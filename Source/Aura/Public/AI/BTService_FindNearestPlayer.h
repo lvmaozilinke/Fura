@@ -13,8 +13,8 @@ UCLASS()
 class AURA_API UBTService_FindNearestPlayer : public UBTService_BlueprintBase
 {
 	GENERATED_BODY()
-protected:
 
+protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
@@ -22,4 +22,5 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FBlackboardKeySelector DistanceToTargetSelector;
+	
 };

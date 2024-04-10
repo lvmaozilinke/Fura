@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
 #include "Actor/AuraFireBall.h"
@@ -8,6 +8,7 @@
 #include "GameplayCueManager.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Components/AudioComponent.h"
+
 
 void AAuraFireBall::BeginPlay()
 {
@@ -46,5 +47,4 @@ void AAuraFireBall::OnHit()
 		LoopingSoundComponent->Stop();
 		LoopingSoundComponent->DestroyComponent();
 	}
-	bHit = true;
 }

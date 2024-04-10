@@ -14,10 +14,7 @@ class AURA_API UAuraAssetManager : public UAssetManager
 {
 	GENERATED_BODY()
 public:
-
-	static UAuraAssetManager& Get();
-
-protected:
+	static  UAuraAssetManager& Get();
 
 	virtual void StartInitialLoading() override;
 };

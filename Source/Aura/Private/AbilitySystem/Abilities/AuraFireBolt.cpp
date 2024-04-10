@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
 #include "AbilitySystem/Abilities/AuraFireBolt.h"
@@ -6,10 +6,12 @@
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Actor/AuraProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Iteraction/CombatInterface.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 FString UAuraFireBolt::GetDescription(int32 Level)
 {
-	const int32 ScaledDamage = Damage.GetValueAtLevel(Level);
+	const int32 DamageFireBolt = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
 	if (Level == 1)
@@ -24,7 +26,7 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 			"<Small>ManaCost: </><ManaCost>%.1f</>\n"
 			// Cooldown
 			"<Small>Cooldown: </><Cooldown>%.1f</>\n\n"
-			
+
 			"<Default>Launches a bolt of fire, "
 			"exploding on impact and dealing: </>"
 
@@ -36,7 +38,7 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 			Level,
 			ManaCost,
 			Cooldown,
-			ScaledDamage);
+			DamageFireBolt);
 	}
 	else
 	{
@@ -64,13 +66,14 @@ FString UAuraFireBolt::GetDescription(int32 Level)
 			ManaCost,
 			Cooldown,
 			FMath::Min(Level, NumProjectiles),
-			ScaledDamage);		
+			DamageFireBolt);
+
 	}
 }
 
 FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 {
-	const int32 ScaledDamage = Damage.GetValueAtLevel(Level);
+	const int32 DamageFireBolt = Damage.GetValueAtLevel(Level);
 	const float ManaCost = FMath::Abs(GetManaCost(Level));
 	const float Cooldown = GetCooldown(Level);
 	return FString::Printf(TEXT(
@@ -97,10 +100,11 @@ FString UAuraFireBolt::GetNextLevelDescription(int32 Level)
 			ManaCost,
 			Cooldown,
 			FMath::Min(Level, NumProjectiles),
-			ScaledDamage);
+			DamageFireBolt);
 }
 
-void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride, AActor* HomingTarget)
+void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag,
+                                     const bool bOverridePitch, const float PitchOverride, AActor* HomingTarget)
 {
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
@@ -127,22 +131,25 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 		GetOwningActorFromActorInfo(),
 		Cast<APawn>(GetOwningActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-	
+
 		Projectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
 
 		if (HomingTarget && HomingTarget->Implements<UCombatInterface>())
 		{
-			Projectile->ProjectileMovement->HomingTargetComponent = HomingTarget->GetRootComponent();
+			Projectile->ProjectileMovementComponent->HomingTargetComponent = HomingTarget->GetRootComponent();
 		}
 		else
 		{
 			Projectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
 			Projectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
-			Projectile->ProjectileMovement->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
+			Projectile->ProjectileMovementComponent->HomingTargetComponent = Projectile->HomingTargetSceneComponent;
 		}
-		Projectile->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
-		Projectile->ProjectileMovement->bIsHomingProjectile = bLaunchHomingProjectiles;
-		
+
+		Projectile->ProjectileMovementComponent->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+		Projectile->ProjectileMovementComponent->bIsHomingProjectile = bLaunchHomingProjectiles;
+
 		Projectile->FinishSpawning(SpawnTransform);
 	}
+
+	//NumProjectiles = FMath::Min(MaxNumProjectiles, GetAbilityLevel());
 }

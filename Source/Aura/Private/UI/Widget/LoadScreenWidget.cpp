@@ -1,5 +1,4 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
 #include "UI/Widget/LoadScreenWidget.h"
-

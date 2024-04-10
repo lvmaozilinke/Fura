@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
+#include "Engine/DataAsset.h"
 #include "AttributeInfo.generated.h"
+
+
+struct FGameplayTag;
 
 USTRUCT(BlueprintType)
 struct FAuraAttributeInfo
 {
-	GENERATED_BODY()
+	GENERATED_BODY();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag AttributeTag = FGameplayTag();
@@ -21,20 +24,20 @@ struct FAuraAttributeInfo
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText AttributeDescription = FText();
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float AttributeValue = 0.f;
 };
 
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class AURA_API UAttributeInfo : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	FAuraAttributeInfo FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound = false) const;
-
+	FAuraAttributeInfo FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound = false);
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FAuraAttributeInfo> AttributeInformation;
+	TArray<FAuraAttributeInfo> AttributeInfos;
 };

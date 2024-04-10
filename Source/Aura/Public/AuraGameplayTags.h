@@ -5,36 +5,31 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 
-/**
- * AuraGameplayTags
- *
- * Singleton containing native Gameplay Tags
- */
-
 struct FAuraGameplayTags
 {
 public:
-    static const FAuraGameplayTags& Get() { return GameplayTags;}
-    static void InitializeNativeGameplayTags();
+	static const FAuraGameplayTags& Get() {return GameplayTags;}
+	static void InitializeNativeGameplayTags();
 
-	FGameplayTag Attributes_Primary_Strength;
+	// primary tags
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Resilience;
+	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Vigor;
 
+	// secondary tags
 	FGameplayTag Attributes_Secondary_Armor;
 	FGameplayTag Attributes_Secondary_ArmorPenetration;
 	FGameplayTag Attributes_Secondary_BlockChance;
 	FGameplayTag Attributes_Secondary_CriticalHitChance;
-	FGameplayTag Attributes_Secondary_CriticalHitDamage;
 	FGameplayTag Attributes_Secondary_CriticalHitResistance;
+	FGameplayTag Attributes_Secondary_CriticalHitDamage;
 	FGameplayTag Attributes_Secondary_HealthRegeneration;
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
-	
-	FGameplayTag Attributes_Meta_IncomingXP;
 
+	//input tags
 	FGameplayTag InputTag_LMB;
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_1;
@@ -44,68 +39,54 @@ public:
 	FGameplayTag InputTag_Passive_1;
 	FGameplayTag InputTag_Passive_2;
 
+	// damage types
 	FGameplayTag Damage;
-	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Lightning;
 	FGameplayTag Damage_Arcane;
 	FGameplayTag Damage_Physical;
+	FGameplayTag Damage_Fire;
 
+	// resistance to damage
 	FGameplayTag Attributes_Resistance_Fire;
 	FGameplayTag Attributes_Resistance_Lightning;
 	FGameplayTag Attributes_Resistance_Arcane;
 	FGameplayTag Attributes_Resistance_Physical;
 
-	FGameplayTag Debuff_Burn;
-	FGameplayTag Debuff_Stun;
-	FGameplayTag Debuff_Arcane;
-	FGameplayTag Debuff_Physical;
+	// DeBuff
+	FGameplayTag DeBuff_Burn;
+	FGameplayTag DeBuff_Stun;
+	FGameplayTag DeBuff_Arcane;
+	FGameplayTag DeBuff_Physical;
 
-	FGameplayTag Debuff_Chance;
-	FGameplayTag Debuff_Damage;
-	FGameplayTag Debuff_Duration;
-	FGameplayTag Debuff_Frequency;
+	FGameplayTag DeBuff_Chance;
+	FGameplayTag DeBuff_Damage;
+	FGameplayTag DeBuff_Duration;
+	FGameplayTag DeBuff_Frequency;
 
-	FGameplayTag Abilities_None;
-	
+	// abilities
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
-	
-	FGameplayTag Abilities_HitReact;
+	FGameplayTag Abilities_Fire_FireBolt;
+	FGameplayTag Abilities_Fire_FireBlast;
+	FGameplayTag Abilities_Lightning_Electrocute;
+	FGameplayTag Abilities_Arcane_ArcaneShards;
+	FGameplayTag Abilities_None;
 
+	//Abilities Status
 	FGameplayTag Abilities_Status_Locked;
 	FGameplayTag Abilities_Status_Eligible;
 	FGameplayTag Abilities_Status_Unlocked;
 	FGameplayTag Abilities_Status_Equipped;
 
+	//Abilities Type
 	FGameplayTag Abilities_Type_Offensive;
 	FGameplayTag Abilities_Type_Passive;
 	FGameplayTag Abilities_Type_None;
-	
-	FGameplayTag Abilities_Fire_FireBolt;
-	FGameplayTag Abilities_Fire_FireBlast;	
-	FGameplayTag Abilities_Lightning_Electrocute;
-	FGameplayTag Abilities_Arcane_ArcaneShards;
-
-
-	FGameplayTag Abilities_Passive_HaloOfProtection;
-	FGameplayTag Abilities_Passive_LifeSiphon;
-	FGameplayTag Abilities_Passive_ManaSiphon;
 
 	FGameplayTag Cooldown_Fire_FireBolt;
 
-	FGameplayTag CombatSocket_Weapon;
-	FGameplayTag CombatSocket_RightHand;
-	FGameplayTag CombatSocket_LeftHand;
-	FGameplayTag CombatSocket_Tail;
-
-	FGameplayTag Montage_Attack_1;
-	FGameplayTag Montage_Attack_2;
-	FGameplayTag Montage_Attack_3;
-	FGameplayTag Montage_Attack_4;
-	
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
-
+	// Effect actor
+	FGameplayTag Effects_FireArea;
 	FGameplayTag Effects_HitReact;
 
 	FGameplayTag Player_Block_InputPressed;
@@ -114,7 +95,24 @@ public:
 	FGameplayTag Player_Block_CursorTrace;
 
 	FGameplayTag GameplayCue_FireBlast;
+	
+    // Attack for montages and sounds
+	FGameplayTag Attack_Weapon;
+	FGameplayTag Attack_RightHand;
+	FGameplayTag Attack_LeftHand;
+	FGameplayTag Attack_Tail;
+	FGameplayTag Attack_Summon;
 
+	FGameplayTag Abilities_Passive_HaloOfProtection;
+	FGameplayTag Abilities_Passive_LifeSiphon;
+	FGameplayTag Abilities_Passive_ManaSiphon;
+
+	// meta attributes
+	FGameplayTag Attributes_Meta_IncomingXP;
+	
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDeBuffs;
 private:
-    static FAuraGameplayTags GameplayTags;
+	
+	static FAuraGameplayTags GameplayTags;
+	
 };

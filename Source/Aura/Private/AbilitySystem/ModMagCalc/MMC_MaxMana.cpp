@@ -4,15 +4,16 @@
 #include "AbilitySystem/ModMagCalc/MMC_MaxMana.h"
 
 #include "AbilitySystem/AuraAttributeSet.h"
-#include "Interaction/CombatInterface.h"
+#include "Iteraction/CombatInterface.h"
 
 UMMC_MaxMana::UMMC_MaxMana()
 {
-	IntDef.AttributeToCapture = UAuraAttributeSet::GetIntelligenceAttribute();
-	IntDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
-	IntDef.bSnapshot = false;
+	IntelligenceDef.AttributeToCapture= UAuraAttributeSet::GetIntelligenceAttribute();
 
-	RelevantAttributesToCapture.Add(IntDef);
+	IntelligenceDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	IntelligenceDef.bSnapshot = false;
+
+	RelevantAttributesToCapture.Add(IntelligenceDef);
 }
 
 float UMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
@@ -21,19 +22,21 @@ float UMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectS
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
+	FAggregatorEvaluateParameters EvaluateParameters;
 
-	float Int = 0.f;
-	GetCapturedAttributeMagnitude(IntDef, Spec, EvaluationParameters, Int);
-	Int = FMath::Max<float>(Int, 0.f);
+	EvaluateParameters.SourceTags = SourceTags;
+	EvaluateParameters.TargetTags = TargetTags;
+
+	float Intelligence = 0.f;
+	GetCapturedAttributeMagnitude(IntelligenceDef, Spec, EvaluateParameters, Intelligence);
+
+	Intelligence = FMath::Max<float>(Intelligence, 0.f);
 
 	int32 PlayerLevel = 1;
 	if (Spec.GetContext().GetSourceObject()->Implements<UCombatInterface>())
 	{
 		PlayerLevel = ICombatInterface::Execute_GetPlayerLevel(Spec.GetContext().GetSourceObject());
 	}
-	
-	return 50.f + 2.5f * Int + 15.f * PlayerLevel;
+
+	return  50.f + 2.5f * Intelligence + 15.f * PlayerLevel;
 }

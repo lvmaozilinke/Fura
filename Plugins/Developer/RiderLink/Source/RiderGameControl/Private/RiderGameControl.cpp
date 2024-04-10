@@ -17,7 +17,7 @@
 #include "Misc/FeedbackContext.h"
 #include "Modules/ModuleManager.h"
 #include "Settings/LevelEditorPlaySettings.h"
-#include "Editor.h"
+#include "UnrealEd/Public/Editor.h"
 
 #include "Runtime/Launch/Resources/Version.h"
 #if ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION <= 23
@@ -289,7 +289,7 @@ void FRiderGameControl::RequestPlayWorldCommand(const FCachedCommandInfo& Comman
         SendRequestFailed(RequestID, NotificationType::Error, Message);
         return;
     }
-    AsyncTask(ENamedThreads::GameThread, [this, RequestID, CommandInfo]()
+    AsyncTask(ENamedThreads::GameThread, [=]()
     {
         if (FPlayWorldCommands::GlobalPlayWorldActions->TryExecuteAction(CommandInfo.Command.ToSharedRef()))
         {

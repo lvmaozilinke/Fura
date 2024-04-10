@@ -1,30 +1,22 @@
-// Copyright Druid Mechanics
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
-#include "GameplayTagContainer.h"
 #include "AuraPlayerController.generated.h"
 
-
-class IHighlightInterface;
+class AMagicCircle;
 class UNiagaraSystem;
 class UDamageTextComponent;
+class USplineComponent;
+class UAuraAbilitySystemComponent;
+class IEnemyInterface;
+struct FGameplayTag;
+class UAuraInputConfig;
 class UInputMappingContext;
 class UInputAction;
-struct FInputActionValue;
-class UAuraInputConfig;
-class UAuraAbilitySystemComponent;
-class USplineComponent;
-class AMagicCircle;
 
-enum class ETargetingStatus : uint8
-{
-	TargetingEnemy,
-	TargetingNonEnemy,
-	NotTargeting
-};
+struct FInputActionValue;
 
 /**
  * 
@@ -35,21 +27,32 @@ class AURA_API AAuraPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	AAuraPlayerController();
-	virtual void PlayerTick(float DeltaTime) override;
+
+	UAuraAbilitySystemComponent* GetASC();
 
 	UFUNCTION(Client, Reliable)
 	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit);
-
+	
 	UFUNCTION(BlueprintCallable)
-	void ShowMagicCircle(UMaterialInterface* DecalMaterial = nullptr);
+	void ShowMagicCircle(UMaterialInterface* DecalMaterial);
 
 	UFUNCTION(BlueprintCallable)
 	void HideMagicCircle();
 
-	
 protected:
 	virtual void BeginPlay() override;
+
 	virtual void SetupInputComponent() override;
+
+	virtual void PlayerTick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AMagicCircle> MagicCircleClass;
+
+	UPROPERTY()
+	TObjectPtr<AMagicCircle> MagicCircle;
+
+	void UpdateMagicCircleLocation();
 private:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
@@ -60,6 +63,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> ShiftAction;
 
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTexComponentClass;
+
 	void ShiftPressed() { bShiftKeyDown = true; };
 	void ShiftReleased() { bShiftKeyDown = false; };
 	bool bShiftKeyDown = false;
@@ -67,30 +73,26 @@ private:
 	void Move(const FInputActionValue& InputActionValue);
 
 	void CursorTrace();
-	TObjectPtr<AActor> LastActor;
-	TObjectPtr<AActor> ThisActor;
-	FHitResult CursorHit;
-	static void HighlightActor(AActor* InActor);
-	static void UnHighlightActor(AActor* InActor);
 
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
-	void AbilityInputTagHeld(FGameplayTag InputTag);
+	
+
+	IEnemyInterface* LastActor;
+	IEnemyInterface* ThisActor;
+	FHitResult CursorResult;
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
 
 	UPROPERTY()
-	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
+	TObjectPtr<UAuraAbilitySystemComponent> AbilitySystemComponent;
 
-	UAuraAbilitySystemComponent* GetASC();
-
-	
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	float ShortPressThreshold = 0.5f;
 	bool bAutoRunning = false;
-	ETargetingStatus TargetingStatus = ETargetingStatus::NotTargeting;
+	bool bTargeting = false;
 
 	UPROPERTY(EditDefaultsOnly)
 	float AutoRunAcceptanceRadius = 50.f;
@@ -102,15 +104,4 @@ private:
 	TObjectPtr<UNiagaraSystem> ClickNiagaraSystem;
 
 	void AutoRun();
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AMagicCircle> MagicCircleClass;
-
-	UPROPERTY()
-	TObjectPtr<AMagicCircle> MagicCircle;
-
-	void UpdateMagicCircleLocation();
 };

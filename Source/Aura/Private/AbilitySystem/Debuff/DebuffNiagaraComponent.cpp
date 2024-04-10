@@ -1,41 +1,40 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
-#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "AbilitySystem/DeBuff/DeBuffNiagaraComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Interaction/CombatInterface.h"
+#include "Iteraction/CombatInterface.h"
 
-
-UDebuffNiagaraComponent::UDebuffNiagaraComponent()
+UDeBuffNiagaraComponent::UDeBuffNiagaraComponent()
 {
 	bAutoActivate = false;
 }
 
-void UDebuffNiagaraComponent::BeginPlay()
+void UDeBuffNiagaraComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetOwner());
 	if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetOwner()))
 	{
-		ASC->RegisterGameplayTagEvent(DebuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UDebuffNiagaraComponent::DebuffTagChanged);
+		ASC->RegisterGameplayTagEvent(DeBuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UDeBuffNiagaraComponent::DeBuffTagChanged);
 	}
 	else if (CombatInterface)
 	{
 		CombatInterface->GetOnASCRegisteredDelegate().AddWeakLambda(this, [this](UAbilitySystemComponent* InASC)
 		{
-			InASC->RegisterGameplayTagEvent(DebuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UDebuffNiagaraComponent::DebuffTagChanged);
+			InASC->RegisterGameplayTagEvent(DeBuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UDeBuffNiagaraComponent::DeBuffTagChanged);
 		});
 	}
 }
 
-void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+void UDeBuffNiagaraComponent::DeBuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	const bool bOwnerValid = IsValid(GetOwner());
 	const bool bOwnerAlive = GetOwner()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(GetOwner());
-	
 	if (NewCount > 0 && bOwnerValid && bOwnerAlive)
 	{
 		Activate();

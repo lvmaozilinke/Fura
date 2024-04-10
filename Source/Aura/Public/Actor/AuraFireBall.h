@@ -1,18 +1,16 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/AuraProjectile.h"
+#include "AuraProjectile.h"
 #include "AuraFireBall.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class AURA_API AAuraFireBall : public AAuraProjectile
 {
 	GENERATED_BODY()
+
 public:
 
 	UFUNCTION(BlueprintImplementableEvent)

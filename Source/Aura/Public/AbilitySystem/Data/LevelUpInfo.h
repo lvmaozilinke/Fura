@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "LevelUpInfo.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FAuraLevelUpInfo
 {
@@ -20,7 +21,6 @@ struct FAuraLevelUpInfo
 	UPROPERTY(EditDefaultsOnly)
 	int32 SpellPointAward = 1;
 };
-
 /**
  * 
  */
@@ -29,7 +29,6 @@ class AURA_API ULevelUpInfo : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FAuraLevelUpInfo> LevelUpInformation;
 

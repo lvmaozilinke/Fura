@@ -3,11 +3,11 @@
 
 #include "UI/WidgetController/AuraWidgetController.h"
 
-#include "Player/AuraPlayerController.h"
-#include "Player/AuraPlayerState.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "Player/AuraPlayerController.h"
+#include "Player/AuraPlayerState.h"
 
 void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
@@ -19,12 +19,10 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 
 void UAuraWidgetController::BroadcastInitialValues()
 {
-	
 }
 
 void UAuraWidgetController::BindCallbacksToDependencies()
 {
-	
 }
 
 void UAuraWidgetController::BroadcastAbilityInfo()

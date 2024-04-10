@@ -29,7 +29,7 @@ static TArray<rd::Wrapper<JetBrains::EditorPlugin::StringRange>> GetPathRanges(
 	{
 		const int Start = Matcher.GetMatchBeginning();
 		const int End = Matcher.GetMatchEnding();
-		FString PathName = Str.Mid(Start, End - Start);
+		FString PathName = Str.Mid(Start, End - Start - 1);
 		if (BluePrintProvider::IsBlueprint(PathName))
 			Ranges.Emplace(StringRange(Start, End));
 	}
@@ -52,7 +52,7 @@ static TArray<rd::Wrapper<JetBrains::EditorPlugin::StringRange>> GetMethodRanges
 
 static bool SendMessageToRider(const JetBrains::EditorPlugin::LogMessageInfo& MessageInfo, const FString& Message)
 {
-	static const FRegexPattern PathPattern = FRegexPattern(TEXT("(/[\\w\\.]+)+"));
+	static const FRegexPattern PathPattern = FRegexPattern(TEXT("[^\\s]*/[^\\s]+"));
 	static const FRegexPattern MethodPattern = FRegexPattern(TEXT("[0-9a-z_A-Z]+::~?[0-9a-z_A-Z]+"));
 	
 	return IRiderLinkModule::Get().FireAsyncAction(
@@ -106,7 +106,8 @@ void FRiderLoggingModule::StartupModule()
 	ModuleLifetimeDef.lifetime->bracket(
 	[this]()
 	{
-		OutputDevice.Setup([this](const TCHAR* msg, ELogVerbosity::Type Type, const FName& Name, TOptional<double> Time)
+		OutputDevice.onSerializeMessage.BindLambda(
+		[this](const TCHAR* msg, ELogVerbosity::Type Type, const class FName& Name, TOptional<double> Time)
 		{
 			if (Type > ELogVerbosity::All) return;
 
@@ -117,7 +118,6 @@ void FRiderLoggingModule::StartupModule()
 			}
 			const FString PlainName = Name.GetPlainNameString();
 			const JetBrains::EditorPlugin::LogMessageInfo MessageInfo{Type, PlainName, DateTime};
-			
 			LoggingScheduler->queue([Msg = FString(msg), MessageInfo]() mutable
 			{
 				LoggingExtensionImpl::ScheduledSendMessage(&Msg, MessageInfo);
@@ -126,7 +126,8 @@ void FRiderLoggingModule::StartupModule()
 	},
 	[this]()
 	{
-		OutputDevice.TearDown();
+		if (OutputDevice.onSerializeMessage.IsBound())
+			OutputDevice.onSerializeMessage.Unbind();
 	});
 
 	UE_LOG(FLogRiderLoggingModule, Verbose, TEXT("STARTUP FINISH"));

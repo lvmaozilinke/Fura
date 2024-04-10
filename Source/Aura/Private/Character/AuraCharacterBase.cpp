@@ -1,38 +1,41 @@
-// Copyright Druid Mechanics
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Character/AuraCharacterBase.h"
+
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
-#include "AbilitySystem/AuraAbilitySystemComponent.h"
-#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "GameplayEffectTypes.h"
+#include "AbilitySystem/DeBuff/DeBuffNiagaraComponent.h"
 #include "AbilitySystem/Passive/PassiveNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+
 
 AAuraCharacterBase::AAuraCharacterBase()
 {
+ 	
 	PrimaryActorTick.bCanEverTick = true;
 	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
+	BurnDeBuffComponent = CreateDefaultSubobject<UDeBuffNiagaraComponent>("BurnDeBuffComponent");
+	BurnDeBuffComponent->SetupAttachment(GetRootComponent());
+	BurnDeBuffComponent->DeBuffTag = GameplayTags.DeBuff_Burn;
+
+	StunDeBuffComponent = CreateDefaultSubobject<UDeBuffNiagaraComponent>("StunDeBuffComponent");
+	StunDeBuffComponent->SetupAttachment(GetRootComponent());
+	StunDeBuffComponent->DeBuffTag = GameplayTags.DeBuff_Stun;
 	
-	BurnDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("BurnDebuffComponent");
-	BurnDebuffComponent->SetupAttachment(GetRootComponent());
-	BurnDebuffComponent->DebuffTag = GameplayTags.Debuff_Burn;
-
-	StunDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>("StunDebuffComponent");
-	StunDebuffComponent->SetupAttachment(GetRootComponent());
-	StunDebuffComponent->DebuffTag = GameplayTags.Debuff_Stun;
-
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
-
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
+
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -44,40 +47,91 @@ AAuraCharacterBase::AAuraCharacterBase()
 	LifeSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
 	ManaSiphonNiagaraComponent = CreateDefaultSubobject<UPassiveNiagaraComponent>("ManaSiphonNiagaraComponent");
 	ManaSiphonNiagaraComponent->SetupAttachment(EffectAttachComponent);
-
-	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 }
 
-void AAuraCharacterBase::Tick(float DeltaTime)
+void AAuraCharacterBase::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(DeltaSeconds);
 	EffectAttachComponent->SetWorldRotation(FRotator::ZeroRotator);
 }
 
 void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
 	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
 	DOREPLIFETIME(AAuraCharacterBase, bIsBurned);
 	DOREPLIFETIME(AAuraCharacterBase, bIsBeingShocked);
 }
 
-float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+float AAuraCharacterBase::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
 {
 	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	OnDamageDelegate.Broadcast(DamageTaken);
 	return DamageTaken;
 }
 
-UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+
+void AAuraCharacterBase::BeginPlay()
 {
-	return AbilitySystemComponent;
+	Super::BeginPlay();
+	
+}
+
+void AAuraCharacterBase::Dissolve()
+{
+	if(IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* InstanceDynamic = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, InstanceDynamic);
+		StartDissolveTimeline(InstanceDynamic);
+	}
+	if(IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* WeaponInstanceDynamic = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		Weapon->SetMaterial(0, WeaponInstanceDynamic);
+		StartWeaponDissolveTimeline(WeaponInstanceDynamic);
+	}
+}
+
+void AAuraCharacterBase::OnRep_Stunned()
+{
+}
+
+void AAuraCharacterBase::OnRep_Burned()
+{
+}
+
+UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& AttackTag)
+{
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+	if (AttackTag.MatchesTagExact(GameplayTags.Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	if (AttackTag.MatchesTagExact(GameplayTags.Attack_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (AttackTag.MatchesTagExact(GameplayTags.Attack_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	if (AttackTag.MatchesTagExact(GameplayTags.Attack_Tail))
+	{
+		return GetMesh()->GetSocketLocation(TailSocketName);
+	}
+	return FVector();
 }
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
 {
-	return HitReactMontage;
+	return  HitReactMontage;
 }
 
 void AAuraCharacterBase::Die(const FVector& DeathImpulse)
@@ -91,70 +145,9 @@ FOnDeathSignature& AAuraCharacterBase::GetOnDeathDelegate()
 	return OnDeathDelegate;
 }
 
-void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
 {
-	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
-	
-	Weapon->SetSimulatePhysics(true);
-	Weapon->SetEnableGravity(true);
-	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	Weapon->AddImpulse(DeathImpulse * 0.1f, NAME_None, true);
-	
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetEnableGravity(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	GetMesh()->AddImpulse(DeathImpulse, NAME_None, true);
-	
-	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	Dissolve();
-	bDead = true;
-	BurnDebuffComponent->Deactivate();
-	StunDebuffComponent->Deactivate();
-	OnDeathDelegate.Broadcast(this);
-}
-
-void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
-{
-	bIsStunned = NewCount > 0;
-	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
-}
-
-void AAuraCharacterBase::OnRep_Stunned()
-{
-	
-}
-
-void AAuraCharacterBase::OnRep_Burned()
-{
-}
-
-void AAuraCharacterBase::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
-{
-	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
-	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
-	{
-		return Weapon->GetSocketLocation(WeaponTipSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_LeftHand))
-	{
-		return GetMesh()->GetSocketLocation(LeftHandSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_RightHand))
-	{
-		return GetMesh()->GetSocketLocation(RightHandSocketName);
-	}
-	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Tail))
-	{
-		return GetMesh()->GetSocketLocation(TailSocketName);
-	}
-	return FVector();
+	return this;
 }
 
 bool AAuraCharacterBase::IsDead_Implementation() const
@@ -162,26 +155,16 @@ bool AAuraCharacterBase::IsDead_Implementation() const
 	return bDead;
 }
 
-AActor* AAuraCharacterBase::GetAvatar_Implementation()
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontage_Implementation()
 {
-	return this;
-}
-
-TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
-{
-	return AttackMontages;
-}
-
-UNiagaraSystem* AAuraCharacterBase::GetBloodEffect_Implementation()
-{
-	return BloodEffect;
+	return AttackMontage;
 }
 
 FTaggedMontage AAuraCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
 {
-	for (FTaggedMontage TaggedMontage : AttackMontages)
+	for (FTaggedMontage TaggedMontage : AttackMontage)
 	{
-		if (TaggedMontage.MontageTag == MontageTag)
+		if (TaggedMontage.AttackTag == MontageTag)
 		{
 			return TaggedMontage;
 		}
@@ -194,14 +177,14 @@ int32 AAuraCharacterBase::GetMinionCount_Implementation()
 	return MinionCount;
 }
 
-void AAuraCharacterBase::IncremenetMinionCount_Implementation(int32 Amount)
+void AAuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
 {
 	MinionCount += Amount;
 }
 
 ECharacterClass AAuraCharacterBase::GetCharacterClass_Implementation()
 {
-	return CharacterClass;
+	return CharacterType;
 }
 
 FOnASCRegistered& AAuraCharacterBase::GetOnASCRegisteredDelegate()
@@ -229,11 +212,39 @@ FOnDamageSignature& AAuraCharacterBase::GetOnDamageSignature()
 	return OnDamageDelegate;
 }
 
+void AAuraCharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImpulse)
+{
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	// why physicsOnly? 
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	Weapon->AddImpulse(DeathImpulse * 0.1f, NAME_None, true);
+	
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	GetMesh()->AddImpulse(DeathImpulse, NAME_None, true);
+
+	Dissolve();
+	bDead = true;
+	BurnDeBuffComponent->Deactivate();
+	StunDeBuffComponent->Deactivate();
+	OnDeathDelegate.Broadcast(this);
+}
+
+
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 }
 
-void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const
+void AAuraCharacterBase::ApplyEffectToSelf(const TSubclassOf<UGameplayEffect> GameplayEffectClass, const int Level) const
 {
 	check(IsValid(GetAbilitySystemComponent()));
 	check(GameplayEffectClass);
@@ -243,35 +254,15 @@ void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
-void AAuraCharacterBase::InitializeDefaultAttributes() const
+void AAuraCharacterBase::InitializeDefaultAttributes()
 {
-	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
-void AAuraCharacterBase::AddCharacterAbilities()
+void AAuraCharacterBase::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-	if (!HasAuthority()) return;
-
-	AuraASC->AddCharacterAbilities(StartupAbilities);
-	AuraASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
+	bIsStunned = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bIsStunned ? 0.f : BaseWalkSpeed;
 }
 
-void AAuraCharacterBase::Dissolve()
-{
-	if (IsValid(DissolveMaterialInstance))
-	{
-		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
-		GetMesh()->SetMaterial(0, DynamicMatInst);
-		StartDissolveTimeline(DynamicMatInst);
-	}
-	if (IsValid(WeaponDissolveMaterialInstance))
-	{
-		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
-		Weapon->SetMaterial(0, DynamicMatInst);
-		StartWeaponDissolveTimeline(DynamicMatInst);
-	}
-}
+
 

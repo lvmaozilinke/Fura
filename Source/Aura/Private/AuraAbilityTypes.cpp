@@ -1,5 +1,9 @@
-
 #include "AuraAbilityTypes.h"
+
+UScriptStruct* FAuraGameplayEffectContext::GetScriptStruct() const
+{
+	return FGameplayEffectContext::GetScriptStruct();
+}
 
 bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
@@ -42,19 +46,19 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			RepBits |= 1 << 8;
 		}
-		if (bIsSuccessfulDebuff)
+		if (bIsSuccessfulDeBuff)
 		{
 			RepBits |= 1 << 9;
 		}
-		if (DebuffDamage > 0.f)
+		if (DeBuffDamage > 0.f)
 		{
 			RepBits |= 1 << 10;
 		}
-		if (DebuffDuration > 0.f)
+		if (DeBuffDuration > 0.f)
 		{
 			RepBits |= 1 << 11;
 		}
-		if (DebuffFrequency > 0.f)
+		if (DeBuffFrequency > 0.f)
 		{
 			RepBits |= 1 << 12;
 		}
@@ -66,7 +70,7 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			RepBits |= 1 << 14;
 		}
-		if (!KnockbackForce.IsZero())
+		if (!KnockBackForce.IsZero())
 		{
 			RepBits |= 1 << 15;
 		}
@@ -87,10 +91,9 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 				RepBits |= 1 << 19;
 			}
 		}
-		
 	}
 
-	Ar.SerializeBits(&RepBits, 19);
+	Ar.SerializeBits(&RepBits, 20);
 
 	if (RepBits & (1 << 0))
 	{
@@ -118,7 +121,7 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!HitResult.IsValid())
 			{
-				HitResult = TSharedPtr<FHitResult>(new FHitResult());
+				HitResult = MakeShared<FHitResult>();
 			}
 		}
 		HitResult->NetSerialize(Ar, Map, bOutSuccess);
@@ -142,19 +145,19 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	}
 	if (RepBits & (1 << 9))
 	{
-		Ar << bIsSuccessfulDebuff;
+		Ar << bIsSuccessfulDeBuff;
 	}
 	if (RepBits & (1 << 10))
 	{
-		Ar << DebuffDamage;
+		Ar << DeBuffDamage;
 	}
 	if (RepBits & (1 << 11))
 	{
-		Ar << DebuffDuration;
+		Ar << DeBuffDuration;
 	}
 	if (RepBits & (1 << 12))
 	{
-		Ar << DebuffFrequency;
+		Ar << DeBuffFrequency;
 	}
 	if (RepBits & (1 << 13))
 	{
@@ -162,7 +165,7 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		{
 			if (!DamageType.IsValid())
 			{
-				DamageType = TSharedPtr<FGameplayTag>(new FGameplayTag());
+				DamageType = MakeShared<FGameplayTag>();
 			}
 		}
 		DamageType->NetSerialize(Ar, Map, bOutSuccess);
@@ -173,12 +176,13 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	}
 	if (RepBits & (1 << 15))
 	{
-		KnockbackForce.NetSerialize(Ar, Map, bOutSuccess);
+		KnockBackForce.NetSerialize(Ar, Map, bOutSuccess);
 	}
+
 	if (RepBits & (1 << 16))
 	{
 		Ar << bIsRadialDamage;
-		
+
 		if (RepBits & (1 << 17))
 		{
 			Ar << RadialDamageInnerRadius;
@@ -192,7 +196,6 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 			RadialDamageOrigin.NetSerialize(Ar, Map, bOutSuccess);
 		}
 	}
-	
 
 	if (Ar.IsLoading())
 	{
@@ -202,3 +205,4 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	bOutSuccess = true;
 	return true;
 }
+

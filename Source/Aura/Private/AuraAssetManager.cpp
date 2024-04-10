@@ -9,16 +9,18 @@
 UAuraAssetManager& UAuraAssetManager::Get()
 {
 	check(GEngine);
-	
-	UAuraAssetManager* AuraAssetManager = Cast<UAuraAssetManager>(GEngine->AssetManager);
-	return *AuraAssetManager;
+
+	UAuraAssetManager * AssetManager = Cast<UAuraAssetManager>(GEngine->AssetManager);
+
+	return *AssetManager;
 }
 
 void UAuraAssetManager::StartInitialLoading()
 {
 	Super::StartInitialLoading();
+
 	FAuraGameplayTags::InitializeNativeGameplayTags();
 
-	// This is required to use Target Data!
+	// Target data
 	UAbilitySystemGlobals::Get().InitGlobalData();
 }

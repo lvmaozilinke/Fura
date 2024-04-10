@@ -1,0 +1,30 @@
+// Copyright Druid Mechanics
+
+
+#include "FuraPlayerState.h"
+
+#include "AbilitySystemComponent.h"
+#include"FuraAttributeSet.h"
+
+AFuraPlayerState::AFuraPlayerState()
+{
+	//此参与者将被考虑进行复制的频率（每秒），用于确定NetUpdateTime
+	NetUpdateFrequency=100;
+
+	
+	//在构造函数中创建
+	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent->SetIsReplicated(true);//开启复制
+	AttributeSet=CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
+
+	//设置复制模式---混合模式---多人，玩家本身---游戏效果是复制到拥有---仅限客户端
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	
+	
+}
+
+UAbilitySystemComponent* AFuraPlayerState::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}

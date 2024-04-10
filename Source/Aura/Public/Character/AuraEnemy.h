@@ -1,77 +1,75 @@
-// Copyright Druid Mechanics
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Character/AuraCharacterBase.h"
-#include "Interaction/EnemyInterface.h"
-#include "Interaction/HighlightInterface.h"
+#include "Iteraction/EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 #include "AuraEnemy.generated.h"
 
-class UWidgetComponent;
-class UBehaviorTree;
 class AAuraAIController;
+class UBehaviorTree;
+enum class ECharacterClass : uint8;
+class UWidgetComponent;
 /**
  * 
  */
 UCLASS()
-class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface, public IHighlightInterface
+class AURA_API AAuraEnemy : public AAuraCharacterBase, public IEnemyInterface
 {
 	GENERATED_BODY()
+
 public:
 	AAuraEnemy();
+	virtual void HighLightActor() override;
+	virtual void UnHighLightActor() override;
+
+	virtual int32 GetPlayerLevel_Implementation() override;
+
 	virtual void PossessedBy(AController* NewController) override;
 
-	/** Highlight Interface */
-	virtual void HighlightActor_Implementation() override;
-	virtual void UnHighlightActor_Implementation() override;
-	virtual void SetMoveToLocation_Implementation(FVector& OutDestination) override;
-	/** end Highlight Interface */
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnAttributesChangedSignature OnHealthChanged;
 
-	/** Combat Interface */
-	virtual int32 GetPlayerLevel_Implementation() override;
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnAttributesChangedSignature OnMaxHealthChanged;
+
 	virtual void Die(const FVector& DeathImpulse) override;
-	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
-	virtual AActor* GetCombatTarget_Implementation() const override;
-	/** end Combat Interface */
 
-	UPROPERTY(BlueprintReadWrite, Category = "Combat")
-	TObjectPtr<AActor> CombatTarget;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnHealthChanged;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeChangedSignature OnMaxHealthChanged;
-	
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-
-	UPROPERTY(BlueprintReadOnly, Category = "Combat")
-	bool bHitReacting = false;
+	void HitTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float LifeSpan = 5.f;
 
-	void SetLevel(int32 InLevel) { Level = InLevel; }
-protected:
-	virtual void BeginPlay() override;
-	virtual void InitAbilityActorInfo() override;
-	virtual void InitializeDefaultAttributes() const override;
+	UPROPERTY(BlueprintReadOnly, Category = "Combat")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Combat")
+	TObjectPtr<AActor> CombatTarget;
+
 	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
-	int32 Level = 1;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	virtual AActor* GetCombatTarget_Implementation() const override;
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UWidgetComponent> HealthBar;
 
-	UPROPERTY(EditAnywhere, Category = "AI")
+	virtual void InitAbilityActorInfo() override;
+
+	virtual void InitializeDefaultAttributes() override;
+
+	UPROPERTY(EditAnywhere, Category="AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	UPROPERTY()
 	TObjectPtr<AAuraAIController> AuraAIController;
+private:
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void SpawnLoot();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category= "Character Class Defaults", meta=(AllowPrivateAccess))
+	int32 Level = 1;
 };

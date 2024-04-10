@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
 #include "AbilitySystem/Abilities/ArcaneShards.h"
@@ -89,5 +89,5 @@ FString UArcaneShards::GetNextLevelDescription(int32 Level)
 			ManaCost,
 			Cooldown,
 			FMath::Min(Level, MaxNumShards),
-			ScaledDamage);	
+			ScaledDamage);
 }

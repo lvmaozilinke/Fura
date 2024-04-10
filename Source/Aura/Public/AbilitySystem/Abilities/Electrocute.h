@@ -1,9 +1,9 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/AuraBeamSpell.h"
+#include "AuraBeamSpell.h"
 #include "Electrocute.generated.h"
 
 /**

@@ -1,4 +1,4 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 #pragma once
 
@@ -10,14 +10,16 @@ UCLASS()
 class AURA_API APointCollection : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
+	// Sets default values for this actor's properties
 	APointCollection();
 
 	UFUNCTION(BlueprintPure)
 	TArray<USceneComponent*> GetGroundPoints(const FVector& GroundLocation, int32 NumPoints, float YawOverride = 0.f);
-	
+
 protected:
+	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
@@ -55,6 +57,4 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
 	TObjectPtr<USceneComponent> Pt_10;
-
-	
 };

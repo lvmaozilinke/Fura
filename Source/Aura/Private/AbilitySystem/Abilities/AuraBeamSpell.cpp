@@ -1,10 +1,11 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 
 #include "AbilitySystem/Abilities/AuraBeamSpell.h"
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
+#include "Iteraction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void UAuraBeamSpell::StoreMouseDataInfo(const FHitResult& HitResult)
@@ -59,6 +60,7 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 			}
 		}
 	}
+
 	if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(MouseHitActor))
 	{
 		if (!CombatInterface->GetOnDeathDelegate().IsAlreadyBound(this, &UAuraBeamSpell::PrimaryTargetDied))
@@ -73,7 +75,7 @@ void UAuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTarget
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
 	ActorsToIgnore.Add(MouseHitActor);
-	
+
 	TArray<AActor*> OverlappingActors;
 	UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(
 		GetAvatarActorFromActorInfo(),
@@ -81,15 +83,15 @@ void UAuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTarget
 		ActorsToIgnore,
 		850.f,
 		MouseHitActor->GetActorLocation());
-	
-	int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
-	//int32 NumAdditionTargets = 5;
-	
+
+	//int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
+	const int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets);
+
 	UAuraAbilitySystemLibrary::GetClosestTargets(
-		NumAdditionalTargets,
-		OverlappingActors,
-		OutAdditionalTargets,
-		MouseHitActor->GetActorLocation());
+	NumAdditionalTargets,
+	OverlappingActors,
+	OutAdditionalTargets,
+	MouseHitActor->GetActorLocation());
 
 	for (AActor* Target : OutAdditionalTargets)
 	{

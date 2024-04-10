@@ -1,9 +1,9 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/AuraDamageGameplayAbility.h"
+#include "AuraDamageGameplayAbility.h"
 #include "AuraFireBlast.generated.h"
 
 class AAuraFireBall;
@@ -14,6 +14,7 @@ UCLASS()
 class AURA_API UAuraFireBlast : public UAuraDamageGameplayAbility
 {
 	GENERATED_BODY()
+
 public:
 	virtual FString GetDescription(int32 Level) override;
 	virtual FString GetNextLevelDescription(int32 Level) override;

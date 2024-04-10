@@ -2,13 +2,16 @@
 
 
 #include "AbilitySystem/AsyncTasks/WaitCooldownChange.h"
+
 #include "AbilitySystemComponent.h"
 
-UWaitCooldownChange* UWaitCooldownChange::WaitForCooldownChange(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayTag& InCooldownTag)
+UWaitCooldownChange* UWaitCooldownChange::WaitForCooldownChange(UAbilitySystemComponent* AbilitySystemComponent,
+                                                                const FGameplayTag& InCooldownTag, const FGameplayTag& InputTag)
 {
 	UWaitCooldownChange* WaitCooldownChange = NewObject<UWaitCooldownChange>();
 	WaitCooldownChange->ASC = AbilitySystemComponent;
 	WaitCooldownChange->CooldownTag = InCooldownTag;
+	WaitCooldownChange->InputTag = InputTag;
 	
 	if (!IsValid(AbilitySystemComponent) || !InCooldownTag.IsValid())
 	{
@@ -38,15 +41,16 @@ void UWaitCooldownChange::EndTask()
 	MarkAsGarbage();
 }
 
-void UWaitCooldownChange::CooldownTagChanged(const FGameplayTag InCooldownTag, int32 NewCount)
+void UWaitCooldownChange::CooldownTagChanged(const FGameplayTag InCooldownTag, int32 NewCount) const
 {
 	if (NewCount == 0)
 	{
-		CooldownEnd.Broadcast(0.f);
+		CooldownEnd.Broadcast(0.f, InputTag);
 	}
 }
 
-void UWaitCooldownChange::OnActiveEffectAdded(UAbilitySystemComponent* TargetASC, const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveEffectHandle)
+void UWaitCooldownChange::OnActiveEffectAdded(UAbilitySystemComponent* TargetASC,
+	const FGameplayEffectSpec& SpecApplied, FActiveGameplayEffectHandle ActiveEffectHandle) const
 {
 	FGameplayTagContainer AssetTags;
 	SpecApplied.GetAllAssetTags(AssetTags);
@@ -56,7 +60,7 @@ void UWaitCooldownChange::OnActiveEffectAdded(UAbilitySystemComponent* TargetASC
 
 	if (AssetTags.HasTagExact(CooldownTag) || GrantedTags.HasTagExact(CooldownTag))
 	{
-		FGameplayEffectQuery GameplayEffectQuery = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(CooldownTag.GetSingleTagContainer());
+		const FGameplayEffectQuery GameplayEffectQuery = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(CooldownTag.GetSingleTagContainer());
 		TArray<float> TimesRemaining = ASC->GetActiveEffectsTimeRemaining(GameplayEffectQuery);
 		if (TimesRemaining.Num() > 0)
 		{
@@ -68,8 +72,8 @@ void UWaitCooldownChange::OnActiveEffectAdded(UAbilitySystemComponent* TargetASC
 					TimeRemaining = TimesRemaining[i];
 				}
 			}
-			
-			CooldownStart.Broadcast(TimeRemaining);
+
+			CooldownStart.Broadcast(TimeRemaining, InputTag);
 		}
 	}
 }

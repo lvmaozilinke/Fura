@@ -1,3 +1,5 @@
+// Copyright 1998-2020 Epic Games, Inc. All Rights Reserved.
+
 using UnrealBuildTool;
 
 public class RiderLogging : ModuleRules
@@ -9,21 +11,8 @@ public class RiderLogging : ModuleRules
 #else
 		PCHUsage = PCHUsageMode.NoSharedPCHs;
 #endif
-
-#if UE_5_2_OR_LATER
-		if(Target.Platform == UnrealTargetPlatform.Linux || Target.Platform == UnrealTargetPlatform.Mac)
-		{
-			bUseRTTI = false;
-		}
-		else
-#endif
-        {
-		    bUseRTTI = true;
-        }
-
-#if UE_5_2_OR_LATER
-		bDisableStaticAnalysis = true;
-#endif
+		
+		bUseRTTI = true;
 
 		PrivateDependencyModuleNames.AddRange(new []
 		{

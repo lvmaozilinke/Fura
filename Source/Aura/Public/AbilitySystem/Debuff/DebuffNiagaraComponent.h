@@ -1,26 +1,26 @@
-// Copyright Druid Mechanics
+﻿// Copyright Druid Mechanics
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "NiagaraComponent.h"
 #include "GameplayTagContainer.h"
-#include "DebuffNiagaraComponent.generated.h"
+#include "NiagaraComponent.h"
+#include "DeBuffNiagaraComponent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class AURA_API UDebuffNiagaraComponent : public UNiagaraComponent
+class AURA_API UDeBuffNiagaraComponent : public UNiagaraComponent
 {
 	GENERATED_BODY()
 public:
-	UDebuffNiagaraComponent();
-
+	UDeBuffNiagaraComponent();
+	
 	UPROPERTY(VisibleAnywhere)
-	FGameplayTag DebuffTag;
+	FGameplayTag DeBuffTag;
 
 protected:
 	virtual void BeginPlay() override;
-	void DebuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	void DeBuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 };

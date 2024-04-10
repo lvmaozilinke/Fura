@@ -4,7 +4,7 @@
 #include "AbilitySystem/ModMagCalc/MMC_MaxHealth.h"
 
 #include "AbilitySystem/AuraAttributeSet.h"
-#include "Interaction/CombatInterface.h"
+#include "Iteraction/CombatInterface.h"
 
 UMMC_MaxHealth::UMMC_MaxHealth()
 {
@@ -21,12 +21,13 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
+	FAggregatorEvaluateParameters EvaluateParameters;
+
+	EvaluateParameters.SourceTags = SourceTags;
+	EvaluateParameters.TargetTags = TargetTags;
 
 	float Vigor = 0.f;
-	GetCapturedAttributeMagnitude(VigorDef, Spec, EvaluationParameters, Vigor);
+	GetCapturedAttributeMagnitude(VigorDef, Spec, EvaluateParameters, Vigor);
 	Vigor = FMath::Max<float>(Vigor, 0.f);
 
 	int32 PlayerLevel = 1;
@@ -35,5 +36,5 @@ float UMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffec
 		PlayerLevel = ICombatInterface::Execute_GetPlayerLevel(Spec.GetContext().GetSourceObject());
 	}
 
-	return 80.f + 2.5f * Vigor + 10.f * PlayerLevel;
+	return  80.f + 2.5f * Vigor + 10.f * PlayerLevel;
 }
