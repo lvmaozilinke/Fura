@@ -21,10 +21,6 @@ public class RiderLogging : ModuleRules
 		    bUseRTTI = true;
         }
 
-#if UE_5_2_OR_LATER
-		bDisableStaticAnalysis = true;
-#endif
-
 		PrivateDependencyModuleNames.AddRange(new []
 		{
 			"Core",

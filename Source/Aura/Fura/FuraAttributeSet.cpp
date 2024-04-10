@@ -1,0 +1,130 @@
+// Copyright Druid Mechanics
+
+
+#include "FuraAttributeSet.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AttributeSet.h"
+#include "AbilitySystemComponent.h"
+#include "GameplayAbilityBlueprint.h"
+#include "GameplayEffectExtension.h"
+#include "GameFramework/Character.h"
+#include "Net/UnrealNetwork.h"
+
+void UFuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	// REPNOTIFY_Always:总是同步          COND_None：【只要修改就同步】This property has no condition, and will send anytime it changes
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,HP,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MaxHP,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MP,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MaxMP,COND_None,REPNOTIFY_Always);
+	
+}
+
+void UFuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if (Attribute==GetHPAttribute())
+	{
+		//将数据限制最大值和最小值[const float X, const float Min, const float Max]
+		NewValue=FMath::Clamp(NewValue,0.f,GetMaxHP());
+	}
+	if (Attribute==GetMPAttribute())
+	{
+		NewValue=FMath::Clamp(NewValue,0.f,GetMaxMP());
+	}
+
+}
+
+void UFuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties_F& Props) const
+{
+	/*if (Data.EvaluatedData.Attribute==GetHPAttribute())
+		{
+			UE_LOG(LogTemp,Warning,TEXT("HP from GetHP():%f"),GetHP());
+			//变化的数值，更改的数值，效果的数值
+			UE_LOG(LogTemp,Warning,TEXT("Magnitude:%f"),Data.EvaluatedData.Magnitude);
+		}*/
+
+	//Source=causer of the effect,Target = target of the Effect(owner of this AS)
+	Props.EffectContextHandle=Data.EffectSpec.GetContext();
+	Props.SourceASC=Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
+
+	//判断这三个是否存在 AbilitySystemComponent   AbilityActorInfo  AvatarActor
+	if (IsValid(Props.SourceASC)&&Props.SourceASC->AbilityActorInfo.IsValid()&&Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor=Props.SourceASC->AbilityActorInfo->AvatarActor.Get();
+		//AbilityActorInfo里面查找Controller
+		Props.SourceController=Props.SourceASC->AbilityActorInfo->PlayerController.Get();
+
+		if (Props.SourceController==nullptr&&Props.SourceAvatarActor!=nullptr)
+		{
+			//拿到Pawn---SourceAvatorActor
+			if (const APawn* Pawn=Cast<APawn>(Props.SourceAvatarActor))
+			{
+				//查找不到就通过Pawn的方式拿到Controller
+				Props.SourceController=Pawn->GetController();
+			}
+		}
+		//如果找到Controller了
+		if (Props.SourceController)
+		{
+			//那就通过其获取Character
+			ACharacter* SourceCharacter=Cast<ACharacter>(Props.SourceController->GetCharacter());
+		}
+	}
+	if (Data.Target.AbilityActorInfo.IsValid()&&Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor=Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController=Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter=Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC=UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+
+	
+}
+
+
+void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+	FEffectProperties_F Props;
+	SetEffectProperties(Data,Props);
+	
+	
+	
+	
+}
+
+UFuraAttributeSet::UFuraAttributeSet()
+{
+	//初始化生命值
+	InitHP(80.f);
+	InitMaxHP(100.f);
+	InitMP(80.f);
+	InitMaxMP(100.f);
+	
+	
+}
+
+void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData OldHP) const
+{
+	//REPNOTIFY通知给其他人，然后传递的是HP和OldHP的数值
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,HP,OldHP);
+}
+
+void UFuraAttributeSet::OnRep_MaxHP(const FGameplayAttributeData OldMaxHP) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,HP,OldMaxHP);
+}
+
+void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData OldMP) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,MP,OldMP);
+}
+
+void UFuraAttributeSet::OnRep_MaxMP(const FGameplayAttributeData OldMaxMP) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,MP,OldMaxMP);
+}

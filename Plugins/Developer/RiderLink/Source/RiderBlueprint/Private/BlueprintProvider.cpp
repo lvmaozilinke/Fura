@@ -66,7 +66,7 @@ void BluePrintProvider::OpenBlueprint(JetBrains::EditorPlugin::BlueprintReferenc
                 UEdGraphNode* EdGraphNode = FBlueprintEditorUtils::GetNodeByGUID(Blueprint, AssetGuid);
                 if(EdGraphNode != nullptr)
                 {
-                    FKismetEditorUtilities::BringKismetToFocusAttentionOnObject(EdGraphNode); 
+                    FKismetEditorUtilities::BringKismetToFocusAttentionOnObject(Blueprint); 
                 }
                 else
                 {
