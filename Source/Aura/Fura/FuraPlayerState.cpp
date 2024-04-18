@@ -4,6 +4,7 @@
 #include "FuraPlayerState.h"
 
 #include "AbilitySystemComponent.h"
+#include "FuraAbilitySystemComponent.h"
 #include"FuraAttributeSet.h"
 
 AFuraPlayerState::AFuraPlayerState()
@@ -13,7 +14,7 @@ AFuraPlayerState::AFuraPlayerState()
 
 	
 	//在构造函数中创建
-	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent=CreateDefaultSubobject<UFuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);//开启复制
 	AttributeSet=CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
 

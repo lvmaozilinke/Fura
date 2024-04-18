@@ -3,6 +3,7 @@
 
 #include "FuraEnemy.h"
 
+#include "FuraAbilitySystemComponent.h"
 #include "FuraAttributeSet.h"
 #include "Aura/Aura.h"
 
@@ -10,15 +11,25 @@
 void AFuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	/*逻辑移动到InitAbilityActorInfo执行
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
+	*/
+	InitAbilityActorInfo();
+}
 
+void AFuraEnemy::InitAbilityActorInfo()
+{
+	Super::InitAbilityActorInfo();
+	//设置
+	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	
+	Cast<UFuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
 
 AFuraEnemy::AFuraEnemy()
 {
-	AbilitySystemComponent=CreateDefaultSubobject<UAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent=CreateDefaultSubobject<UFuraAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);//开启复制
 	AttributeSet=CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
 

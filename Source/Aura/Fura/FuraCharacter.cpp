@@ -3,6 +3,7 @@
 
 #include "FuraCharacter.h"
 
+#include "FuraAbilitySystemComponent.h"
 #include "FuraPlayerControllerBase.h"
 #include "FuraPlayerState.h"
 #include "Widget/FuraHUD.h"
@@ -36,10 +37,14 @@ void AFuraCharacter::InitAbilityActorInfo()
 	//拿到玩家的state
 	AFuraPlayerState* FuraPlayerState=GetPlayerState<AFuraPlayerState>();
 	check(FuraPlayerState);
-	//设置AbilitySystemComponent为playerstate上的abilitycomponent（传递指针）
-	AbilitySystemComponent=FuraPlayerState->GetAbilitySystemComponent();
+	
 	//InitAbilityActorInfo进行初始化传参
-	AbilitySystemComponent->InitAbilityActorInfo(FuraPlayerState,this);
+	FuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FuraPlayerState,this);
+
+	//设置AbilityActorInfoSet
+	Cast<UFuraAbilitySystemComponent>(FuraPlayerState->GetAbilitySystemComponent())-> AbilityActorInfoSet();
+
+	AbilitySystemComponent=FuraPlayerState->GetAbilitySystemComponent();
 	
 	//设置AttributeSet为playerstate上的AttributeSet（传递指针）
 	AttributeSet=FuraPlayerState->GetAttributeSet();

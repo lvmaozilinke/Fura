@@ -25,6 +25,6 @@ public:
 	AFuraCharacter();
 	
 protected:
-	void InitAbilityActorInfo();
+	virtual void InitAbilityActorInfo() override;
 	
 };

@@ -26,4 +26,9 @@ void AFuraCharacterBase::BeginPlay()
 	
 }
 
+void AFuraCharacterBase::InitAbilityActorInfo()
+{
+	
+}
+
 

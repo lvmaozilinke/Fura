@@ -37,5 +37,7 @@ protected:
 	UPROPERTY(EditAnywhere,Category="FCombat")
 	TObjectPtr<USkeletalMeshComponent>Weapon;
 
-	virtual void InitAbili
+	//启动能力演员信息
+	virtual void InitAbilityActorInfo();
+	
 };
