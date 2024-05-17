@@ -24,13 +24,6 @@ void UFuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* Ability
 	EffectAssetTags.Broadcast(TagContainer);
 
 	
-	for (const FGameplayTag& Tag:TagContainer)
-	{
-		//TODO 将标签广播到Widget控制器
-		const FString Msg=FString::Printf(TEXT("GE Tag:%s"),*Tag.ToString());
-		GEngine->AddOnScreenDebugMessage(-1,8.f,FColor::Blue,Msg);
-		
-		
-	}
+	
 
 }
