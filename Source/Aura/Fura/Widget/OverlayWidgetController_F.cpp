@@ -40,8 +40,18 @@ void UOverlayWidgetController_F::BindCallBackToDependencies()
 				FGameplayTag MessageTag=FGameplayTag::RequestGameplayTag(FName("FMessage"));//查找FMessage tag
 				if (Tag.MatchesTag(MessageTag))
 				{
-					const FUIWidgetRow_F* Row_F=GetDataTableRowByTag<FUIWidgetRow_F>(MessageWidgetDataTable,Tag);
-					MessageWidgetRowDelegate_F.Broadcast(* Row_F);
+					if (MessageWidgetDataTable)
+					{
+						UE_LOG(LogTemp,Warning,TEXT("数据表格的路径是:%s"),*MessageWidgetDataTable.GetPathName());
+						const FUIWidgetRow_F* Row_F=GetDataTableRowByTag<FUIWidgetRow_F>(MessageWidgetDataTable,Tag);
+						if (Row_F)
+						{
+							MessageWidgetRowDelegate_F.Broadcast(*Row_F);
+						}
+						
+						
+					}
+					
 		
 				}
 				
