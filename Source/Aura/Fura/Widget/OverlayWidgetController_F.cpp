@@ -25,10 +25,31 @@ void UOverlayWidgetController_F::BindCallBackToDependencies()
 	//委托绑定
 	//Super::BindCallBackToDependencies();
 	const UFuraAttributeSet* FuraAttributeSet=CastChecked<UFuraAttributeSet>(AttributeSet);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetHPAttribute()).AddUObject(this,&UOverlayWidgetController_F::HPChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMaxHPAttribute()).AddUObject(this,&UOverlayWidgetController_F::MaxHPChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMPAttribute()).AddUObject(this,&UOverlayWidgetController_F::MPChange);
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMaxMPAttribute()).AddUObject(this,&UOverlayWidgetController_F::MaxMPChange);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetHPAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnHPChangeSignature.Broadcast(Data.NewValue);
+		});
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMaxHPAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxHPChangeSignature.Broadcast(Data.NewValue);
+			
+		});
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMPAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMPChangeSignature.Broadcast(Data.NewValue);
+		});
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMaxMPAttribute()).AddLambda(
+		[this](const FOnAttributeChangeData& Data)
+		{
+			OnMaxMPChangeSignature.Broadcast(Data.NewValue);
+		});
 	
 	Cast<UFuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
@@ -48,44 +69,13 @@ void UOverlayWidgetController_F::BindCallBackToDependencies()
 						{
 							MessageWidgetRowDelegate_F.Broadcast(*Row_F);
 						}
-						
-						
 					}
-					
-		
 				}
-				
 				/*const FString Msg=FString::Printf(TEXT("GE Tag:%s"),*Tag.ToString());
 				GEngine->AddOnScreenDebugMessage(-1,8.f,FColor::Blue,Msg);*/
-
-
-				
-				
 			}
 		}
 	);
-	
-}
 
-void UOverlayWidgetController_F::HPChange(const FOnAttributeChangeData& Data) const
-{
-	OnHPChangeSignature.Broadcast(Data.NewValue);
-}
 
-void UOverlayWidgetController_F::MaxHPChange(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHPChangeSignature.Broadcast(Data.NewValue);
-	
-}
-
-void UOverlayWidgetController_F::MPChange(const FOnAttributeChangeData& Data) const
-{
-	OnMPChangeSignature.Broadcast(Data.NewValue);
-	
-}
-
-void UOverlayWidgetController_F::MaxMPChange(const FOnAttributeChangeData& Data) const
-{
-	OnMaxMPChangeSignature.Broadcast(Data.NewValue);
-	
 }
