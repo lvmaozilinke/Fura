@@ -6,7 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "GameplayAbilityBlueprint.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
@@ -85,16 +84,30 @@ void UFuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	
 }
 
-
+/*
+*在GameplayEffect执行之前调用，修改属性的基本值。不能再做任何更改。
+*注意，这只在'execute'期间调用。例如，修改属性的“基本值”。它不会在GameplayEffect的应用过程中被调用，比如5秒+10的移动速度buff。
+*/
 void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 	FEffectProperties_F Props;
 	SetEffectProperties(Data,Props);
+
 	
+	if (Data.EvaluatedData.Attribute==GetHPAttribute())
+	{
+		//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,FString::Printf(TEXT("HP:%f"),GetHP()));
+		//防止血量超出或者低于最大最小值MaxHp
+		SetHP(FMath::Clamp(GetHP(),0.f,GetMaxHP()));
+	}
 	
-	
-	
+	if (Data.EvaluatedData.Attribute==GetMPAttribute())
+	{
+		//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,FString::Printf(TEXT("HP:%f"),GetHP()));
+		//防止血量超出或者低于最大最小值MaxHp
+		SetMP(FMath::Clamp(GetMP(),0.f,GetMaxMP()));
+	}
 }
 
 UFuraAttributeSet::UFuraAttributeSet()

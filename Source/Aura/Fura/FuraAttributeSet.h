@@ -65,6 +65,22 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
 	UFuraAttributeSet();
+
+	/*
+	* Primary Attributes
+	* 力量
+	*/
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Strength,Category="Primary Attributes")
+	FGameplayAttributeData Strength;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,Strength);
+	
+	/*
+	 *
+	 * 
+	 */
+
+
+
 	
 	//创建血量属性【开启网络复制】
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_HP,Category="Attribute")
@@ -96,8 +112,10 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMP(const FGameplayAttributeData OldMaxMP)const;
 
+	UFUNCTION()
+	void OnRep_Strength(const FGameplayAttributeData OldStrength)const;
 
-
+	
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data,FEffectProperties_F& Props) const;
 };
