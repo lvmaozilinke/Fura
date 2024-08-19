@@ -18,7 +18,16 @@ void UFuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MaxHP,COND_None,REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MP,COND_None,REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,MaxMP,COND_None,REPNOTIFY_Always);
-	
+
+	//力量
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,Strength,COND_None,REPNOTIFY_Always);
+	//智力
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,Intelligence,COND_None,REPNOTIFY_Always);
+	//韧性
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,Resilience,COND_None,REPNOTIFY_Always);
+	//活力
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet,Vigor,COND_None,REPNOTIFY_Always);
+
 }
 
 void UFuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -36,6 +45,8 @@ void UFuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 
 }
+
+
 
 void UFuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties_F& Props) const
 {
@@ -121,23 +132,44 @@ UFuraAttributeSet::UFuraAttributeSet()
 	
 }
 
-void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData OldHP) const
+void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
 {
 	//REPNOTIFY通知给其他人，然后传递的是HP和OldHP的数值
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,HP,OldHP);
 }
 
-void UFuraAttributeSet::OnRep_MaxHP(const FGameplayAttributeData OldMaxHP) const
+void UFuraAttributeSet::OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,HP,OldMaxHP);
 }
 
-void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData OldMP) const
+void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData& OldMP) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,MP,OldMP);
 }
 
-void UFuraAttributeSet::OnRep_MaxMP(const FGameplayAttributeData OldMaxMP) const
+void UFuraAttributeSet::OnRep_MaxMP(const FGameplayAttributeData& OldMaxMP) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,MP,OldMaxMP);
+}
+
+void UFuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,Strength,OldStrength);
+
+}
+void UFuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,Intelligence,OldIntelligence);
+}
+
+void UFuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,Resilience,OldResilience);
+}
+
+void UFuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet,Vigor,OldVigor);
+
 }

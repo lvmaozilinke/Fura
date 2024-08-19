@@ -54,6 +54,7 @@ class AURA_API UFuraAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
 public:
+	
 
 	//获取生命周期复制道具
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps)const override;
@@ -69,18 +70,33 @@ public:
 	/*
 	* Primary Attributes
 	* 力量
+	* 基本属性之一
 	*/
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Strength,Category="Primary Attributes")
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,Strength);
+
+	
+	//智力
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Intelligence,Category="Primary Attributes")
+	FGameplayAttributeData Intelligence;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,Intelligence);
+
+	//Resilience 韧性
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Resilience,Category="Primary Attributes")
+	FGameplayAttributeData Resilience;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,Resilience);
+
+	//活力
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_Vigor,Category="Primary Attributes")
+	FGameplayAttributeData Vigor;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,Vigor);
+
 	
 	/*
-	 *
-	 * 
-	 */
-
-
-
+	* Vital Attributes
+	* 重要属性
+	*/	
 	
 	//创建血量属性【开启网络复制】
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing=OnRep_HP,Category="Attribute")
@@ -101,20 +117,28 @@ public:
 	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, MaxMP)
 
 	UFUNCTION()
-	void OnRep_HP(const FGameplayAttributeData OldHP)const;
+	void OnRep_HP(const FGameplayAttributeData& OldHP)const;
 	
 	UFUNCTION()
-	void OnRep_MaxHP(const FGameplayAttributeData OldMaxHP)const;
+	void OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP)const;
 
 	UFUNCTION()
-	void OnRep_MP(const FGameplayAttributeData OldMP)const;
+	void OnRep_MP(const FGameplayAttributeData& OldMP)const;
 
 	UFUNCTION()
-	void OnRep_MaxMP(const FGameplayAttributeData OldMaxMP)const;
+	void OnRep_MaxMP(const FGameplayAttributeData& OldMaxMP)const;
 
 	UFUNCTION()
-	void OnRep_Strength(const FGameplayAttributeData OldStrength)const;
+	void OnRep_Strength(const FGameplayAttributeData& OldStrength)const;
 
+	UFUNCTION()
+	void OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence)const;
+
+	UFUNCTION()
+	void OnRep_Resilience(const FGameplayAttributeData& OldResilience)const;
+
+	UFUNCTION()
+	void OnRep_Vigor(const FGameplayAttributeData& OldVigor)const;
 	
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data,FEffectProperties_F& Props) const;
