@@ -10,6 +10,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class UGameplayEffect;
 
 UCLASS(Abstract)
 class AURA_API AFuraCharacterBase : public ACharacter,public IAbilitySystemInterface
@@ -39,5 +40,13 @@ protected:
 
 	//启动能力演员信息
 	virtual void InitAbilityActorInfo();
+
+
+	//初始化属性相关
+	//Gameplay Effect，定义了将应用的效果。它通常是一个类或数据表，定义了效果的具体属性（如伤害、治疗、状态变化等）。
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes_f")
+	TSubclassOf<UGameplayEffect>DefaultPrimaryAttributes;
+
+	void InitializePrimaryAttributes()const;
 	
 };
