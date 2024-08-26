@@ -32,6 +32,13 @@ AFuraCharacter::AFuraCharacter()
 {
 }
 
+int32 AFuraCharacter::GetPlayerLevel()
+{
+	const AFuraPlayerState* FuraPlayerState=GetPlayerState<AFuraPlayerState>();
+	check(FuraPlayerState);
+	return FuraPlayerState->GetPlayerLevel();
+}
+
 void AFuraCharacter::InitAbilityActorInfo()
 {
 	//拿到玩家的state

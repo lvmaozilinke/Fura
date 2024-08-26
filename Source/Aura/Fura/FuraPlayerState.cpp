@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "FuraAbilitySystemComponent.h"
 #include"FuraAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 AFuraPlayerState::AFuraPlayerState()
 {
@@ -25,7 +26,18 @@ AFuraPlayerState::AFuraPlayerState()
 	
 }
 
+void AFuraPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AFuraPlayerState,Level);
+	
+}
+
 UAbilitySystemComponent* AFuraPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
+}
+
+void AFuraPlayerState::OnRep_Level(int32 OldLevel)
+{
 }

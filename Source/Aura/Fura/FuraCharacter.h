@@ -23,6 +23,9 @@ public:
 	virtual void BeginPlay() override;
 
 	AFuraCharacter();
+
+	/** Combat Interface*/
+	virtual int32 GetPlayerLevel() override;
 	
 protected:
 	virtual void InitAbilityActorInfo() override;
