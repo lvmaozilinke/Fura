@@ -42,11 +42,20 @@ protected:
 	virtual void InitAbilityActorInfo();
 
 
-	//初始化属性相关
+	//主要属性
 	//Gameplay Effect，定义了将应用的效果。它通常是一个类或数据表，定义了效果的具体属性（如伤害、治疗、状态变化等）。
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes_f")
 	TSubclassOf<UGameplayEffect>DefaultPrimaryAttributes;
-
-	void InitializePrimaryAttributes()const;
+	//次要属性
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes_f")
+	TSubclassOf<UGameplayEffect>DefaultSecondaryAttributes;
 	
+
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass,float level) const;
+
+	//初始化所有属性(主要加次要)
+	void InitializeDefaultAttributes()const;
+
+	
+
 };

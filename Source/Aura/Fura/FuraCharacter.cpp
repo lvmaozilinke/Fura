@@ -61,7 +61,7 @@ void AFuraCharacter::InitAbilityActorInfo()
 	}
 
 	//初始化player的属性
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 	
 	
 	

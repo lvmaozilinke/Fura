@@ -127,11 +127,9 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 UFuraAttributeSet::UFuraAttributeSet()
 {
-	//初始化生命值
+	//初始化生命值和法力值
 	InitHP(80.f);
-	InitMaxHP(100.f);
 	InitMP(80.f);
-	InitMaxMP(100.f);
 }
 
 void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
