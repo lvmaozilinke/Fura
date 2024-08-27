@@ -39,7 +39,10 @@ void AFuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 
 	//将游戏效果规范应用于目标能力系统组件的版本
 	//ContextHandle 表示当前效果的上下文信息。上下文可以包含有关技能、目标、施法者等的详细信息。
-	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	//7-10补充: 将当前对象添加为效果的源:
+	ContextHandle.AddSourceObject(this);
+	
 	//SpecHandle 这个方法用于生成一个 FGameplayEffectSpecHandle 对象，表示一个效果的规格（Spec）。它是 Gameplay Effect 的具体实例描述，包括它的属性、持续时间、强度等。
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(
 		GameplayEffectClass, level, ContextHandle);
