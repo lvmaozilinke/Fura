@@ -2,12 +2,16 @@
 
 
 #include "FuraAbilitySystemComponent.h"
+#include "FuraGameplayTags.h"
 
 void UFuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	//(FOnGameplayEffectAppliedDelegate, UAbilitySystemComponent*, const FGameplayEffectSpec&, FActiveGameplayEffectHandle);
 	
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UFuraAbilitySystemComponent::EffectApplied);
+
+	const FFuraGamePlayTags& GamePlayTags=FFuraGamePlayTags::Get();
+	//GamePlayTags.Attributes_F_Secondary_Armor
 
 }
 
