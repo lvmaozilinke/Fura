@@ -20,5 +20,5 @@ FFuraAttributeInfo UAttributeInfo_F::FindAttributeInfoForTag(const FGameplayTag&
 	{
 		UE_LOG(LogTemp,Error,TEXT("数组中找不到指定的Atag[%s],Ainfo[%s]"),*AttributeTag.ToString(),*GetNameSafe(this));//GetNameSafe:获取当前对象的名字
 	}
-
+	return FFuraAttributeInfo();
 }

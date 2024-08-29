@@ -17,7 +17,8 @@ struct FFuraAttributeInfo
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText AttributeName = FText();
-
+	
+	//属性描述
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText AttributeDescription = FText();
 
