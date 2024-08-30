@@ -3,6 +3,10 @@
 
 #include "AttributeMenuWidgetController_F.h"
 
+#include "Aura/Fura/FuraAttributeSet.h"
+#include "Aura/Fura/FuraGamePlayTags.h"
+#include "Aura/Fura/Data/AttributeInfo_F.h"
+
 void UAttributeMenuWidgetController_F::BindCallBackToDependencies()
 {
 	Super::BindCallBackToDependencies();
@@ -10,5 +14,12 @@ void UAttributeMenuWidgetController_F::BindCallBackToDependencies()
 
 void UAttributeMenuWidgetController_F::BroadcastInitValue()
 {
-	Super::BroadcastInitValue();
+	UFuraAttributeSet* AS=Cast<UFuraAttributeSet>(AttributeSet);
+	check(AttributeInfo);
+	FFuraAttributeInfo Info=AttributeInfo->FindAttributeInfoForTag(FFuraGamePlayTags::Get().FAttributes_Primary_Strength);
+	Info.AttributeValue=AS->GetStrength();
+
+
+
+	
 }

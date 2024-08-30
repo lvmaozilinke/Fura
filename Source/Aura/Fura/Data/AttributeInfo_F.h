@@ -41,4 +41,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FFuraAttributeInfo> AttributeInformation;
+
+
+	
 };
