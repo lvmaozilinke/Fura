@@ -15,21 +15,19 @@ void UAttributeMenuWidgetController_F::BindCallBackToDependencies()
 
 void UAttributeMenuWidgetController_F::BroadcastInitValue()
 {
-	UFuraAttributeSet* AS=Cast<UFuraAttributeSet>(AttributeSet);
+	UFuraAttributeSet* AS = Cast<UFuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
-	FFuraAttributeInfo Info=AttributeInfo->FindAttributeInfoForTag(FFuraGamePlayTags::Get().FAttributes_Primary_Strength);
-	Info.AttributeValue=AS->GetStrength();
-	AttributeInfoDelegate.Broadcast(Info);
-	
 
-
-
-	
+	for (auto& Pair : AS->TagsToAttributes)
+	{
+		FFuraAttributeInfo Info=AttributeInfo->FindAttributeInfoForTag(Pair.Key);
+		Info.AttributeValue = Pair.Value().GetNumericValue(AS);
+		AttributeInfoDelegate.Broadcast(Info);
+	}
 }
 
 void UAttributeMenuWidgetController_F::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
 	UFuraAbilitySystemComponent* FuraASC = CastChecked<UFuraAbilitySystemComponent>(AbilitySystemComponent);
 	//FuraASC->UpgradeAttribute(AttributeTag);
-	
 }

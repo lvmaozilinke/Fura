@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "FuraGamePlayTags.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
@@ -127,9 +128,27 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 UFuraAttributeSet::UFuraAttributeSet()
 {
-	//初始化生命值和法力值
+	/*//初始化生命值和法力值
 	InitHP(80.f);
-	InitMP(80.f);
+	InitMP(80.f);*/
+
+	//初始化TMap
+	const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
+
+
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Strength, GetStrengthAttribute);
+
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Intelligence, GetIntelligenceAttribute);
+	
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Resilience, GetResilienceAttribute);
+	
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Vigor, GetVigorAttribute);
+
+	/*FuncPtrPointer=GetIntelligenceAttribute;
+	FGameplayAttribute Attribute=FuncPtrPointer();*/
+
+
+	
 }
 
 void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const

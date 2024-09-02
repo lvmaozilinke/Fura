@@ -13,6 +13,7 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+
 USTRUCT()
 struct FEffectProperties_F
 {
@@ -48,6 +49,10 @@ struct FEffectProperties_F
 	ACharacter* TargetCharacter = nullptr;
 };
 
+template<class T>
+using TStaticFuncPtr=typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+
+
 /**
  * 
  */
@@ -57,6 +62,8 @@ class AURA_API UFuraAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 
 public:
+	UFuraAttributeSet();
+
 	//获取生命周期复制道具
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -66,7 +73,19 @@ public:
 	//游戏后效果执行
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
-	UFuraAttributeSet();
+	//TMap
+	//TMap<FGameplayTag,TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr> TagsToAttributes;
+	/*FGameplayAttribute(*)():FGameplayAttribute(*)() 是值类型，表示一个返回 FGameplayAttribute 的函数指针类型。具体来说，(*)() 表示这个函数不接受任何参数，返回一个 FGameplayAttribute 类型的值。*/
+	TMap<FGameplayTag,TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+
+	/*TBaseStaticDelegateInstance 是 Unreal Engine 中的一个模板类，用于实现静态委托（即全局函数或静态成员函数的委托）。
+	它的模板参数是两个：
+	一个是返回类型和参数类型的函数签名，另一个是用户策略。
+	这里传入的第一个模板参数是 FGameplayAttribute()，表示这个委托绑定的函数返回一个 FGameplayAttribute 对象，并且不接受任何参数。*/
+	//这行代码声明了一个变量 FuncPtrPointer，它是一个指向函数的指针，这个函数返回一个 FGameplayAttribute 对象，并且不接受任何参数。这个指针用于在委托实例中存储函数地址，从而允许委托调用绑定的函数。
+	//https://chatgpt.com/share/647fd815-3332-4183-acfa-38f3db444ed5
+	//TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr FuncPtrPointer;
+	
 
 	/*
 	* Primary Attributes
