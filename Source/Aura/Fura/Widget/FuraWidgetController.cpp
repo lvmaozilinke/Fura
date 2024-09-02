@@ -16,6 +16,7 @@ void UFuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 
 void UFuraWidgetController::BroadcastInitValue()
 {
+	
 }
 
 void UFuraWidgetController::BindCallBackToDependencies()
