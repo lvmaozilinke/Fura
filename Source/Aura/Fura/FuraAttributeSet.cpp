@@ -135,20 +135,26 @@ UFuraAttributeSet::UFuraAttributeSet()
 	//初始化TMap
 	const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
 
-
+	//Primary Attributes
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Strength, GetStrengthAttribute);
-
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Intelligence, GetIntelligenceAttribute);
-	
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Resilience, GetResilienceAttribute);
-	
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Primary_Vigor, GetVigorAttribute);
 
 	/*FuncPtrPointer=GetIntelligenceAttribute;
 	FGameplayAttribute Attribute=FuncPtrPointer();*/
 
-
-	
+	//Secondary Attributes 次要属性
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_Armor, GetArmorAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_ArmorPenetration, GetArmorPenetrationAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_BlockChance, GetBlockChanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_CriticalHitChance, GetCriticalHitChanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_CriticalHitDamage, GetCriticalHitDamageAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_CriticalHitResistance, GetCriticalHitResistanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_HpRegeneration, GetHpRegenerationAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MpRegeneration, GetMpRegenerationAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MaxHP, GetMaxHPAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MaxMP, GetMaxMPAttribute);
 }
 
 void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
@@ -159,7 +165,7 @@ void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
 
 void UFuraAttributeSet::OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, HP, OldMaxHP);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MaxHP, OldMaxHP);
 }
 
 void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData& OldMP) const
@@ -169,7 +175,7 @@ void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData& OldMP) const
 
 void UFuraAttributeSet::OnRep_MaxMP(const FGameplayAttributeData& OldMaxMP) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MP, OldMaxMP);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MaxMP, OldMaxMP);
 }
 
 void UFuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
