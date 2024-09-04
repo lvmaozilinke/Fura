@@ -58,4 +58,14 @@ protected:
 
 	//初始化所有属性(主要加次要)
 	void InitializeDefaultAttributes() const;
+
+	//添加角色能力
+	void AddCharacterAbilities();
+	
+
+private:
+	
+	//角色能力数组
+	UPROPERTY(EditAnywhere,Category="Attributes_f")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 };

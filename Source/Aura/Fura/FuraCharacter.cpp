@@ -11,21 +11,23 @@
 void AFuraCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	InitAbilityActorInfo();//复制给客户端
+	InitAbilityActorInfo(); //复制给客户端
+
+
+	//添加角色能力
+	AddCharacterAbilities();
 }
 
 void AFuraCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	InitAbilityActorInfo();//复制给客户端
-
+	InitAbilityActorInfo(); //复制给客户端
 }
 
 void AFuraCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	//InitAbilityActorInfo();
-
 }
 
 AFuraCharacter::AFuraCharacter()
@@ -34,7 +36,7 @@ AFuraCharacter::AFuraCharacter()
 
 int32 AFuraCharacter::GetPlayerLevel()
 {
-	const AFuraPlayerState* FuraPlayerState=GetPlayerState<AFuraPlayerState>();
+	const AFuraPlayerState* FuraPlayerState = GetPlayerState<AFuraPlayerState>();
 	check(FuraPlayerState);
 	return FuraPlayerState->GetPlayerLevel();
 }
@@ -42,34 +44,31 @@ int32 AFuraCharacter::GetPlayerLevel()
 void AFuraCharacter::InitAbilityActorInfo()
 {
 	//拿到玩家的state
-	AFuraPlayerState* FuraPlayerState=GetPlayerState<AFuraPlayerState>();
+	AFuraPlayerState* FuraPlayerState = GetPlayerState<AFuraPlayerState>();
 	check(FuraPlayerState);
-	
+
 	//InitAbilityActorInfo进行初始化传参
-	FuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FuraPlayerState,this);
+	FuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(FuraPlayerState, this);
 
 	//设置AbilityActorInfoSet
-	Cast<UFuraAbilitySystemComponent>(FuraPlayerState->GetAbilitySystemComponent())-> AbilityActorInfoSet();
+	Cast<UFuraAbilitySystemComponent>(FuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
-	AbilitySystemComponent=FuraPlayerState->GetAbilitySystemComponent();
-	
+	AbilitySystemComponent = FuraPlayerState->GetAbilitySystemComponent();
+
 	//设置AttributeSet为playerstate上的AttributeSet（传递指针）
-	AttributeSet=FuraPlayerState->GetAttributeSet();
+	AttributeSet = FuraPlayerState->GetAttributeSet();
 
-	
+
 	//得到controller
-	if(AFuraPlayerControllerBase* FuraPlayerControllerBase=Cast<AFuraPlayerControllerBase>(GetController()))
+	if (AFuraPlayerControllerBase* FuraPlayerControllerBase = Cast<AFuraPlayerControllerBase>(GetController()))
 	{
 		//拿到hud
-		if (AFuraHUD* FuraHUD=Cast<AFuraHUD>(FuraPlayerControllerBase->GetHUD()))
+		if (AFuraHUD* FuraHUD = Cast<AFuraHUD>(FuraPlayerControllerBase->GetHUD()))
 		{
-			FuraHUD->InitOverlay(FuraPlayerControllerBase,FuraPlayerState,AbilitySystemComponent,AttributeSet);
+			FuraHUD->InitOverlay(FuraPlayerControllerBase, FuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
 
 	//初始化player的属性
 	InitializeDefaultAttributes();
-	
-	
-	
 }

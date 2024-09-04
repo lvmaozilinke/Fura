@@ -31,6 +31,14 @@ public:
 	FGameplayTag FAttributes_Secondary_MaxHP;                  // 最大生命值：角色的生命值上限。
 	FGameplayTag FAttributes_Secondary_MaxMP;                  // 最大魔法值：角色的魔法值上限。
 
+	//InputAction
+	FGameplayTag FInputTag_LMB;
+	FGameplayTag FInputTag_RMB;
+	FGameplayTag FInputTag_1;
+	FGameplayTag FInputTag_2;
+	FGameplayTag FInputTag_3;
+	FGameplayTag FInputTag_4;
+	
 	
 
 protected:

@@ -80,4 +80,35 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 		FName("FAttributes.Secondary.MaxMP"),
 		FString("最大法力值")
 	);
+
+	// InputAction 输入Tag
+	GamePlayTags.FInputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.LMB"),
+		FString("InputTag Left Mouse")
+	);
+
+	GamePlayTags.FInputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.RMB"),
+		FString("InputTag Right Mouse")
+	);
+
+	GamePlayTags.FInputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.1"),
+		FString("InputTag key 1")
+	);
+
+	GamePlayTags.FInputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.2"),
+		FString("InputTag key 2")
+	);
+
+	GamePlayTags.FInputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.3"),
+		FString("InputTag key 3")
+	);
+
+	GamePlayTags.FInputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FInputTag.4"),
+		FString("InputTag key 4")
+	);
 }

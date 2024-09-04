@@ -3,6 +3,7 @@
 
 #include "FuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "FuraAbilitySystemComponent.h"
 
 // Sets default values
 AFuraCharacterBase::AFuraCharacterBase()
@@ -58,4 +59,18 @@ void AFuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttributes,1.f);
 
 	
+}
+
+void AFuraCharacterBase::AddCharacterAbilities()
+{
+
+	UFuraAbilitySystemComponent*FuraASC=CastChecked<UFuraAbilitySystemComponent>(AbilitySystemComponent);
+	
+	if (!HasAuthority())
+	{
+		return;
+	}
+
+	FuraASC->AddCharacterAbilities(StartupAbilities);
+	 
 }
