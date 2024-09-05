@@ -8,10 +8,15 @@
 #include "FuraGamePlayAbility.generated.h"
 
 /**
- * 
+ * 游戏能力
  */
 UCLASS()
 class AURA_API UFuraGamePlayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly,Category="Input")
+	FGameplayTag StartupInputTag;
+	
 };

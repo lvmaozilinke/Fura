@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "InputMappingContext.h"
 #include "GameFramework/PlayerController.h"
 #include "interaction/EnemyInterface_F.h"
@@ -13,31 +14,70 @@
  */
 class UInputMappingContext;
 class UInputAction;
+struct FInputActionValue;
 class IEnemyInterface_F;
+class UFuraInputConfig;
+class UFuraAbilitySystemComponent;
+
+//鼠标点击移动相关
+class USplineComponent;
 
 UCLASS()
 class AURA_API AFuraPlayerControllerBase : public APlayerController
 {
 	GENERATED_BODY()
+
 public:
 	AFuraPlayerControllerBase();
 	virtual void PlayerTick(float DeltaTime) override;
-private:
-	UPROPERTY(EditAnywhere,Category="Input")
-	TObjectPtr<UInputMappingContext>FuraContext;
 
-	UPROPERTY(EditAnywhere,Category="Input")
-	TObjectPtr<UInputAction>MoveAction;
-
-	void Move(const FInputActionValue& InputActionValue);
-	
-	void CurSorTrace();
-	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
+private:
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputMappingContext> FuraContext;
+
+	UPROPERTY(EditAnywhere, Category="Input")
+	TObjectPtr<UInputAction> MoveAction;
+
+	void Move(const FInputActionValue& InputActionValue);
+
+	void CurSorTrace();
+
+
 	IEnemyInterface_F* LastActor;
 	IEnemyInterface_F* ThisActor;
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UFuraInputConfig> InputConfig;
+
+	/*AbilitySystemComponent*/
+	UPROPERTY()
+	TObjectPtr<UFuraAbilitySystemComponent> FuraAbilitySystemComponent;
+
+	UFuraAbilitySystemComponent* GetASC();
+
+
+	//点击移动相关
+
+	FVector CachedDestination;
+	float FollowTime = 0.f;
+	//按下时间
+	float ShortPressThreshold;
+	bool bAutoRunning = false;
+
+	//是否鼠标点击是actor
+	bool bTargeting=false;
+	float AutoRunAcceptanceRadius = 50.f;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline;
 	
 };
