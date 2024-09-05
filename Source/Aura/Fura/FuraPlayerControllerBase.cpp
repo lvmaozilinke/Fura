@@ -125,5 +125,5 @@ void AFuraPlayerControllerBase::SetupInputComponent()
 	Super::SetupInputComponent();
 	UEnhancedInputComponent* UEnhancedInputComponentA=CastChecked<UEnhancedInputComponent>(InputComponent);
 	UEnhancedInputComponentA->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AFuraPlayerControllerBase::Move);
-	
+	 
 }
