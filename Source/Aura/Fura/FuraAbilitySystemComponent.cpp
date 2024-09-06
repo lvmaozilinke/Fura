@@ -66,7 +66,7 @@ void UFuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			//可以通过重写这个函数来实现松开按钮的功能
-			AbilitySpecInputReleased(AbilitySpec);
+			AbilitySpecInputReleased(AbilitySpec);//根据输入的tag执行不同
 			
 		}
 	}

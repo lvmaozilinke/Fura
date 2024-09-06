@@ -70,14 +70,20 @@ private:
 	FVector CachedDestination;
 	float FollowTime = 0.f;
 	//按下时间
-	float ShortPressThreshold;
+	float ShortPressThreshold = 0.5;
 	bool bAutoRunning = false;
 
 	//是否鼠标点击是actor
-	bool bTargeting=false;
+	bool bTargeting = false;
 	float AutoRunAcceptanceRadius = 50.f;
 
+	//样条线，用于绘制玩家移动路线和其他的作用。
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> Spline;
+
+
+	//自动移动函数
+	void AutoRun();
+
 	
 };
