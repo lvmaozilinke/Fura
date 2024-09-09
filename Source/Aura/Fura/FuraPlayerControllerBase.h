@@ -67,6 +67,7 @@ private:
 
 	//点击移动相关
 
+	//点击的终点
 	FVector CachedDestination;
 	float FollowTime = 0.f;
 	//按下时间

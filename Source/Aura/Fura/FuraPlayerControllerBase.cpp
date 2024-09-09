@@ -149,6 +149,9 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 					Spline->AddSplinePoint(PointLoc,ESplineCoordinateSpace::World);
 					DrawDebugSphere(GetWorld(),PointLoc,8.f,8,FColor::Green,false,5.f);
 				}
+				//移动判断自身离移动坐标数组的最后一个点是否等于点击终点
+				CachedDestination=Navpath->PathPoints[Navpath->PathPoints.Num()-1];
+				
 				//开始移动
 				bAutoRunning=true;
 			}
