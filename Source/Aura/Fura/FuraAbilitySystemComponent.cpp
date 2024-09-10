@@ -9,9 +9,9 @@ void UFuraAbilitySystemComponent::AbilityActorInfoSet()
 {
 	//(FOnGameplayEffectAppliedDelegate, UAbilitySystemComponent*, const FGameplayEffectSpec&, FActiveGameplayEffectHandle);
 
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UFuraAbilitySystemComponent::EffectApplied);
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &UFuraAbilitySystemComponent::ClientEffectApplied);
 
-	const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
+	//const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
 	//GamePlayTags.Attributes_F_Secondary_Armor
 }
 
@@ -46,9 +46,7 @@ void UFuraAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputT
 			{
 				//激活能力
 				TryActivateAbility(AbilitySpec.Handle);
-				
 			}
-			
 		}
 	}
 }
@@ -66,14 +64,15 @@ void UFuraAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& In
 		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
 			//可以通过重写这个函数来实现松开按钮的功能
-			AbilitySpecInputReleased(AbilitySpec);//根据输入的tag执行不同
-			
+			AbilitySpecInputReleased(AbilitySpec); //根据输入的tag执行不同
 		}
 	}
 }
-void UFuraAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* AbilitySystemComponent,
-                                                const FGameplayEffectSpec& EffectSpec,
-                                                FActiveGameplayEffectHandle ActiveEffectHandle)
+
+
+void UFuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* AbilitySystemComponent,
+                                                               const FGameplayEffectSpec& EffectSpec,
+                                                               FActiveGameplayEffectHandle ActiveEffectHandle)
 {
 	//GEngine->AddOnScreenDebugMessage(1,8.f,FColor::Blue,FString("Effect Applied!!!"));
 

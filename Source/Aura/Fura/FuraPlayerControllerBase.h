@@ -50,6 +50,10 @@ private:
 	IEnemyInterface_F* LastActor;
 	IEnemyInterface_F* ThisActor;
 
+	//储存鼠标的位置
+	FHitResult CursorHit;
+
+
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputTagHeld(FGameplayTag InputTag);
@@ -85,6 +89,4 @@ private:
 
 	//自动移动函数
 	void AutoRun();
-
-	
 };

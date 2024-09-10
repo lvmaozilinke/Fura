@@ -4,7 +4,7 @@
 #include "MMC_MaxHp.h"
 
 #include "Aura/Fura/FuraAttributeSet.h"
-#include "Fura/interaction/CombatInterface_F.h"
+#include "Aura/Fura/interaction/CombatInterface_F.h"
 
 UMMC_MaxHp::UMMC_MaxHp()
 {

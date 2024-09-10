@@ -26,6 +26,12 @@ void AFuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+FVector AFuraCharacterBase::GetCombatSocketLocation()
+{
+	check(Weapon);
+	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
 void AFuraCharacterBase::InitAbilityActorInfo()
 {
 }

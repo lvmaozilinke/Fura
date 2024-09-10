@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
-#include "Fura/interaction/CombatInterface_F.h"
+#include "interaction/CombatInterface_F.h"
 #include "GameFramework/Character.h"
 #include "FuraCharacterBase.generated.h"
 
@@ -37,7 +37,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="FCombat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	
+	//武器插槽，用于远程子弹生成位置(枪口)
+	UPROPERTY(EditAnywhere, Category="FCombat")
+	FName WeaponTipSocketName;
 
+	//实现接口
+	virtual FVector GetCombatSocketLocation() override;
+	
 	//启动能力演员信息
 	virtual void InitAbilityActorInfo();
 

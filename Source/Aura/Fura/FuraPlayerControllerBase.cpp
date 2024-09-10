@@ -6,7 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "EnhancedInputSubsystems.h"
 #include "FuraAbilitySystemComponent.h"
-#include "FuraAbilitySystemLibrary.h"
 #include "FuraGamePlayTags.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
@@ -29,7 +28,6 @@ void AFuraPlayerControllerBase::PlayerTick(float DeltaTime)
 
 	//自动移动
 	AutoRun();
-	
 }
 
 void AFuraPlayerControllerBase::Move(const FInputActionValue& InputActionValue)
@@ -50,7 +48,6 @@ void AFuraPlayerControllerBase::Move(const FInputActionValue& InputActionValue)
 
 void AFuraPlayerControllerBase::CurSorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.GetActor())
 	{
@@ -59,37 +56,11 @@ void AFuraPlayerControllerBase::CurSorTrace()
 	LastActor = ThisActor;
 	ThisActor = Cast<IEnemyInterface_F>(CursorHit.GetActor());
 
-	if (LastActor == nullptr)
+	//判断 ThisActor 是否与 LastActor 不同，然后进行高亮或取消高亮的处理。
+	if (ThisActor != LastActor)
 	{
-		if (ThisActor != nullptr)
-		{
-			//B
-			ThisActor->HightLightActor();
-		}
-		else
-		{
-			//A
-		}
-	}
-	else
-	{
-		if (ThisActor == nullptr)
-		{
-			//c
-			LastActor->UnHightLightActor();
-		}
-		else
-		{
-			if (LastActor == ThisActor)
-			{
-				//E
-			}
-			else
-			{
-				LastActor->UnHightLightActor();
-				ThisActor->HightLightActor();
-			}
-		}
+		if (LastActor) LastActor->UnHightLightActor();
+		if (ThisActor) ThisActor->HightLightActor();
 	}
 }
 
@@ -143,24 +114,22 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 				//绘制移动路线 Nav path->PathPoints 是一个TArray数组，路线坐标点数组集合。
 				//清空绘制线的坐标点
 				Spline->ClearSplinePoints();
-				for (const FVector& PointLoc:Navpath->PathPoints)
+				for (const FVector& PointLoc : Navpath->PathPoints)
 				{
 					//绘制数组里面的每一个点,在spline 为样条线添加一个点。入参为点坐标和坐标系（本地和世界）
-					Spline->AddSplinePoint(PointLoc,ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(),PointLoc,8.f,8,FColor::Green,false,5.f);
+					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
+					DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
 				}
 				//移动判断自身离移动坐标数组的最后一个点是否等于点击终点
-				CachedDestination=Navpath->PathPoints[Navpath->PathPoints.Num()-1];
-				
+				CachedDestination = Navpath->PathPoints[Navpath->PathPoints.Num() - 1];
+
 				//开始移动
-				bAutoRunning=true;
+				bAutoRunning = true;
 			}
-			
 		}
 		//松开后恢复数值
-		FollowTime=0.f;
-		bTargeting=false;
-		
+		FollowTime = 0.f;
+		bTargeting = false;
 	}
 }
 
@@ -185,11 +154,11 @@ void AFuraPlayerControllerBase::AbilityInputTagHeld(FGameplayTag InputTag)
 	else
 	{
 		FollowTime += GetWorld()->GetDeltaSeconds();
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+		//判断鼠标是否命中的函数[.bBlockingHit]
+		if (CursorHit.bBlockingHit)
 		{
 			//命中坐标点
-			CachedDestination = Hit.ImpactPoint;
+			CachedDestination = CursorHit.ImpactPoint;
 		}
 		if (APawn* ControllerPawn = GetPawn())
 		{
@@ -216,23 +185,23 @@ void AFuraPlayerControllerBase::AutoRun()
 {
 	//如果不是自动运行就返回
 	if (!bAutoRunning) return;
-	if (APawn* ControlledPawn=GetPawn())
+	if (APawn* ControlledPawn = GetPawn())
 	{
 		//实现沿着样条线移动
 		//给定一个位置，在世界空间中，返回最接近该位置的曲线上的点的位置。 
-		const FVector LocationOnSpline=Spline->FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(),ESplineCoordinateSpace::World);
+		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(
+			ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
 		//获取方向Direction
-		const FVector Direction=Spline->FindDirectionClosestToWorldLocation(LocationOnSpline,ESplineCoordinateSpace::World);
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(
+			LocationOnSpline, ESplineCoordinateSpace::World);
 		ControlledPawn->AddMovementInput(Direction);
 		//创建float长度，值为玩家距离曲线最近点的位置-点击命中的点的长度（length）
-		const float DistanceToDestination=(LocationOnSpline-CachedDestination).Length();
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		//判断这个长度是为小于等于设定的值
-		if (DistanceToDestination<=AutoRunAcceptanceRadius)
+		if (DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
 			//移动完成
-			bAutoRunning=false;
-			
-			
+			bAutoRunning = false;
 		}
 	}
 }
