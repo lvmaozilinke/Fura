@@ -7,7 +7,7 @@
 #include "FuraAssetManager.generated.h"
 
 /**
- * 
+ * 用于管理和加载游戏中的资产（Assets），以优化资源管理和加载流程
  */
 UCLASS()
 class AURA_API UFuraAssetManager : public UAssetManager
