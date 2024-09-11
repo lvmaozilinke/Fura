@@ -16,8 +16,12 @@ void UFuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	//UKismetSystemLibrary::PrintString(this,FString("ActivateAbility(C++)"),true,true,FLinearColor::Yellow,3);
 
+}
+
+void UFuraProjectileSpell::SpawnProjectile()
+{
 	//判断是否为服务器
-	const bool bIsServer = HasAuthority(&ActivationInfo);
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bIsServer) return;
 
 	//通过cast的方式判断GetAvatarActorFromActorInfo 当前的角色是否继承了接口
@@ -38,4 +42,5 @@ void UFuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 		//ESpawnActorCollisionHandlingMethod:生成actor的方式，忽略碰撞之类的
 		Projectile->FinishSpawning(SpawnTransform);
 	}
+	
 }
