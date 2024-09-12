@@ -21,15 +21,10 @@ protected:
 	                             const FGameplayAbilityActivationInfo ActivationInfo,
 	                             const FGameplayEventData* TriggerEventData) override;
 
-	UFUNCTION(BlueprintCallable,Category="Projectile_F")
-	void SpawnProjectile();
+	UFUNCTION(BlueprintCallable, Category="Projectile_F")
+	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 	//火球
-	UPROPERTY(EditAnywhere,BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AFuraProjectile> ProjectileClass;
-
-
-	
-
-	
 };

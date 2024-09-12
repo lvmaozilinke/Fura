@@ -18,7 +18,7 @@ void UFuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 
 }
 
-void UFuraProjectileSpell::SpawnProjectile()
+void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	//判断是否为服务器
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -31,9 +31,15 @@ void UFuraProjectileSpell::SpawnProjectile()
 	{
 		//获取当前接口实现的玩家的子弹生成位置
 		const FVector SocketLocation = CombatInterface_F->GetCombatSocketLocation();
+
+		//子弹的旋转角度(从插槽位置到射击目标位置的向量)
+		FRotator Rotation=(ProjectileTargetLocation-SocketLocation).Rotation();
+		Rotation.Pitch=0.f;
+		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
-
+		//将Rotator转换成四元数，并设置设计角度
+		SpawnTransform.SetRotation(Rotation.Quaternion());
 		//尝试生成火球
 		AFuraProjectile* Projectile = GetWorld()->SpawnActorDeferred<AFuraProjectile>(
 			ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(),

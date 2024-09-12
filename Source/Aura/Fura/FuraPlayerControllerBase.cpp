@@ -91,15 +91,14 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 		}
 		return;
 	}
-	if (bTargeting)
+	if (GetASC())
 	{
-		if (GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);
-		}
+		GetASC()->AbilityInputTagReleased(InputTag);
 	}
-	else
+	
+	if (!bTargeting&&!bShiftKeyDown)
 	{
+		
 		APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold)
 		{
@@ -131,6 +130,7 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 		FollowTime = 0.f;
 		bTargeting = false;
 	}
+	
 }
 
 void AFuraPlayerControllerBase::AbilityInputTagHeld(FGameplayTag InputTag)
@@ -144,7 +144,8 @@ void AFuraPlayerControllerBase::AbilityInputTagHeld(FGameplayTag InputTag)
 		}
 		return;
 	}
-	if (bTargeting)
+	//如果点中怪物或者按了shift，就切换射击模式。
+	if (bTargeting||bShiftKeyDown)
 	{
 		if (GetASC())
 		{
@@ -243,7 +244,14 @@ void AFuraPlayerControllerBase::SetupInputComponent()
 	UFuraInputComponent* FuraInputComponentA = CastChecked<UFuraInputComponent>(InputComponent);
 	//绑定wasd
 	FuraInputComponentA->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFuraPlayerControllerBase::Move);
+	//绑定SHIFT 按下
+	FuraInputComponentA->BindAction(ShiftAction,ETriggerEvent::Started,this,&AFuraPlayerControllerBase::ShiftPressed);
+	//绑定SHIFT 松开
+	FuraInputComponentA->BindAction(ShiftAction,ETriggerEvent::Completed,this,&AFuraPlayerControllerBase::ShiftReleased);
 	//绑定按键的按下、松开、按住
 	FuraInputComponentA->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed,
 	                                        &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+
+	
+	
 }

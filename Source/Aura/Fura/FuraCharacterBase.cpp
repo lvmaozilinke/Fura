@@ -4,12 +4,22 @@
 #include "FuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "FuraAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AFuraCharacterBase::AFuraCharacterBase()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	//设置模型和胶囊体对相机碰撞忽略
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	
+	
+
+	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
