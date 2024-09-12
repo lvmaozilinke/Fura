@@ -27,4 +27,8 @@ protected:
 	//火球
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AFuraProjectile> ProjectileClass;
+
+	
+
+	
 };
