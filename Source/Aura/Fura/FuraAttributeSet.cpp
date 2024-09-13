@@ -116,6 +116,7 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,FString::Printf(TEXT("HP:%f"),GetHP()));
 		//防止血量超出或者低于最大最小值MaxHp
 		SetHP(FMath::Clamp(GetHP(), 0.f, GetMaxHP()));
+		UE_LOG(LogTemp,Warning,TEXT("修改后的生命值为:%f,目标为:%s"),GetHP(),*Props.TargetAvatarActor->GetName());
 	}
 
 	if (Data.EvaluatedData.Attribute == GetMPAttribute())

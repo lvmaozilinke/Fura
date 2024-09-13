@@ -3,6 +3,8 @@
 
 #include "FuraProjectileSpell.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Aura/Fura/Actor/FuraProjectile.h"
 #include "Aura/Fura/interaction/CombatInterface_F.h"
 
@@ -15,7 +17,6 @@ void UFuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	//UKismetSystemLibrary::PrintString(this,FString("ActivateAbility(C++)"),true,true,FLinearColor::Yellow,3);
-
 }
 
 void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
@@ -33,9 +34,9 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const FVector SocketLocation = CombatInterface_F->GetCombatSocketLocation();
 
 		//子弹的旋转角度(从插槽位置到射击目标位置的向量)
-		FRotator Rotation=(ProjectileTargetLocation-SocketLocation).Rotation();
-		Rotation.Pitch=0.f;
-		
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		Rotation.Pitch = 0.f;
+
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
 		//将Rotator转换成四元数，并设置设计角度
@@ -45,8 +46,17 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(),
 			Cast<APawn>(GetOwningActorFromActorInfo()),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		//获取与某个角色或对象相关联的能力系统组件
+		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
+			GetAvatarActorFromActorInfo());
+		//这里使用MakeOutgoingSpec函数来生成一个游戏效果规格（Gameplay Effect Spec），并将其包装成一个FGameplayEffectSpecHandle对象。
+		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
+			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+		//把伤害的spec handle传递到火球里面
+		Projectile->DamageEffectSpecHandle = SpecHandle;
+
 		//ESpawnActorCollisionHandlingMethod:生成actor的方式，忽略碰撞之类的
 		Projectile->FinishSpawning(SpawnTransform);
 	}
-	
 }

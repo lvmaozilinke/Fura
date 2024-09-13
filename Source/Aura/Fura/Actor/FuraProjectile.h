@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "GameFramework/Actor.h"
 #include "FuraProjectile.generated.h"
 
@@ -23,6 +24,12 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
+
+	//伤害相关,meta=(ExposeOnSpawn=true):spawn时显示这个变量
+	UPROPERTY(BlueprintReadWrite,meta=(ExposeOnSpawn=true))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
@@ -31,6 +38,11 @@ protected:
 	                     int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
+	//存在时间
+	UPROPERTY(EditDefaultsOnly)
+	float LifeSpan = 15.f;
+
+
 	bool bHit = false;
 
 
@@ -44,4 +56,11 @@ private:
 	//命中音效
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;
+
+	//子弹在空中飞行的音效
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USoundBase> LoopingSound;
+
+	UPROPERTY()
+	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 };

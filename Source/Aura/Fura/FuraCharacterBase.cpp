@@ -4,6 +4,7 @@
 #include "FuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "FuraAbilitySystemComponent.h"
+#include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -14,12 +15,14 @@ AFuraCharacterBase::AFuraCharacterBase()
 
 
 	//设置模型和胶囊体对相机碰撞忽略
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
-	
-	
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 
-	
+	//启用碰撞体重叠事件
+	GetMesh()->SetGenerateOverlapEvents(true);
+
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -47,7 +50,6 @@ void AFuraCharacterBase::InitAbilityActorInfo()
 }
 
 
-
 void AFuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const
 {
 	//确保存在
@@ -59,7 +61,7 @@ void AFuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	//7-10补充: 将当前对象添加为效果的源:
 	ContextHandle.AddSourceObject(this);
-	
+
 	//SpecHandle 这个方法用于生成一个 FGameplayEffectSpecHandle 对象，表示一个效果的规格（Spec）。它是 Gameplay Effect 的具体实例描述，包括它的属性、持续时间、强度等。
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(
 		GameplayEffectClass, level, ContextHandle);
@@ -70,23 +72,19 @@ void AFuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 
 void AFuraCharacterBase::InitializeDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultPrimaryAttributes,1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes,1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes,1.f);
-
-	
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
 void AFuraCharacterBase::AddCharacterAbilities()
 {
+	UFuraAbilitySystemComponent* FuraASC = CastChecked<UFuraAbilitySystemComponent>(AbilitySystemComponent);
 
-	UFuraAbilitySystemComponent*FuraASC=CastChecked<UFuraAbilitySystemComponent>(AbilitySystemComponent);
-	
 	if (!HasAuthority())
 	{
 		return;
 	}
 
 	FuraASC->AddCharacterAbilities(StartupAbilities);
-	 
 }
