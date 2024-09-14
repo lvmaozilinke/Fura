@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "FuraCharacterBase.h"
 #include "interaction/EnemyInterface_F.h"
+#include "Widget/OverlayWidgetController_F.h"
 #include "FuraEnemy.generated.h"
+
+class UWidgetComponent;
 
 UCLASS(Abstract)
 class AURA_API AFuraEnemy : public AFuraCharacterBase, public IEnemyInterface_F
@@ -23,6 +26,13 @@ public:
 
 	/*End Combat Interface*/
 	virtual int32 GetPlayerLevel() override;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignture_F OnHpChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeChangedSignture_F OnMaxHpChanged;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -31,5 +41,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Default_F")
 	int32 Level = 1;
 
-private:
+
+	//头顶血条
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UWidgetComponent> HPBar;
 };
