@@ -4,6 +4,7 @@
 #include "FuraEnemy.h"
 
 #include "FuraAbilitySystemComponent.h"
+#include "FuraAbilitySystemLibrary.h"
 #include "FuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
@@ -60,6 +61,17 @@ void AFuraEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	Cast<UFuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+}
+
+void AFuraEnemy::InitializeDefaultAttributes() const
+{
+
+	UFuraAbilitySystemLibrary::InitializeDefaultAttributes(this,CharacterClass,Level,AbilitySystemComponent);
+	
+
+	
+
+	
 }
 
 AFuraEnemy::AFuraEnemy()

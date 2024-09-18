@@ -3,6 +3,7 @@
 
 #include "FuraAbilitySystemLibrary.h"
 
+#include "FuraGameModeBase.h"
 #include "FuraPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widget/FuraHUD.h"
@@ -45,4 +46,41 @@ UAttributeMenuWidgetController_F* UFuraAbilitySystemLibrary::GetAttributeMenuWid
 		}
 	}
 	return nullptr;
+}
+
+void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContentObject,
+                                                            ECharacterClass_F CharacterClass, float Level,
+                                                            UAbilitySystemComponent* ASC)
+{
+	//获取game mode
+	const AFuraGameModeBase* FuraGameMode = Cast<AFuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContentObject));
+	if (FuraGameMode == nullptr)
+	{
+		return;
+	}
+	//获取character class info
+	UCharacterClassInfo_F* ClassInfo = FuraGameMode->CharacterClassInfo;
+
+	//不同的模式获取不同的效果
+	const FCharacterClassDefaultInfo_F ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+
+	AActor* AvatarActor = ASC->GetAvatarActor();
+
+	FGameplayEffectContextHandle PrimaryAttributesContextHandle = ASC->MakeEffectContext();
+	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
+		ClassDefaultInfo.PrimaryAttributes, Level, PrimaryAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data.Get());
+
+	FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
+	SecondaryAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
+		ClassInfo->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data.Get());
+
+	FGameplayEffectContextHandle VitalAttributesContextHandle = ASC->MakeEffectContext();
+	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
+		ClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }

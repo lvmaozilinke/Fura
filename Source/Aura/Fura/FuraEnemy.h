@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FuraCharacterBase.h"
+#include "Data/CharacterClassInfo_F.h"
 #include "interaction/EnemyInterface_F.h"
 #include "Widget/OverlayWidgetController_F.h"
 #include "FuraEnemy.generated.h"
@@ -45,4 +46,13 @@ protected:
 	//头顶血条
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HPBar;
+
+
+
+
+	//设置角色类型，是warrior(法师、弓箭手、战士等不同的类型有着不同的属性)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Default_F")
+	ECharacterClass_F CharacterClass=ECharacterClass_F::Warrior;
+
+	virtual void InitializeDefaultAttributes() const override;
 };

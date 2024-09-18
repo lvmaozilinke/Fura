@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/CharacterClassInfo_F.h"
 #include "Engine/Classes/Kismet/BlueprintFunctionLibrary.h"
 #include "Widget/OverlayWidgetController_F.h"
+#include "AbilitySystemComponent.h"
 #include "FuraAbilitySystemLibrary.generated.h"
 
 class UAttributeMenuWidgetController_F;
@@ -22,8 +24,8 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="FuraAbilitySystemLibrary|Widgetcontroller")
 	static UAttributeMenuWidgetController_F* GetAttributeMenuWidgetController_F(const UObject* WorldContentObject);
-	
 
-
-	
+	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|CharacterClassDefaults")
+	static void InitializeDefaultAttributes(const UObject* WorldContentObject, ECharacterClass_F CharacterClass,
+	                                        float Level,UAbilitySystemComponent *ASC);
 };
