@@ -39,7 +39,7 @@ public:
 	FGameplayTag FInputTag_3;
 	FGameplayTag FInputTag_4;
 	
-	
+	FGameplayTag FDamage;
 
 protected:
 

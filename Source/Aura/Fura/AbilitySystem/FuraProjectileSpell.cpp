@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Aura/Fura/FuraGamePlayTags.h"
 #include "Aura/Fura/Actor/FuraProjectile.h"
 #include "Aura/Fura/interaction/CombatInterface_F.h"
 
@@ -53,6 +54,14 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		//这里使用MakeOutgoingSpec函数来生成一个游戏效果规格（Gameplay Effect Spec），并将其包装成一个FGameplayEffectSpecHandle对象。
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
 			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+
+		FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
+
+		//分配标签由呼叫者幅度设置
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,GamePlayTags.FDamage,50.f);
+		
+
+
 		//把伤害的spec handle传递到火球里面
 		Projectile->DamageEffectSpecHandle = SpecHandle;
 

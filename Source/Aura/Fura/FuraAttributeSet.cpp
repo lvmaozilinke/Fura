@@ -116,7 +116,7 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,FString::Printf(TEXT("HP:%f"),GetHP()));
 		//防止血量超出或者低于最大最小值MaxHp
 		SetHP(FMath::Clamp(GetHP(), 0.f, GetMaxHP()));
-		UE_LOG(LogTemp,Warning,TEXT("修改后的生命值为:%f,目标为:%s"),GetHP(),*Props.TargetAvatarActor->GetName());
+		UE_LOG(LogTemp, Warning, TEXT("修改后的生命值为:%f,目标为:%s"), GetHP(), *Props.TargetAvatarActor->GetName());
 	}
 
 	if (Data.EvaluatedData.Attribute == GetMPAttribute())
@@ -124,6 +124,23 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,FString::Printf(TEXT("HP:%f"),GetHP()));
 		//防止血量超出或者低于最大最小值MaxHp
 		SetMP(FMath::Clamp(GetMP(), 0.f, GetMaxMP()));
+	}
+
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		//创建临时变量存储得到的值
+		const float LocalIncomingDamage = GetIncomingDamage();
+		//清空伤害值（上次的）
+		SetIncomingDamage(0.f);
+		if (LocalIncomingDamage > 0.f)
+		{
+			//新的生命值等于当前生命值减去收到伤害值
+			const float NewHP = GetHP() - LocalIncomingDamage;
+			SetHP(FMath::Clamp(NewHP, 0.f, GetMaxHP()));
+
+			//生命值小于等于0
+			const bool bFatal = NewHP <= 0.f;
+		}
 	}
 }
 

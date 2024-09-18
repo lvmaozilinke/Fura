@@ -49,8 +49,8 @@ struct FEffectProperties_F
 	ACharacter* TargetCharacter = nullptr;
 };
 
-template<class T>
-using TStaticFuncPtr=typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+template <class T>
+using TStaticFuncPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
 
 /**
@@ -76,7 +76,7 @@ public:
 	//TMap
 	//TMap<FGameplayTag,TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr> TagsToAttributes;
 	/*FGameplayAttribute(*)():FGameplayAttribute(*)() 是值类型，表示一个返回 FGameplayAttribute 的函数指针类型。具体来说，(*)() 表示这个函数不接受任何参数，返回一个 FGameplayAttribute 类型的值。*/
-	TMap<FGameplayTag,TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
+	TMap<FGameplayTag, TStaticFuncPtr<FGameplayAttribute()>> TagsToAttributes;
 
 	/*TBaseStaticDelegateInstance 是 Unreal Engine 中的一个模板类，用于实现静态委托（即全局函数或静态成员函数的委托）。
 	它的模板参数是两个：
@@ -85,7 +85,7 @@ public:
 	//这行代码声明了一个变量 FuncPtrPointer，它是一个指向函数的指针，这个函数返回一个 FGameplayAttribute 对象，并且不接受任何参数。这个指针用于在委托实例中存储函数地址，从而允许委托调用绑定的函数。
 	//https://chatgpt.com/share/647fd815-3332-4183-acfa-38f3db444ed5
 	//TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr FuncPtrPointer;
-	
+
 
 	/*
 	* Primary Attributes
@@ -181,6 +181,16 @@ public:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_MpRegeneration, Category="Secondary Attributes")
 	FGameplayAttributeData MpRegeneration;
 	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, MpRegeneration);
+
+
+	/* 
+	 * Meta Attributes 元属性
+	 */
+
+	//传入的伤害
+	UPROPERTY(BlueprintReadOnly,Category="Meta Attributes_F")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,IncomingDamage)
 
 	UFUNCTION()
 	void OnRep_HP(const FGameplayAttributeData& OldHP) const;
