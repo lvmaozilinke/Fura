@@ -9,6 +9,7 @@
 #include "FuraGamePlayTags.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "interaction/CombatInterface_F.h"
 #include "Net/UnrealNetwork.h"
 
 void UFuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -140,15 +141,24 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 			//生命值小于等于0
 			const bool bFatal = NewHP <= 0.f;
-			if (!bFatal)
+
+			if (bFatal)
+			{
+				ICombatInterface_F* CombatInterface = Cast<ICombatInterface_F>(Props.TargetAvatarActor);
+				if (CombatInterface)
+				{
+					//调用死亡事件
+					CombatInterface->Die();
+				}
+			}
+			else
 			{
 				//标签容器，可以通过add添加多个
 				FGameplayTagContainer TagContainer;
 				TagContainer.AddTag(FFuraGamePlayTags::Get().FEffects_HitReact);
-				
+
 				//尝试通过tag来激活一个赋予的能力。传入的是标签容器，可以一次性激活多个能力
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
-				
 			}
 		}
 	}

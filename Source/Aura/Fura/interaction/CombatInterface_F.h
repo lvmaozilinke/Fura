@@ -34,4 +34,6 @@ public:
 	//中用于声明一个可以在 C++ 中实现，但也可以由蓝图（Blueprints）在运行时重载的函数。
 	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
+
+	virtual void Die()=0;
 };

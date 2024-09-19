@@ -38,6 +38,32 @@ UAnimMontage* AFuraCharacterBase::GetHitReactMontage_Implementation()
 	return HitReactMontage;
 }
 
+void AFuraCharacterBase::Die()
+{
+	//把武器卸掉   FDetachmentTransformRules:分离组件的规则
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+
+	MulticastHandleDeath_Implementation();
+}
+
+void AFuraCharacterBase::MulticastHandleDeath_Implementation()
+{
+	//设置武器
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	//设置角色模型
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic,ECR_Block);
+	//设置胶囊体
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+
+	
+}
+
 // Called when the game starts or when spawned
 void AFuraCharacterBase::BeginPlay()
 {

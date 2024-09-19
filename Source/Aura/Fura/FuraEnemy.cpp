@@ -121,3 +121,9 @@ int32 AFuraEnemy::GetPlayerLevel()
 {
 	return Level;
 }
+
+void AFuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);//x秒后销毁(可以插入动画和特效)
+	Super::Die();
+}

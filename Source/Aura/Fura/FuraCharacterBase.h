@@ -31,6 +31,15 @@ public:
 	//重写接口函数（收到伤害蒙太奇）
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
+	//重写死亡事件（本地的）
+	virtual void Die() override;
+
+
+	//多人同步的死亡事件(服务器上调用)
+	UFUNCTION(NetMulticast,Reliable)
+	virtual void MulticastHandleDeath();
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
