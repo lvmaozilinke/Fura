@@ -6,6 +6,7 @@
 #include "Engine/Classes/Engine/DataAsset.h"
 #include "CharacterClassInfo_F.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 
 UENUM()
@@ -46,4 +47,11 @@ public:
 
 	//返回结构体
 	FCharacterClassDefaultInfo_F GetClassDefaultInfo(ECharacterClass_F CharacterClass);
+
+
+	//能力集合数组
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults_F")
+	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
+	
+	
 };

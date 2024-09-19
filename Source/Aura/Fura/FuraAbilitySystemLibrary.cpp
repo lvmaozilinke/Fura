@@ -84,3 +84,22 @@ void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 		ClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
+
+void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC)
+{
+	const AFuraGameModeBase* FuraGameMode = Cast<AFuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContentObject));
+	if (FuraGameMode == nullptr)
+	{
+		return;
+	}
+	//获取character class info
+	UCharacterClassInfo_F* ClassInfo = FuraGameMode->CharacterClassInfo;
+	//遍历能力数组
+	for (const auto AbilityClass : ClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		//赋予能力
+		ASC->GiveAbility(AbilitySpec);
+		
+	}
+}

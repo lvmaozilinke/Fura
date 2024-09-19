@@ -27,5 +27,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializeDefaultAttributes(const UObject* WorldContentObject, ECharacterClass_F CharacterClass,
-	                                        float Level,UAbilitySystemComponent *ASC);
+	                                        float Level, UAbilitySystemComponent* ASC);
+
+	//赋予能力
+	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|CharacterClassDefaults")
+	static void GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC);
 };

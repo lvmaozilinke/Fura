@@ -140,6 +140,16 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 			//生命值小于等于0
 			const bool bFatal = NewHP <= 0.f;
+			if (!bFatal)
+			{
+				//标签容器，可以通过add添加多个
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FFuraGamePlayTags::Get().FEffects_HitReact);
+				
+				//尝试通过tag来激活一个赋予的能力。传入的是标签容器，可以一次性激活多个能力
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+				
+			}
 		}
 	}
 }
