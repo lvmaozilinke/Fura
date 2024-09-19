@@ -41,7 +41,7 @@ public:
 	
 	FGameplayTag FDamage;
 
-protected:
+	FGameplayTag FEffects_HitReact;
 
 private:
 	static FFuraGamePlayTags GamePlayTags;

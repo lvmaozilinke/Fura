@@ -33,6 +33,11 @@ UAbilitySystemComponent* AFuraCharacterBase::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+UAnimMontage* AFuraCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 // Called when the game starts or when spawned
 void AFuraCharacterBase::BeginPlay()
 {

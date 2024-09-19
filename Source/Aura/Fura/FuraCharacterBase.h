@@ -12,6 +12,7 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 class UGameplayEffect;
+class UAnimMontage;
 
 UCLASS(Abstract)
 class AURA_API AFuraCharacterBase : public ACharacter, public IAbilitySystemInterface, public ICombatInterface_F
@@ -26,6 +27,10 @@ public:
 
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+
+	//重写接口函数（收到伤害蒙太奇）
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -37,14 +42,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="FCombat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
-	
+
 	//武器插槽，用于远程子弹生成位置(枪口)
 	UPROPERTY(EditAnywhere, Category="FCombat")
 	FName WeaponTipSocketName;
 
 	//实现接口
 	virtual FVector GetCombatSocketLocation() override;
-	
+
 	//启动能力演员信息
 	virtual void InitAbilityActorInfo();
 
@@ -68,11 +73,13 @@ protected:
 
 	//添加角色能力
 	void AddCharacterAbilities();
-	
 
 private:
-	
 	//角色能力数组
-	UPROPERTY(EditAnywhere,Category="Attributes_f")
+	UPROPERTY(EditAnywhere, Category="Attributes_f")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+
+	UPROPERTY(EditAnywhere, Category="Combat_F")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

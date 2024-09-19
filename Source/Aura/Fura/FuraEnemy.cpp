@@ -8,6 +8,8 @@
 #include "FuraAttributeSet.h"
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
+#include "FuraGamePlayTags.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 void AFuraEnemy::BeginPlay()
@@ -18,8 +20,8 @@ void AFuraEnemy::BeginPlay()
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	*/
 	InitAbilityActorInfo();
-
-	
+	//初始化玩家移动速度
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 
 	//拿到UI
 	if (UFuraUserWidget* EnemyHpBar = Cast<UFuraUserWidget>(HPBar->GetUserWidgetObject()))
@@ -30,11 +32,10 @@ void AFuraEnemy::BeginPlay()
 
 	if (UFuraAttributeSet* FuraAs = Cast<UFuraAttributeSet>(AttributeSet))
 	{
-
 		//初始化怪物血量
 		FuraAs->InitHP(100);
 		FuraAs->InitMaxHP(100);
-		
+
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAs->GetHPAttribute()).AddLambda(
 			[this](const FOnAttributeChangeData& Data)
 			{
@@ -47,11 +48,24 @@ void AFuraEnemy::BeginPlay()
 			});
 
 
+		//敌人死亡相关
+
+		//登记tag和对应的事件，当tag触发时，对应的事件就就会执行。(这里监听的tag是FEffects_HitReact)
+		AbilitySystemComponent->RegisterGameplayTagEvent(FFuraGamePlayTags::Get().FEffects_HitReact,
+		                                                 EGameplayTagEventType::NewOrRemoved).AddUObject(
+			this, &AFuraEnemy::HitReactTagChanged);
+
+
 		OnHpChanged.Broadcast(FuraAs->GetHP());
 		OnMaxHpChanged.Broadcast(FuraAs->GetMaxHP());
-
 	}
-	
+}
+
+void AFuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCount)
+{
+	//被命中会停下来（移动速度变为0）
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 }
 
 void AFuraEnemy::InitAbilityActorInfo()
@@ -65,13 +79,7 @@ void AFuraEnemy::InitAbilityActorInfo()
 
 void AFuraEnemy::InitializeDefaultAttributes() const
 {
-
-	UFuraAbilitySystemLibrary::InitializeDefaultAttributes(this,CharacterClass,Level,AbilitySystemComponent);
-	
-
-	
-
-	
+	UFuraAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
 AFuraEnemy::AFuraEnemy()

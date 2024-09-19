@@ -34,6 +34,13 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignture_F OnMaxHpChanged;
 
+	void HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCount);
+	
+	UPROPERTY(BlueprintReadOnly, Category="Combat_F")
+	bool bHitReacting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category="Combat_F")
+	float BaseWalkSpeed=250.f;
 protected:
 	virtual void BeginPlay() override;
 
@@ -48,11 +55,9 @@ protected:
 	TObjectPtr<UWidgetComponent> HPBar;
 
 
-
-
 	//设置角色类型，是warrior(法师、弓箭手、战士等不同的类型有着不同的属性)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Default_F")
-	ECharacterClass_F CharacterClass=ECharacterClass_F::Warrior;
+	ECharacterClass_F CharacterClass = ECharacterClass_F::Warrior;
 
 	virtual void InitializeDefaultAttributes() const override;
 };

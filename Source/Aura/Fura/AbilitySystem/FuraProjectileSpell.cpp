@@ -55,12 +55,13 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
 			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
 
-		FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
+		const FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
+
+		//曲线表格使用方法，根据等级显示对应数据
+		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
 
 		//分配标签由呼叫者幅度设置
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,GamePlayTags.FDamage,50.f);
-		
-
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GamePlayTags.FDamage, ScaledDamage);
 
 		//把伤害的spec handle传递到火球里面
 		Projectile->DamageEffectSpecHandle = SpecHandle;
