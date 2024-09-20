@@ -135,6 +135,7 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		SetIncomingDamage(0.f);
 		if (LocalIncomingDamage > 0.f)
 		{
+			//UE_LOG(LogTemp,Warning,TEXT("LocalIncomingDamage:%f,GetHP()=%f"), LocalIncomingDamage, GetHP());
 			//新的生命值等于当前生命值减去收到伤害值
 			const float NewHP = GetHP() - LocalIncomingDamage;
 			SetHP(FMath::Clamp(NewHP, 0.f, GetMaxHP()));

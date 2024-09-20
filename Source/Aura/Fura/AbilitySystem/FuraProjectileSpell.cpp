@@ -58,7 +58,7 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
 
 		//曲线表格使用方法，根据等级显示对应数据
-		const float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		const float ScaledDamage = Damage.GetValueAtLevel(10);
 
 		//分配标签由呼叫者幅度设置
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GamePlayTags.FDamage, ScaledDamage);
