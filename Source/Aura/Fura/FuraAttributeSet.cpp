@@ -7,9 +7,11 @@
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "FuraGamePlayTags.h"
+#include "FuraPlayerControllerBase.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "interaction/CombatInterface_F.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 void UFuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -89,7 +91,7 @@ void UFuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 		if (Props.SourceController)
 		{
 			//那就通过其获取Character
-			ACharacter* SourceCharacter = Cast<ACharacter>(Props.SourceController->GetCharacter());
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetCharacter());
 		}
 	}
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
@@ -101,11 +103,13 @@ void UFuraAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData
 	}
 }
 
+
 /*
 *在GameplayEffect执行之前调用，修改属性的基本值。不能再做任何更改。
 *注意，这只在'execute'期间调用。例如，修改属性的“基本值”。它不会在GameplayEffect的应用过程中被调用，比如5秒+10的移动速度buff。
 */
 void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+
 {
 	Super::PostGameplayEffectExecute(Data);
 	FEffectProperties_F Props;
@@ -161,7 +165,26 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				//尝试通过tag来激活一个赋予的能力。传入的是标签容器，可以一次性激活多个能力
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+
+
+			//收到伤害生成伤害数组，调用PlayerController上的函数
+			if (Props.SourceCharacter != Props.TargetCharacter)
+			{
+				ShowFloatingText(Props,LocalIncomingDamage);
+			}
 		}
+	}
+}
+
+void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage) const
+{
+	//获取player controller
+	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(
+		UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0));
+	if (PlayerController)
+	{
+		//调用
+		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter);
 	}
 }
 

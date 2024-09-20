@@ -7,10 +7,13 @@
 #include "EnhancedInputSubsystems.h"
 #include "FuraAbilitySystemComponent.h"
 #include "FuraGamePlayTags.h"
+#include "MovieSceneTracksComponentTypes.h"
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "Components/SplineComponent.h"
 #include "Input/FuraInputComponent.h"
+#include "GameFramework/Character.h"
+#include "Widget/DamageTextComponent_F.h"
 
 AFuraPlayerControllerBase::AFuraPlayerControllerBase()
 {
@@ -28,6 +31,24 @@ void AFuraPlayerControllerBase::PlayerTick(float DeltaTime)
 
 	//自动移动
 	AutoRun();
+}
+
+void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	//伤害数字，进行同步，在所有客户端上都可见。
+	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	{
+		UDamageTextComponent_F* DamageText = NewObject<UDamageTextComponent_F>(TargetCharacter, DamageTextComponentClass);
+		//注册WidgetComponent
+		DamageText->RegisterComponent();
+		//把组件附加到对应的character 的component上  (相对位置附加规则)
+		DamageText->AttachToComponent(TargetCharacter->GetRootComponent(),
+		                              FAttachmentTransformRules::KeepRelativeTransform);
+		//解除附加（和上面搭配使用类似只是获取了个初始位置？）
+		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageText->SetDamageText(DamageAmount);
+		
+	}
 }
 
 void AFuraPlayerControllerBase::Move(const FInputActionValue& InputActionValue)
@@ -95,10 +116,9 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 	{
 		GetASC()->AbilityInputTagReleased(InputTag);
 	}
-	
-	if (!bTargeting&&!bShiftKeyDown)
+
+	if (!bTargeting && !bShiftKeyDown)
 	{
-		
 		APawn* ControlledPawn = GetPawn();
 		if (FollowTime <= ShortPressThreshold)
 		{
@@ -130,7 +150,6 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 		FollowTime = 0.f;
 		bTargeting = false;
 	}
-	
 }
 
 void AFuraPlayerControllerBase::AbilityInputTagHeld(FGameplayTag InputTag)
@@ -145,7 +164,7 @@ void AFuraPlayerControllerBase::AbilityInputTagHeld(FGameplayTag InputTag)
 		return;
 	}
 	//如果点中怪物或者按了shift，就切换射击模式。
-	if (bTargeting||bShiftKeyDown)
+	if (bTargeting || bShiftKeyDown)
 	{
 		if (GetASC())
 		{
@@ -245,13 +264,12 @@ void AFuraPlayerControllerBase::SetupInputComponent()
 	//绑定wasd
 	FuraInputComponentA->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFuraPlayerControllerBase::Move);
 	//绑定SHIFT 按下
-	FuraInputComponentA->BindAction(ShiftAction,ETriggerEvent::Started,this,&AFuraPlayerControllerBase::ShiftPressed);
+	FuraInputComponentA->BindAction(ShiftAction, ETriggerEvent::Started, this,
+	                                &AFuraPlayerControllerBase::ShiftPressed);
 	//绑定SHIFT 松开
-	FuraInputComponentA->BindAction(ShiftAction,ETriggerEvent::Completed,this,&AFuraPlayerControllerBase::ShiftReleased);
+	FuraInputComponentA->BindAction(ShiftAction, ETriggerEvent::Completed, this,
+	                                &AFuraPlayerControllerBase::ShiftReleased);
 	//绑定按键的按下、松开、按住
 	FuraInputComponentA->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed,
 	                                        &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
-
-	
-	
 }

@@ -9,6 +9,7 @@
 #include "interaction/EnemyInterface_F.h"
 #include "FuraPlayerControllerBase.generated.h"
 
+class UDamageTextComponent_F;
 /**
  * 
  */
@@ -31,6 +32,10 @@ public:
 	AFuraPlayerControllerBase();
 	virtual void PlayerTick(float DeltaTime) override;
 
+	//显示伤害值(指定哪一个character)
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -45,11 +50,11 @@ private:
 	UPROPERTY(EditAnywhere, Category="Input")
 	TObjectPtr<UInputAction> ShiftAction;
 
-	void ShiftPressed(){bShiftKeyDown=true;}
-	void ShiftReleased(){bShiftKeyDown=false;}
-	bool bShiftKeyDown=false;
-	
-	
+	void ShiftPressed() { bShiftKeyDown = true; }
+	void ShiftReleased() { bShiftKeyDown = false; }
+	bool bShiftKeyDown = false;
+
+
 	void Move(const FInputActionValue& InputActionValue);
 
 	void CurSorTrace();
@@ -97,4 +102,8 @@ private:
 
 	//自动移动函数
 	void AutoRun();
+
+	//伤害组件
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent_F> DamageTextComponentClass;
 };

@@ -100,7 +100,7 @@ protected:
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 
 private:
-	//角色能力数组
+	//角色能力数组+
 	UPROPERTY(EditAnywhere, Category="Attributes_f")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
