@@ -83,6 +83,22 @@ protected:
 	//添加角色能力
 	void AddCharacterAbilities();
 
+
+
+	
+	//死亡溶解材质
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartMeshDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+
 private:
 	//角色能力数组
 	UPROPERTY(EditAnywhere, Category="Attributes_f")
@@ -91,4 +107,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Combat_F")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+
+
+	
+	
+	
 };
