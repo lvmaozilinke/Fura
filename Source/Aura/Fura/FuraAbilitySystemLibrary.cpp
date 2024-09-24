@@ -52,14 +52,8 @@ void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
                                                             ECharacterClass_F CharacterClass, float Level,
                                                             UAbilitySystemComponent* ASC)
 {
-	//获取game mode
-	const AFuraGameModeBase* FuraGameMode = Cast<AFuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContentObject));
-	if (FuraGameMode == nullptr)
-	{
-		return;
-	}
 	//获取character class info
-	UCharacterClassInfo_F* ClassInfo = FuraGameMode->CharacterClassInfo;
+	UCharacterClassInfo_F* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
 
 	//不同的模式获取不同的效果
 	const FCharacterClassDefaultInfo_F ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
@@ -88,13 +82,9 @@ void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 
 void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC)
 {
-	const AFuraGameModeBase* FuraGameMode = Cast<AFuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContentObject));
-	if (FuraGameMode == nullptr)
-	{
-		return;
-	}
+	
 	//获取character class info
-	UCharacterClassInfo_F* ClassInfo = FuraGameMode->CharacterClassInfo;
+	UCharacterClassInfo_F* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
 	//遍历能力数组
 	for (const auto AbilityClass : ClassInfo->CommonAbilities)
 	{
@@ -102,4 +92,14 @@ void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContent
 		//赋予能力
 		ASC->GiveAbility(AbilitySpec);
 	}
+}
+
+UCharacterClassInfo_F* UFuraAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+	const AFuraGameModeBase* FuraGameMode = Cast<AFuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (FuraGameMode == nullptr)
+	{
+		return nullptr;
+	}
+	return FuraGameMode->CharacterClassInfo;
 }

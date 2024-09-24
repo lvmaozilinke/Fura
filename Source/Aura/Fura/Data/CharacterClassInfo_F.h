@@ -52,6 +52,9 @@ public:
 	//能力集合数组
 	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults_F")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
-	
-	
+
+
+	//曲线表格，不同等级对应的护甲计算参数值（护甲值*参数值）
+	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults_F|Damage")
+	TObjectPtr<UCurveTable>DamageCalculationCoefficients;
 };
