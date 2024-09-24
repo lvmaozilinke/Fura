@@ -243,6 +243,7 @@ void UFuraAttributeSet::OnRep_MaxMP(const FGameplayAttributeData& OldMaxMP) cons
 void UFuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, Strength, OldStrength);
+	//UE_LOG(LogTemp,Warning,TEXT("XXX:%f"),Strength.GetCurrentValue());
 }
 
 void UFuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence) const
@@ -273,6 +274,8 @@ void UFuraAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& Old
 void UFuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlockChance) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, BlockChance, OldBlockChance);
+	//UE_LOG(LogTemp,Warning,TEXT("XXX:%f"),BlockChance.GetCurrentValue());
+
 }
 
 void UFuraAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const

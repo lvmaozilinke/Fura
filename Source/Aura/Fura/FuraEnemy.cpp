@@ -71,11 +71,16 @@ void AFuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCou
 
 void AFuraEnemy::InitAbilityActorInfo()
 {
-	Super::InitAbilityActorInfo();
+	//Super::InitAbilityActorInfo();
 	//设置
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	Cast<UFuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();		
+	}
 }
 
 void AFuraEnemy::InitializeDefaultAttributes() const

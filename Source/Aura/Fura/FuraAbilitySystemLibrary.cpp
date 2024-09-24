@@ -66,6 +66,7 @@ void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
+
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = ASC->MakeEffectContext();
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
 	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
@@ -100,6 +101,5 @@ void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContent
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		//赋予能力
 		ASC->GiveAbility(AbilitySpec);
-		
 	}
 }
