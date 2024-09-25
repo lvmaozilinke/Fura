@@ -51,9 +51,33 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		//获取与某个角色或对象相关联的能力系统组件
 		const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
 			GetAvatarActorFromActorInfo());
+
+		//GameplayEffectContextHandle:游戏效果上下文句柄，通过makeEffectContext获取得到。
+		FGameplayEffectContextHandle EffectContextHandle=SourceASC->MakeEffectContext();
+
+		//设置上下文实例参数 
+		EffectContextHandle.SetAbility(this);
+		//设置创建此效果的对象 
+		EffectContextHandle.AddSourceObject(Projectile);
+		
+		/*	TWeakObjectPtr 是一种弱引用指针，通常用于避免循环引用问题。
+		 *	它不会增加对象的引用计数，因此即使 TWeakObjectPtr 指向的对象被销毁，TWeakObjectPtr 本身不会阻止该对象被垃圾回收。
+		 *	这是一个指向 AActor 对象的弱引用。
+		 */
+		TArray<TWeakObjectPtr<AActor>>Actors;
+		Actors.Add(Projectile);
+		//将Actors放到列表
+		EffectContextHandle.AddActors(Actors);
+
+		//命中结果
+		FHitResult HitResult;
+		//命中的敌人的位置进行传递
+		HitResult.Location=ProjectileTargetLocation;
+		EffectContextHandle.AddHitResult(HitResult);
+		
 		//这里使用MakeOutgoingSpec函数来生成一个游戏效果规格（Gameplay Effect Spec），并将其包装成一个FGameplayEffectSpecHandle对象。
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
-			DamageEffectClass, GetAbilityLevel(), SourceASC->MakeEffectContext());
+			DamageEffectClass, GetAbilityLevel(),EffectContextHandle);
 
 		const FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
 
