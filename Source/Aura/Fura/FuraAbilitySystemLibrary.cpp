@@ -85,6 +85,10 @@ void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContent
 	
 	//获取character class info
 	UCharacterClassInfo_F* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
+	if (!ClassInfo)
+	{
+		return;
+	}
 	//遍历能力数组
 	for (const auto AbilityClass : ClassInfo->CommonAbilities)
 	{

@@ -38,4 +38,26 @@ protected:
 	//是否暴击
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+
+
+	
+};
+
+
+/*
+	 * 代码解释：
+	 * 此模板 FFuraGameplayEffectContext 结构体定义特性，使其具备一些特定的行为。
+	 * 使用 TStructOpsTypeTraits 是 Unreal Engine C++ 中的一种机制，用于指定结构体的一些额外功能，比如网络序列化、复制构造等。
+	 * TStructOpsTypeTraitsBase2 是一个基类，提供了默认的结构体特性支持。我们通过继承这个类来扩展 FFuraGameplayEffectContext 的功能。
+	 */
+template <>
+struct TStructOpsTypeTraits<FFuraGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FFuraGameplayEffectContext>
+{
+	enum
+	{
+		//网络序列化
+		WithNetSerializer = true,
+		//拷贝复制
+		WithCopy = true
+	};
 };
