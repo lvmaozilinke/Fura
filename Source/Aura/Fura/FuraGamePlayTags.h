@@ -40,7 +40,11 @@ public:
 	FGameplayTag FInputTag_4;
 	
 	FGameplayTag FDamage;
+	//伤害类型
+	FGameplayTag FDamage_Fire;
 
+	TArray<FGameplayTag> DamageTypes;
+	
 	FGameplayTag FEffects_HitReact;
 
 private:

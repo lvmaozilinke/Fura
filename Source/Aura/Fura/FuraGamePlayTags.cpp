@@ -116,6 +116,13 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 		FName("FDamage"),
 		FString("FDamage")
 	);
+	GamePlayTags.FDamage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FDamage.Fire"),
+		FString("Fire Damage Type")
+	);
+	//把tag伤害类型添加到伤害类型数组中去。
+	GamePlayTags.DamageTypes.Add(GamePlayTags.FDamage_Fire);
+	
 	GamePlayTags.FEffects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("FEffects.HitReact"),
 		FString("FEffects_HitReact")

@@ -85,9 +85,15 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 
 	//Get Damage Set by Caller Magnitude(通知幅度)
 
-	//获取伤害数值
-	float Damage = Spec.GetSetByCallerMagnitude(FFuraGamePlayTags::Get().FDamage);
-
+	float Damage=0.f;
+	
+	//循环遍历伤害类型数组
+	for (FGameplayTag DamageTypeTag:FFuraGamePlayTags::Get().DamageTypes)
+	{
+		//获得对应伤害类型的Tag的数值
+		const float DamageTypeValue=Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		Damage+=DamageTypeValue;
+	}
 
 	/*	格挡相关
 	 * 

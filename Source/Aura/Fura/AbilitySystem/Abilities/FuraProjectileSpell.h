@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FuraDamageGameplayAbility.h"
 #include "FuraGamePlayAbility.h"
 #include "FuraProjectileSpell.generated.h"
 
@@ -12,7 +13,7 @@ class UGameplayEffect;
  * 
  */
 UCLASS()
-class AURA_API UFuraProjectileSpell : public UFuraGamePlayAbility
+class AURA_API UFuraProjectileSpell : public UFuraDamageGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -27,8 +28,4 @@ protected:
 	//火球
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AFuraProjectile> ProjectileClass;
-
-	//伤害效果
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

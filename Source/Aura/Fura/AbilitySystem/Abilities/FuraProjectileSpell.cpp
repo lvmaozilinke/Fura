@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "Aura/Fura/FuraAbilitySystemLibrary.h"
 #include "Aura/Fura/FuraGamePlayTags.h"
 #include "Aura/Fura/Actor/FuraProjectile.h"
 #include "Aura/Fura/interaction/CombatInterface_F.h"
@@ -81,11 +82,22 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 
 		const FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
 
+		//遍历Map
+		for (auto& Pair:DamageTypes)
+		{
+			//计算伤害值
+			const float ScaledDamage=Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			//AssignTagSetByCallerMagnitude:将计算后的伤害值（ScaledDamage）与指定的 Tag（Pair.Key）绑定到一个 SpecHandle 上。
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Pair.Key,ScaledDamage);
+		}
+		
+		/*
 		//曲线表格使用方法，根据等级显示对应数据
 		const float ScaledDamage = Damage.GetValueAtLevel(10);
 
 		//分配标签由呼叫者幅度设置
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GamePlayTags.FDamage, ScaledDamage);
+		*/
 
 		//把伤害的spec handle传递到火球里面
 		Projectile->DamageEffectSpecHandle = SpecHandle;
