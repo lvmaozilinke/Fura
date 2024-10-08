@@ -3,6 +3,7 @@
 
 #include "FuraAbilitySystemLibrary.h"
 
+#include "FuraAbilityTypes.h"
 #include "FuraGameModeBase.h"
 #include "FuraPlayerState.h"
 #include "Kismet/GameplayStatics.h"
@@ -82,7 +83,6 @@ void UFuraAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* World
 
 void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC)
 {
-	
 	//获取character class info
 	UCharacterClassInfo_F* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
 	if (!ClassInfo)
@@ -106,4 +106,52 @@ UCharacterClassInfo_F* UFuraAbilitySystemLibrary::GetCharacterClassInfo(const UO
 		return nullptr;
 	}
 	return FuraGameMode->CharacterClassInfo;
+}
+
+//返回是否格挡
+bool UFuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{/*
+	 * 转换为子类的方式
+	 * static_cast<FFuraGameplayEffectContext*>()：
+	 * 这是一个 C++ 的强制类型转换操作，将基类指针 FGameplayEffectContext* 转换为你的自定义上下文类 FFuraGameplayEffectContext*。
+	 * 这种转换通常在你确定 Context 实际上是派生自 FFuraGameplayEffectContext 时才进行。
+	 */
+	if (const FFuraGameplayEffectContext* FuraEffectContext = static_cast<const FFuraGameplayEffectContext*>(
+		EffectContextHandle.Get())
+	)
+	{
+		return FuraEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UFuraAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FFuraGameplayEffectContext* FuraEffectContext = static_cast<const FFuraGameplayEffectContext*>(
+		EffectContextHandle.Get())
+	)
+	{
+		return FuraEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UFuraAbilitySystemLibrary::SetBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	if (FFuraGameplayEffectContext* FuraEffectContext = static_cast<FFuraGameplayEffectContext*>(
+		EffectContextHandle.Get())
+	)
+	{
+		FuraEffectContext->SetBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UFuraAbilitySystemLibrary::SetCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit)
+{
+	if (FFuraGameplayEffectContext* FuraEffectContext = static_cast<FFuraGameplayEffectContext*>(
+		EffectContextHandle.Get())
+	)
+	{
+		FuraEffectContext->SetCriticalHit(bInIsCriticalHit);
+	}
 }

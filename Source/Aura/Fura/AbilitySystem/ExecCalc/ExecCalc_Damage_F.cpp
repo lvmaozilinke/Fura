@@ -4,7 +4,9 @@
 #include "ExecCalc_Damage_F.h"
 
 #include "AbilitySystemComponent.h"
+#include "AuraAbilityTypes.h"
 #include "Aura/Fura/FuraAbilitySystemLibrary.h"
+#include "Aura/Fura/FuraAbilityTypes.h"
 #include "Aura/Fura/FuraAttributeSet.h"
 #include "Aura/Fura/FuraGamePlayTags.h"
 #include "Aura/Fura/Data/CharacterClassInfo_F.h"
@@ -98,6 +100,12 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f); //返回两个值中值更大的值，防止出现负数的存在
 	//创建bool变量，(随机生成1~100之间的数值，然后判断格挡几率是否大于随机的数值，数值大于就是格挡成功
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+
+	//获取游戏效果上下文  spec是游戏效果（FGameplayEffectSpec）的应用类包含效果的详细信息（强度，持续时间）
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	//设置格挡，用于将效果同步？
+	UFuraAbilitySystemLibrary::SetBlockedHit(EffectContextHandle,bBlocked);
+
 	if (bBlocked)
 	{
 		//格挡成功，伤害减半。这个是这个教程的计算方法。（这个应该类似闪避，闪避概率应该时完全逃避掉伤害）)
@@ -173,6 +181,9 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 		CriticalHitResistanceCoefficient;
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
 
+	//暴击状态传递？
+	UFuraAbilitySystemLibrary::SetCriticalHit(EffectContextHandle,bCriticalHit);
+	
 	//再次修改Damage值
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
 

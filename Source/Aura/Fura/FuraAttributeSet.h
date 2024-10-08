@@ -244,6 +244,6 @@ private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties_F& Props) const;
 
 	//显示
-	void ShowFloatingText(const FEffectProperties_F& Props,float Damage) const;
+	void ShowFloatingText(const FEffectProperties_F& Props,float Damage,bool bBlockedHit,bool bCriticalHit) const;
 	
 };

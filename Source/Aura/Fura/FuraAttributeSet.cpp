@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "FuraAbilitySystemLibrary.h"
 #include "FuraGamePlayTags.h"
 #include "FuraPlayerControllerBase.h"
 #include "GameplayEffectExtension.h"
@@ -170,13 +171,16 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			//收到伤害生成伤害数组，调用PlayerController上的函数
 			if (Props.SourceCharacter != Props.TargetCharacter)
 			{
-				ShowFloatingText(Props,LocalIncomingDamage);
+				//获取两种状态（是否格挡或是否暴击）
+				const bool bBlock=UFuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+				const bool bCriticalHit=UFuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+				ShowFloatingText(Props,LocalIncomingDamage,bBlock,bCriticalHit);
 			}
 		}
 	}
 }
 
-void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage) const
+void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage,bool bBlockedHit,bool bCriticalHit) const
 {
 	//获取player controller
 	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(
