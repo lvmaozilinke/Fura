@@ -188,7 +188,7 @@ void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float
 	if (PlayerController)
 	{
 		//调用
-		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter);
+		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit);
 	}
 }
 

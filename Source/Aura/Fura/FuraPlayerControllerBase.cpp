@@ -33,12 +33,14 @@ void AFuraPlayerControllerBase::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter,
+                                                                bool bBlockedHit, bool bCriticalHit)
 {
 	//伤害数字，进行同步，在所有客户端上都可见。
 	if (IsValid(TargetCharacter) && DamageTextComponentClass)
 	{
-		UDamageTextComponent_F* DamageText = NewObject<UDamageTextComponent_F>(TargetCharacter, DamageTextComponentClass);
+		UDamageTextComponent_F* DamageText = NewObject<UDamageTextComponent_F>(
+			TargetCharacter, DamageTextComponentClass);
 		//注册WidgetComponent
 		DamageText->RegisterComponent();
 		//把组件附加到对应的character 的component上  (相对位置附加规则)
@@ -46,8 +48,7 @@ void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmou
 		                              FAttachmentTransformRules::KeepRelativeTransform);
 		//解除附加（和上面搭配使用类似只是获取了个初始位置？）
 		DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageText->SetDamageText(DamageAmount);
-		
+		DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 	}
 }
 

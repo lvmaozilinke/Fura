@@ -34,7 +34,7 @@ public:
 
 	//显示伤害值(指定哪一个character)
 	UFUNCTION(Client, Reliable)
-	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter,bool bBlockedHit,bool bCriticalHit);
 
 protected:
 	virtual void BeginPlay() override;

@@ -15,5 +15,5 @@ class AURA_API UDamageTextComponent_F : public UWidgetComponent
 public:
 	//设置小部件文本的数值数据
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetDamageText(float Damage);
+	void SetDamageText(float Damage,bool bBlockedHit,bool bCriticalHit);
 };
