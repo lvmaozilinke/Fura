@@ -31,6 +31,13 @@ public:
 	FGameplayTag FAttributes_Secondary_MaxHP;                  // 最大生命值：角色的生命值上限。
 	FGameplayTag FAttributes_Secondary_MaxMP;                  // 最大魔法值：角色的魔法值上限。
 
+	//抗性，对以下伤害类型的抗性
+	FGameplayTag FAttributes_Resistance_Fire;
+	FGameplayTag FAttributes_Resistance_Lightning;
+	FGameplayTag FAttributes_Resistance_Arcane;
+	FGameplayTag FAttributes_Resistance_Physical;
+
+	
 	//InputAction
 	FGameplayTag FInputTag_LMB;
 	FGameplayTag FInputTag_RMB;
@@ -40,10 +47,16 @@ public:
 	FGameplayTag FInputTag_4;
 	
 	FGameplayTag FDamage;
-	//伤害类型
+	//伤害类型A:射击
 	FGameplayTag FDamage_Fire;
+	//伤害类型B:雷电
+	FGameplayTag FDamage_Lightning;
+	//伤害类型B:奥术
+	FGameplayTag FDamage_Arcane;
+	//伤害类型B:物理
+	FGameplayTag FDamage_Physical;
 
-	TArray<FGameplayTag> DamageTypes;
+	TMap<FGameplayTag,FGameplayTag> DamageTypesToResistances;
 	
 	FGameplayTag FEffects_HitReact;
 

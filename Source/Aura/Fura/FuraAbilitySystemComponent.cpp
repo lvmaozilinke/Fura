@@ -3,7 +3,7 @@
 
 #include "FuraAbilitySystemComponent.h"
 #include "FuraGameplayTags.h"
-#include "AbilitySystem/FuraGamePlayAbility.h"
+#include "AbilitySystem/Abilities/FuraGamePlayAbility.h"
 
 void UFuraAbilitySystemComponent::AbilityActorInfoSet()
 {

@@ -85,14 +85,14 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 
 	//Get Damage Set by Caller Magnitude(通知幅度)
 
-	float Damage=0.f;
-	
+	float Damage = 0.f;
+
 	//循环遍历伤害类型数组
-	for (FGameplayTag DamageTypeTag:FFuraGamePlayTags::Get().DamageTypes)
+	for (const auto& Pair : FFuraGamePlayTags::Get().DamageTypesToResistances)
 	{
 		//获得对应伤害类型的Tag的数值
-		const float DamageTypeValue=Spec.GetSetByCallerMagnitude(DamageTypeTag);
-		Damage+=DamageTypeValue;
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key);
+		Damage += DamageTypeValue;
 	}
 
 	/*	格挡相关
@@ -110,7 +110,7 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	//获取游戏效果上下文  spec是游戏效果（FGameplayEffectSpec）的应用类包含效果的详细信息（强度，持续时间）
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
 	//设置格挡，用于将效果同步？
-	UFuraAbilitySystemLibrary::SetBlockedHit(EffectContextHandle,bBlocked);
+	UFuraAbilitySystemLibrary::SetBlockedHit(EffectContextHandle, bBlocked);
 
 	if (bBlocked)
 	{
@@ -188,8 +188,8 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
 
 	//暴击状态传递？
-	UFuraAbilitySystemLibrary::SetCriticalHit(EffectContextHandle,bCriticalHit);
-	
+	UFuraAbilitySystemLibrary::SetCriticalHit(EffectContextHandle, bCriticalHit);
+
 	//再次修改Damage值
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
 
