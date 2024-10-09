@@ -39,6 +39,14 @@ void UFuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, CriticalHitResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, HpRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, MpRegeneration, COND_None, REPNOTIFY_Always);
+
+	//抗性
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, LightningResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, ArcaneResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UFuraAttributeSet, PhysicalResistance, COND_None, REPNOTIFY_Always);
+
+	
 }
 
 void UFuraAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -172,15 +180,16 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			if (Props.SourceCharacter != Props.TargetCharacter)
 			{
 				//获取两种状态（是否格挡或是否暴击）
-				const bool bBlock=UFuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
-				const bool bCriticalHit=UFuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
-				ShowFloatingText(Props,LocalIncomingDamage,bBlock,bCriticalHit);
+				const bool bBlock = UFuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
+				const bool bCriticalHit = UFuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
+				ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit);
 			}
 		}
 	}
 }
 
-void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage,bool bBlockedHit,bool bCriticalHit) const
+void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage, bool bBlockedHit,
+                                         bool bCriticalHit) const
 {
 	//获取player controller
 	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(
@@ -188,7 +197,7 @@ void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float
 	if (PlayerController)
 	{
 		//调用
-		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit);
+		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
 }
 
@@ -221,6 +230,14 @@ UFuraAttributeSet::UFuraAttributeSet()
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MpRegeneration, GetMpRegenerationAttribute);
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MaxHP, GetMaxHPAttribute);
 	TagsToAttributes.Add(GamePlayTags.FAttributes_Secondary_MaxMP, GetMaxMPAttribute);
+
+	//抗性
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Resistance_Arcane, GetFireResistanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Resistance_Lightning, GetLightningResistanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Resistance_Arcane, GetArcaneResistanceAttribute);
+	TagsToAttributes.Add(GamePlayTags.FAttributes_Resistance_Physical, GetPhysicalResistanceAttribute);
+	
+
 }
 
 void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
@@ -279,7 +296,6 @@ void UFuraAttributeSet::OnRep_BlockChance(const FGameplayAttributeData& OldBlock
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, BlockChance, OldBlockChance);
 	//UE_LOG(LogTemp,Warning,TEXT("XXX:%f"),BlockChance.GetCurrentValue());
-
 }
 
 void UFuraAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const
@@ -305,4 +321,24 @@ void UFuraAttributeSet::OnRep_HpRegeneration(const FGameplayAttributeData& OldHp
 void UFuraAttributeSet::OnRep_MpRegeneration(const FGameplayAttributeData& OldMpRegeneration) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MpRegeneration, OldMpRegeneration);
+}
+
+void UFuraAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, FireResistance, OldFireResistance);
+}
+
+void UFuraAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, LightningResistance, OldLightningResistance);
+}
+
+void UFuraAttributeSet::OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, ArcaneResistance, OldArcaneResistance);
+}
+
+void UFuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, PhysicalResistance, OldPhysicalResistance);
 }

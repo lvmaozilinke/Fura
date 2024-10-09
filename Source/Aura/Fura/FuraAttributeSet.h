@@ -183,14 +183,34 @@ public:
 	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, MpRegeneration);
 
 
+	/*
+	 * Resistance Attributes:抗性
+	 */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_FireResistance, Category="Resistance Attributes")
+	FGameplayAttributeData FireResistance;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, FireResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_LightningResistance, Category="Resistance Attributes")
+	FGameplayAttributeData LightningResistance;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, LightningResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_ArcaneResistance, Category="Resistance Attributes")
+	FGameplayAttributeData ArcaneResistance;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, ArcaneResistance);
+	
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_PhysicalResistance, Category="Resistance Attributes")
+	FGameplayAttributeData PhysicalResistance;
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, PhysicalResistance);
+
+
 	/* 
 	 * Meta Attributes 元属性
 	 */
 
 	//传入的伤害
-	UPROPERTY(BlueprintReadOnly,Category="Meta Attributes_F")
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attributes_F")
 	FGameplayAttributeData IncomingDamage;
-	ATTRIBUTE_ACCESSORS(UFuraAttributeSet,IncomingDamage)
+	ATTRIBUTE_ACCESSORS(UFuraAttributeSet, IncomingDamage)
 
 	UFUNCTION()
 	void OnRep_HP(const FGameplayAttributeData& OldHP) const;
@@ -240,10 +260,27 @@ public:
 	UFUNCTION()
 	void OnRep_MpRegeneration(const FGameplayAttributeData& OldMpRegeneration) const;
 
+	
+	/*
+	 * Resistance Attributes:抗性
+	 */
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const;
+
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
+
+	
+	
 private:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties_F& Props) const;
 
 	//显示
-	void ShowFloatingText(const FEffectProperties_F& Props,float Damage,bool bBlockedHit,bool bCriticalHit) const;
-	
+	void ShowFloatingText(const FEffectProperties_F& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 };
