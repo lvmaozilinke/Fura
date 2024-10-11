@@ -22,8 +22,12 @@ void AFuraEnemy::BeginPlay()
 	InitAbilityActorInfo();
 	//初始化玩家移动速度
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-	//批量赋予能力(获取数组变量设置能力)
-	UFuraAbilitySystemLibrary::GiveStartupAbilities(this,AbilitySystemComponent);
+	if (HasAuthority())
+	{
+		//批量赋予能力(获取数组变量设置能力)
+		UFuraAbilitySystemLibrary::GiveStartupAbilities(this,AbilitySystemComponent);
+	}
+	
 	//拿到UI
 	if (UFuraUserWidget* EnemyHpBar = Cast<UFuraUserWidget>(HPBar->GetUserWidgetObject()))
 	{

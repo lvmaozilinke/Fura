@@ -37,7 +37,6 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 
 		//子弹的旋转角度(从插槽位置到射击目标位置的向量)
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-		Rotation.Pitch = 0.f;
 
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);

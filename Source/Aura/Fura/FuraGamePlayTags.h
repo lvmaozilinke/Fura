@@ -56,6 +56,7 @@ public:
 	//伤害类型B:物理
 	FGameplayTag FDamage_Physical;
 
+	//伤害属性和对应的伤害抗性的TMap
 	TMap<FGameplayTag,FGameplayTag> DamageTypesToResistances;
 	
 	FGameplayTag FEffects_HitReact;

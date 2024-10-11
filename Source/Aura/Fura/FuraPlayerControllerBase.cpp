@@ -36,8 +36,8 @@ void AFuraPlayerControllerBase::PlayerTick(float DeltaTime)
 void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter,
                                                                 bool bBlockedHit, bool bCriticalHit)
 {
-	//伤害数字，进行同步，在所有客户端上都可见。
-	if (IsValid(TargetCharacter) && DamageTextComponentClass)
+	//伤害数字，进行同步，在所有客户端上都可见。IsLocalController(),排除服务器
+	if (IsValid(TargetCharacter) && DamageTextComponentClass&&IsLocalController())
 	{
 		UDamageTextComponent_F* DamageText = NewObject<UDamageTextComponent_F>(
 			TargetCharacter, DamageTextComponentClass);

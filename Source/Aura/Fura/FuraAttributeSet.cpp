@@ -191,9 +191,8 @@ void UFuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float Damage, bool bBlockedHit,
                                          bool bCriticalHit) const
 {
-	//获取player controller
-	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(
-		UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0));
+	//获取player controller:Props.SourceCharacter->Controller从造成伤害的controller
+	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(Props.SourceCharacter->Controller);
 	if (PlayerController)
 	{
 		//调用

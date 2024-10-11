@@ -83,15 +83,28 @@ void AFuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                       const FHitResult& SweepResult)
 {
-	//播放命中音效
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-	//播放命中特效
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	//停止播放飞行中音效
-	if (LoopingSoundComponent)
+	//检查碰到的是否是自己
+	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() ==
+		OtherActor)
 	{
-		LoopingSoundComponent->Stop();
+		return;
 	}
+
+	//
+	if (!bHit)
+	{
+		//播放命中音效
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+		//播放命中特效
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+		//停止播放飞行中音效
+		if (LoopingSoundComponent)
+		{
+			LoopingSoundComponent->Stop();
+		}
+	}
+
+
 	//用于检查当前实例是否拥有网络权限（Authority）的一个常用条件，特别在多玩家（多人游戏）和服务器/客户端架构中使用。
 	//它可以用来区分当前的代码是否在服务器上运行（即拥有权限），还是在客户端上运行（没有权限）。
 	if (HasAuthority())
