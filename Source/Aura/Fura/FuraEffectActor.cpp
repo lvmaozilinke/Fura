@@ -63,10 +63,9 @@ void AFuraEffectActor::BeginPlay()
 void AFuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
 	//判断目标Actor的Tag是否为敌人
-	const bool bIsEnemy = TargetActor->ActorHasTag(FName("Enemy"));
-
+	
 	//敌人或者开启敌人伤害就返回（敌人也会受到影响）
-	if (bIsEnemy && !bApplyEffectsToEnemies)
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies)
 	{
 		return;
 	}
@@ -98,6 +97,13 @@ void AFuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 
 void AFuraEffectActor::OnOverLap(AActor* TargetActor)
 {
+		
+	//敌人或者开启敌人伤害就返回（敌人也会受到影响）
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies)
+	{
+		return;
+	}
+	
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy_F::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
@@ -114,6 +120,12 @@ void AFuraEffectActor::OnOverLap(AActor* TargetActor)
 
 void AFuraEffectActor::OnEndOverLap(AActor* TargetActor)
 {
+		
+	//敌人或者开启敌人伤害就返回（敌人也会受到影响）
+	if (TargetActor->ActorHasTag(FName("Enemy")) && !bApplyEffectsToEnemies)
+	{
+		return;
+	}
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy_F::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
