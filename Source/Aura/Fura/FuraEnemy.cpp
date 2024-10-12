@@ -9,6 +9,9 @@
 #include "Aura/Aura.h"
 #include "Components/WidgetComponent.h"
 #include "FuraGamePlayTags.h"
+#include "AI/FuraAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
@@ -25,9 +28,9 @@ void AFuraEnemy::BeginPlay()
 	if (HasAuthority())
 	{
 		//批量赋予能力(获取数组变量设置能力)
-		UFuraAbilitySystemLibrary::GiveStartupAbilities(this,AbilitySystemComponent);
+		UFuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 	}
-	
+
 	//拿到UI
 	if (UFuraUserWidget* EnemyHpBar = Cast<UFuraUserWidget>(HPBar->GetUserWidgetObject()))
 	{
@@ -83,7 +86,7 @@ void AFuraEnemy::InitAbilityActorInfo()
 
 	if (HasAuthority())
 	{
-		InitializeDefaultAttributes();		
+		InitializeDefaultAttributes();
 	}
 }
 
@@ -102,10 +105,32 @@ AFuraEnemy::AFuraEnemy()
 	//设置复制模式
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+
+
 	HPBar = CreateDefaultSubobject<UWidgetComponent>("HPBar");
 
 	//附加到根组件
 	HPBar->SetupAttachment(GetRootComponent());
+}
+
+void AFuraEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	//客户端看到的所有东西都是复制的结果，所以这些操作是不会在客户端上执行的
+	if (!HasAuthority())
+	{
+		return;
+	}
+	//被controller控制时(玩家或AIController)-cast 是否为创建的子类
+	FuraAIController = Cast<AFuraAIController>(NewController);
+	//初始化黑板
+	FuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	//运行行为树
+	FuraAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AFuraEnemy::HightLightActor()
@@ -133,6 +158,6 @@ int32 AFuraEnemy::GetPlayerLevel()
 
 void AFuraEnemy::Die()
 {
-	SetLifeSpan(LifeSpan);//x秒后销毁(可以插入动画和特效)
+	SetLifeSpan(LifeSpan); //x秒后销毁(可以插入动画和特效)
 	Super::Die();
 }

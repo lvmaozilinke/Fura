@@ -10,7 +10,8 @@
 #include "FuraEnemy.generated.h"
 
 class UWidgetComponent;
-
+class UBehaviorTree;
+class AFuraAIController;
 UCLASS(Abstract)
 class AURA_API AFuraEnemy : public AFuraCharacterBase, public IEnemyInterface_F
 {
@@ -18,6 +19,9 @@ class AURA_API AFuraEnemy : public AFuraCharacterBase, public IEnemyInterface_F
 
 public:
 	AFuraEnemy();
+
+	virtual void PossessedBy(AController* NewController) override;
+	
 	//被鼠标指针选中的样子
 	UPROPERTY(BlueprintReadOnly)
 	bool bHightLightActor = false;
@@ -64,4 +68,14 @@ protected:
 	ECharacterClass_F CharacterClass = ECharacterClass_F::Warrior;
 
 	virtual void InitializeDefaultAttributes() const override;
+
+
+	//AI CONTROLLER
+
+	UPROPERTY(EditAnywhere,Category="AI")
+	TObjectPtr<UBehaviorTree>BehaviorTree;
+
+	UPROPERTY()
+	TObjectPtr<AFuraAIController>FuraAIController;
+	
 };
