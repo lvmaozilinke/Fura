@@ -62,6 +62,7 @@ protected:
 	void OnEndOverLap(AActor* TargetActor);
 
 
+	//是否效果应用目标后销毁（消耗品）
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
 	bool bDestroyOnEffectApplication = false;
 

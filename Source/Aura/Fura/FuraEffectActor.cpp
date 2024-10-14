@@ -93,6 +93,13 @@ void AFuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	{
 		ActiveEffectHandles.Add(ActiveEffectHandle, TargetASC);
 	}
+
+	//如果不是无限的就使用后销毁
+	if (!bIsInfinite)
+	{
+		Destroy();
+	}
+	
 }
 
 void AFuraEffectActor::OnOverLap(AActor* TargetActor)
