@@ -74,6 +74,8 @@ void AFuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCou
 	//被命中会停下来（移动速度变为0）
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	//更新被命中的黑板键
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),bHitReacting);
 }
 
 void AFuraEnemy::InitAbilityActorInfo()
@@ -131,6 +133,14 @@ void AFuraEnemy::PossessedBy(AController* NewController)
 	FuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	//运行行为树
 	FuraAIController->RunBehaviorTree(BehaviorTree);
+	//设置黑板键上边的变量
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+
+	//传递信息到行为树，告知当前敌人角色类型是否为*远程攻击*
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),CharacterClass==ECharacterClass_F::Ranger);
+	
+
+	
 }
 
 void AFuraEnemy::HightLightActor()
