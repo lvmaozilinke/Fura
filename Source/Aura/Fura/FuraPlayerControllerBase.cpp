@@ -37,7 +37,7 @@ void AFuraPlayerControllerBase::ShowDamageNumber_Implementation(float DamageAmou
                                                                 bool bBlockedHit, bool bCriticalHit)
 {
 	//伤害数字，进行同步，在所有客户端上都可见。IsLocalController(),排除服务器
-	if (IsValid(TargetCharacter) && DamageTextComponentClass&&IsLocalController())
+	if (IsValid(TargetCharacter) && DamageTextComponentClass && IsLocalController())
 	{
 		UDamageTextComponent_F* DamageText = NewObject<UDamageTextComponent_F>(
 			TargetCharacter, DamageTextComponentClass);
@@ -140,11 +140,16 @@ void AFuraPlayerControllerBase::AbilityInputTagReleased(FGameplayTag InputTag)
 					Spline->AddSplinePoint(PointLoc, ESplineCoordinateSpace::World);
 					DrawDebugSphere(GetWorld(), PointLoc, 8.f, 8, FColor::Green, false, 5.f);
 				}
-				//移动判断自身离移动坐标数组的最后一个点是否等于点击终点
-				CachedDestination = Navpath->PathPoints[Navpath->PathPoints.Num() - 1];
+				//防止出现路径数组出现空
+				if (Navpath->PathPoints.Num() > 0)
+				{
+					//移动判断自身离移动坐标数组的最后一个点是否等于点击终点
+					CachedDestination = Navpath->PathPoints[Navpath->PathPoints.Num() - 1];
 
-				//开始移动
-				bAutoRunning = true;
+					//开始移动
+					bAutoRunning = true;
+				}
+				
 			}
 		}
 		//松开后恢复数值
