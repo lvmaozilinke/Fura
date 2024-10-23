@@ -23,6 +23,12 @@ struct FCharacterClassDefaultInfo_F
 	GENERATED_BODY()
 	UPROPERTY(EditDefaultsOnly, Category="Class Defaults_F")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes;
+
+	//常见属性数组，包含多个能力
+	UPROPERTY(EditDefaultsOnly, Category="Class Defaults_F")
+	TArray<TSubclassOf<UGameplayAbility>>CommonAttributes;
+
+	
 };
 
 

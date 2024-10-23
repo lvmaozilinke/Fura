@@ -27,8 +27,8 @@ void AFuraEnemy::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	if (HasAuthority())
 	{
-		//批量赋予能力(获取数组变量设置能力)
-		UFuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+		//批量赋予能力(获取数组变量设置能力),给予能力时传递敌人类型
+		UFuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent,CharacterClass);
 	}
 
 	//拿到UI

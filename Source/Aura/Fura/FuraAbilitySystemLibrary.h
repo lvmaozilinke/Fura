@@ -31,7 +31,7 @@ public:
 
 	//赋予能力
 	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC);
+	static void GiveStartupAbilities(const UObject* WorldContentObject, UAbilitySystemComponent* ASC,ECharacterClass_F CharacterClass);
 
 	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|CharacterClassDefaults")
 	static UCharacterClassInfo_F* GetCharacterClassInfo(const UObject* WorldContextObject);
