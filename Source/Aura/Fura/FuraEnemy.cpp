@@ -28,7 +28,7 @@ void AFuraEnemy::BeginPlay()
 	if (HasAuthority())
 	{
 		//批量赋予能力(获取数组变量设置能力),给予能力时传递敌人类型
-		UFuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent,CharacterClass);
+		UFuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
 	}
 
 	//拿到UI
@@ -75,7 +75,7 @@ void AFuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCou
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 	//更新被命中的黑板键
-	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),bHitReacting);
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AFuraEnemy::InitAbilityActorInfo()
@@ -134,13 +134,11 @@ void AFuraEnemy::PossessedBy(AController* NewController)
 	//运行行为树
 	FuraAIController->RunBehaviorTree(BehaviorTree);
 	//设置黑板键上边的变量
-	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
 
 	//传递信息到行为树，告知当前敌人角色类型是否为*远程攻击*
-	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),CharacterClass==ECharacterClass_F::Ranger);
-	
-
-	
+	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),
+	                                                           CharacterClass == ECharacterClass_F::Ranger);
 }
 
 void AFuraEnemy::HightLightActor()
@@ -170,4 +168,14 @@ void AFuraEnemy::Die()
 {
 	SetLifeSpan(LifeSpan); //x秒后销毁(可以插入动画和特效)
 	Super::Die();
+}
+
+void AFuraEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AFuraEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
 }

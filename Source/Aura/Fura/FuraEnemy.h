@@ -12,6 +12,7 @@
 class UWidgetComponent;
 class UBehaviorTree;
 class AFuraAIController;
+
 UCLASS(Abstract)
 class AURA_API AFuraEnemy : public AFuraCharacterBase, public IEnemyInterface_F
 {
@@ -21,7 +22,7 @@ public:
 	AFuraEnemy();
 
 	virtual void PossessedBy(AController* NewController) override;
-	
+
 	//被鼠标指针选中的样子
 	UPROPERTY(BlueprintReadOnly)
 	bool bHightLightActor = false;
@@ -32,6 +33,11 @@ public:
 	/*End Combat Interface*/
 	virtual int32 GetPlayerLevel() override;
 	virtual void Die() override;
+
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+
+
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChangedSignture_F OnHpChanged;
 
@@ -48,6 +54,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat_F")
 	float LifeSpan = 5.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat_F")
+	TObjectPtr<AActor> CombatTarget;
 
 protected:
 	virtual void BeginPlay() override;
@@ -72,10 +81,9 @@ protected:
 
 	//AI CONTROLLER
 
-	UPROPERTY(EditAnywhere,Category="AI")
-	TObjectPtr<UBehaviorTree>BehaviorTree;
+	UPROPERTY(EditAnywhere, Category="AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 
 	UPROPERTY()
-	TObjectPtr<AFuraAIController>FuraAIController;
-	
+	TObjectPtr<AFuraAIController> FuraAIController;
 };
