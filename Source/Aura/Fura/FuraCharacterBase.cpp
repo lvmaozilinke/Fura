@@ -61,6 +61,8 @@ void AFuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Dissolve();
+
+	bDead=true;
 }
 
 // Called when the game starts or when spawned
@@ -69,10 +71,21 @@ void AFuraCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FVector AFuraCharacterBase::GetCombatSocketLocation()
+
+FVector AFuraCharacterBase::GetCombatSocketLocation_Implementation()
 {
 	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
+}
+
+bool AFuraCharacterBase::IsDead_Implementation()
+{
+	return bDead;
+}
+
+AActor* AFuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
 }
 
 void AFuraCharacterBase::InitAbilityActorInfo()

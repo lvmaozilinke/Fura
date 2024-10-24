@@ -105,9 +105,8 @@ void UFuraAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContent
 		ICombatInterface_F* CombatInterface = Cast<ICombatInterface_F>(ASC->GetAvatarActor());
 		if (CombatInterface)
 		{
-			FGameplayAbilitySpec AbilitySpec= FGameplayAbilitySpec(AbilityClass,CombatInterface->GetPlayerLevel());
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
 			ASC->GiveAbility(AbilitySpec);
-
 		}
 	}
 }
@@ -168,5 +167,48 @@ void UFuraAbilitySystemLibrary::SetCriticalHit(FGameplayEffectContextHandle& Eff
 	)
 	{
 		FuraEffectContext->SetCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UFuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
+                                                           TArray<AActor*>& OutOverlappingActors,
+                                                           const TArray<AActor*>& ActorsToIgnore, float Radius,
+                                                           const FVector& SphereOrigin)
+{
+	// 创建碰撞查询参数对象，用于设置忽略的演员（Actors）列表
+	FCollisionQueryParams SphereParams;
+
+	// 将需要忽略的演员（通常是玩家自己或不相关对象）添加到碰撞查询参数中
+	SphereParams.AddIgnoredActors(ActorsToIgnore);
+
+	// 定义用于存储检测结果的重叠结果数组
+	TArray<FOverlapResult> Overlaps;
+
+	// 从提供的上下文对象中获取世界对象，确保碰撞检测在正确的世界中进行
+	if (const UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject,
+	                                                             EGetWorldErrorMode::LogAndReturnNull))
+	{
+		// 使用球形碰撞检测在给定的半径范围内查找动态对象
+		World->OverlapMultiByObjectType(
+			Overlaps, // 输出的重叠结果
+			SphereOrigin, // 球形碰撞检测的中心点
+			FQuat::Identity, // 球形的旋转（此处设置为默认旋转）
+			FCollisionObjectQueryParams(
+				FCollisionObjectQueryParams::InitType::AllDynamicObjects), // 仅检测动态对象
+			FCollisionShape::MakeSphere(Radius), // 创建一个以指定半径为大小的球体
+			SphereParams // 使用先前设置的碰撞查询参数（忽略指定的对象）
+		);
+
+		// 遍历检测到的重叠结果
+		for (FOverlapResult& Overlap : Overlaps)
+		{
+			// 如果对象实现了 Combat 接口并且存活，则将其 Avatar（角色表示）添加到结果数组中  (检查重叠的演员是否实现了 UCombatInterface_F 接口&&使用接口方法检测演员是否存活（未死亡）)
+			if (Overlap.GetActor()->Implements<UCombatInterface_F>() && !ICombatInterface_F::Execute_IsDead(
+				Overlap.GetActor()))
+			{
+				// 使用接口方法获取重叠对象的 Avatar，并确保不重复添加
+				OutOverlappingActors.AddUnique(ICombatInterface_F::Execute_GetAvatar(Overlap.GetActor()));
+			}
+		}
 	}
 }

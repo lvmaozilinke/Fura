@@ -33,7 +33,15 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	if (CombatInterface_F)
 	{
 		//获取当前接口实现的玩家的子弹生成位置
-		const FVector SocketLocation = CombatInterface_F->GetCombatSocketLocation();
+		//const FVector SocketLocation = CombatInterface_F->GetCombatSocketLocation_Implementation();
+		
+		/*`ICombatInterface_F::Execute_GetCombatSocketLocation();
+		 ***调用目标**：这种方式是通过 Unreal Engine 自动生成的 `Execute_` 方法来调用接口函数。
+		 *它的作用是在不知道实际类实现的情况下，安全地调用实现了该接口的任何对象的方法。
+		*/
+		const FVector SocketLocation = ICombatInterface_F::Execute_GetCombatSocketLocation(
+			GetAvatarActorFromActorInfo());
+
 
 		//子弹的旋转角度(从插槽位置到射击目标位置的向量)
 		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
@@ -53,18 +61,18 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			GetAvatarActorFromActorInfo());
 
 		//GameplayEffectContextHandle:游戏效果上下文句柄，通过makeEffectContext获取得到。
-		FGameplayEffectContextHandle EffectContextHandle=SourceASC->MakeEffectContext();
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 
 		//设置上下文实例参数 
 		EffectContextHandle.SetAbility(this);
 		//设置创建此效果的对象 
 		EffectContextHandle.AddSourceObject(Projectile);
-		
+
 		/*	TWeakObjectPtr 是一种弱引用指针，通常用于避免循环引用问题。
 		 *	它不会增加对象的引用计数，因此即使 TWeakObjectPtr 指向的对象被销毁，TWeakObjectPtr 本身不会阻止该对象被垃圾回收。
 		 *	这是一个指向 AActor 对象的弱引用。
 		 */
-		TArray<TWeakObjectPtr<AActor>>Actors;
+		TArray<TWeakObjectPtr<AActor>> Actors;
 		Actors.Add(Projectile);
 		//将Actors放到列表
 		EffectContextHandle.AddActors(Actors);
@@ -72,24 +80,24 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		//命中结果
 		FHitResult HitResult;
 		//命中的敌人的位置进行传递
-		HitResult.Location=ProjectileTargetLocation;
+		HitResult.Location = ProjectileTargetLocation;
 		EffectContextHandle.AddHitResult(HitResult);
-		
+
 		//这里使用MakeOutgoingSpec函数来生成一个游戏效果规格（Gameplay Effect Spec），并将其包装成一个FGameplayEffectSpecHandle对象。
 		const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(
-			DamageEffectClass, GetAbilityLevel(),EffectContextHandle);
+			DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 
 		const FFuraGamePlayTags GamePlayTags = FFuraGamePlayTags::Get();
 
 		//遍历Map
-		for (auto& Pair:DamageTypes)
+		for (auto& Pair : DamageTypes)
 		{
 			//计算伤害值
-			const float ScaledDamage=Pair.Value.GetValueAtLevel(GetAbilityLevel());
+			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
 			//AssignTagSetByCallerMagnitude:将计算后的伤害值（ScaledDamage）与指定的 Tag（Pair.Key）绑定到一个 SpecHandle 上。
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Pair.Key,ScaledDamage);
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
 		}
-		
+
 		/*
 		//曲线表格使用方法，根据等级显示对应数据
 		const float ScaledDamage = Damage.GetValueAtLevel(10);

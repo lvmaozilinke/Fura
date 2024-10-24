@@ -28,17 +28,13 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 
-	//重写接口函数（收到伤害蒙太奇）
-	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-
 	//重写死亡事件（本地的）
 	virtual void Die() override;
 
 
 	//多人同步的死亡事件(服务器上调用)
-	UFUNCTION(NetMulticast,Reliable)
+	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
-	
 
 protected:
 	// Called when the game starts or when spawned
@@ -56,8 +52,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category="FCombat")
 	FName WeaponTipSocketName;
 
-	//实现接口
-	virtual FVector GetCombatSocketLocation() override;
+
+	bool bDead=false;
+
+	
+	//重写实现接口
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+
+	virtual bool IsDead_Implementation() override;
+
+	virtual AActor* GetAvatar_Implementation() override;
+
+	//（收到伤害蒙太奇）
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	//
+
 
 	//启动能力演员信息
 	virtual void InitAbilityActorInfo();
@@ -84,8 +93,6 @@ protected:
 	void AddCharacterAbilities();
 
 
-
-	
 	//死亡溶解材质
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
@@ -107,10 +114,4 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Combat_F")
 	TObjectPtr<UAnimMontage> HitReactMontage;
-
-
-
-	
-	
-	
 };
