@@ -13,7 +13,7 @@
 #include "Aura/Fura/interaction/CombatInterface_F.h"
 
 
-struct FuraDamageStatics
+struct FuraDamageStatics_F
 {
 	//护甲
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor)
@@ -35,7 +35,7 @@ struct FuraDamageStatics
 	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
 
 
-	FuraDamageStatics()
+	FuraDamageStatics_F()
 	{
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UFuraAttributeSet, Armor, Target, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UFuraAttributeSet, BlockChance, Target, false);
@@ -68,27 +68,27 @@ struct FuraDamageStatics
 	}
 };
 
-static const FuraDamageStatics& DamageStatics()
+static const FuraDamageStatics_F& DamageStatics_F()
 {
 	//静态
-	static FuraDamageStatics DStatics;
+	static FuraDamageStatics_F DStatics;
 	return DStatics;
 }
 
 UExecCalc_Damage_F::UExecCalc_Damage_F()
 {
 	//
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
-	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().ArmorDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().ArmorPenetrationDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().CriticalHitDamageDef);
 	//抗性
-	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().ArcaneResistanceDef);
-	RelevantAttributesToCapture.Add(DamageStatics().PhysicalResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics_F().PhysicalResistanceDef);
 }
 
 void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -130,12 +130,12 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 		const FGameplayTag ResistanceTag = Pair.Value;
 
 		//检查对应的键是否存在(Contains():根据键查找值)
-		checkf(FuraDamageStatics().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("ExecCalc伤害的抗性键没有找到，键名称为:%s"),
+		checkf(FuraDamageStatics_F().TagsToCaptureDefs.Contains(ResistanceTag), TEXT("ExecCalc伤害的抗性键没有找到，键名称为:%s"),
 		       *ResistanceTag.ToString());
 
 
 		//游戏玩法效果捕获 值为根据伤害类型抗性的名称(TMap,根据键去获得值)
-		const FGameplayEffectAttributeCaptureDefinition CaptureDef = FuraDamageStatics().TagsToCaptureDefs[
+		const FGameplayEffectAttributeCaptureDefinition CaptureDef = FuraDamageStatics_F().TagsToCaptureDefs[
 			ResistanceTag];
 
 
@@ -163,7 +163,7 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	//创建局部格挡几率变量
 	float TargetBlockChance = 0.f;
 	//捕获格挡值并设置到TargetBlockChance ---捕获到的值是0，也就是说原因在于这个值没有设置正确。
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluationParameters,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().BlockChanceDef, EvaluationParameters,
 	                                                           TargetBlockChance);
 	TargetBlockChance = FMath::Max<float>(TargetBlockChance, 0.f); //返回两个值中值更大的值，防止出现负数的存在
 	//创建bool变量，(随机生成1~100之间的数值，然后判断格挡几率是否大于随机的数值，数值大于就是格挡成功
@@ -183,7 +183,7 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	/*护甲相关(目标)
 	 */
 	float TargetArmor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().ArmorDef, EvaluationParameters,
 	                                                           TargetArmor);
 	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
 
@@ -191,7 +191,7 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 	/*穿甲相关(来源)
 	 */
 	float SourceArmorPenetration = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().ArmorPenetrationDef,
 	                                                           EvaluationParameters,
 	                                                           SourceArmorPenetration);
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
@@ -222,21 +222,21 @@ void UExecCalc_Damage_F::Execute_Implementation(const FGameplayEffectCustomExecu
 
 	//暴击率
 	float SourceCriticalHitChance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().CriticalHitChanceDef,
 	                                                           EvaluationParameters,
 	                                                           SourceCriticalHitChance);
 	SourceCriticalHitChance = FMath::Max<float>(SourceCriticalHitChance, 0.f);
 
 	//暴击抵抗
 	float TargetCriticalHitResistance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().CriticalHitResistanceDef,
 	                                                           EvaluationParameters,
 	                                                           TargetCriticalHitResistance);
 	TargetCriticalHitResistance = FMath::Max<float>(TargetCriticalHitResistance, 0.f);
 
 	//暴击伤害
 	float SourceCriticalHitDamage = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef,
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics_F().CriticalHitDamageDef,
 	                                                           EvaluationParameters,
 	                                                           SourceCriticalHitDamage);
 	SourceCriticalHitDamage = FMath::Max<float>(SourceCriticalHitDamage, 0.f);
