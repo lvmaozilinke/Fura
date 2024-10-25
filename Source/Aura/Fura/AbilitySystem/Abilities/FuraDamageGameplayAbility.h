@@ -13,6 +13,11 @@ UCLASS()
 class AURA_API UFuraDamageGameplayAbility : public UFuraGamePlayAbility
 {
 	GENERATED_BODY()
+public:
+
+	//造成伤害
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
 
 protected:
 

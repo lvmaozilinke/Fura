@@ -192,11 +192,17 @@ void UFuraAttributeSet::ShowFloatingText(const FEffectProperties_F& Props, float
                                          bool bCriticalHit) const
 {
 	//获取player controller:Props.SourceCharacter->Controller从造成伤害的controller
-	AFuraPlayerControllerBase* PlayerController = Cast<AFuraPlayerControllerBase>(Props.SourceCharacter->Controller);
-	if (PlayerController)
+	if (AFuraPlayerControllerBase* PCS = Cast<AFuraPlayerControllerBase>(Props.SourceCharacter->Controller))
 	{
 		//调用
-		PlayerController->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+		PCS->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+		return;
+	}
+	
+	if (AFuraPlayerControllerBase* PCT = Cast<AFuraPlayerControllerBase>(Props.TargetCharacter->Controller))
+	{
+		//调用显示UI
+		PCT->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 	}
 }
 
