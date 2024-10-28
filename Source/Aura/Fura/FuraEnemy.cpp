@@ -74,9 +74,13 @@ void AFuraEnemy::HitReactTagChanged(const FGameplayTag CallBackTag, int32 NewCou
 	//被命中会停下来（移动速度变为0）
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
-	//更新被命中的黑板键
-	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	if (FuraAIController && FuraAIController->GetBlackboardComponent())
+	{
+		//更新被命中的黑板键
+		FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	}
 }
+
 
 void AFuraEnemy::InitAbilityActorInfo()
 {

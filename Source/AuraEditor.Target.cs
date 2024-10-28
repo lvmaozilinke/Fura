@@ -9,9 +9,9 @@ public class AuraEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-        bOverrideBuildEnvironment = true;  // 使用此行
-        ExtraModuleNames.AddRange( new string[] { "Aura" } );
-        CppStandard = CppStandardVersion.Cpp20; // 设置为 C++20
+		bOverrideBuildEnvironment = true;  // 使锟矫达拷锟斤拷
+		ExtraModuleNames.AddRange( new string[] { "Aura" } );
+		CppStandard = CppStandardVersion.Cpp20; // 锟斤拷锟斤拷为 C++20
 
-    }
+	}
 }

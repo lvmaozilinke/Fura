@@ -80,7 +80,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Attributes_f")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
-	//必不可少的
+	//必不可少的`
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Attributes_f")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
