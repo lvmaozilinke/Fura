@@ -36,6 +36,11 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 
+
+	//蒙太奇动画攻击，不同的攻击tag对应不同的动画，存到结构体数组里
+	UPROPERTY(EditAnywhere, Category="FCombat.h")
+	TArray<FTaggedMontage_F> AttachMontages;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -51,17 +56,24 @@ protected:
 	//武器插槽，用于远程子弹生成位置(枪口)
 	UPROPERTY(EditAnywhere, Category="FCombat")
 	FName WeaponTipSocketName;
+	//左手插槽，攻击使用
+	UPROPERTY(EditAnywhere, Category="FCombat")
+	FName LeftHandSocketName;
+	//右手插槽，攻击使用)
+	UPROPERTY(EditAnywhere, Category="FCombat")
+	FName RightHandSocketName;
+
+	bool bDead = false;
 
 
-	bool bDead=false;
-
-	
 	//重写实现接口
-	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 
 	virtual bool IsDead_Implementation() override;
 
 	virtual AActor* GetAvatar_Implementation() override;
+
+	virtual TArray<FTaggedMontage_F> GetAttackMontages_Implementation() override;
 
 	//（收到伤害蒙太奇）
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
@@ -88,7 +100,7 @@ protected:
 
 	//初始化所有属性(主要加次要)
 	virtual void InitializeDefaultAttributes() const;
-	
+
 
 	//添加角色能力
 	void AddCharacterAbilities();

@@ -4,7 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameplayTagContainer.h"
 #include "CombatInterface_F.generated.h"
+
+USTRUCT(BlueprintType)
+struct FTaggedMontage_F
+{
+	GENERATED_BODY()
+	//蒙太奇动画
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* Montage = nullptr;
+	//tag
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag MontageTag;
+};
+
 
 class UAnimMontage;
 // This class does not need to be modified.
@@ -26,7 +40,7 @@ public:
 	virtual int32 GetPlayerLevel();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	FVector GetCombatSocketLocation();
+	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag);
 
 	//蓝图中实现，C++ 中创建
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
@@ -44,4 +58,8 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	AActor* GetAvatar();
+
+	//声明接口：获取攻击蒙太奇集合，在实现接口的类里面实现对应功能
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	TArray<FTaggedMontage_F> GetAttackMontages();
 };

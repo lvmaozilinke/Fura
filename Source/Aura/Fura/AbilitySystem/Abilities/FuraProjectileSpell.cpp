@@ -40,7 +40,7 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		 *它的作用是在不知道实际类实现的情况下，安全地调用实现了该接口的任何对象的方法。
 		*/
 		const FVector SocketLocation = ICombatInterface_F::Execute_GetCombatSocketLocation(
-			GetAvatarActorFromActorInfo());
+			GetAvatarActorFromActorInfo(),FFuraGamePlayTags::Get().FMontage_Attack_Weapon);
 
 
 		//子弹的旋转角度(从插槽位置到射击目标位置的向量)

@@ -4,6 +4,7 @@
 #include "FuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "FuraAbilitySystemComponent.h"
+#include "FuraGamePlayTags.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 
@@ -72,10 +73,27 @@ void AFuraCharacterBase::BeginPlay()
 }
 
 
-FVector AFuraCharacterBase::GetCombatSocketLocation_Implementation()
+FVector AFuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
+	//查看tag是否为weapon
+	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_Weapon) && IsValid(Weapon))
+	{
+		//从weapon 上获取对应的位置
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_LeftHand))
+	{
+		//从左手指定的插槽名称上获取位置
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_RightHand))
+	{
+		//从右手指定的插槽名称上获取位置
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	
+	return FVector();
 }
 
 bool AFuraCharacterBase::IsDead_Implementation()
@@ -86,6 +104,11 @@ bool AFuraCharacterBase::IsDead_Implementation()
 AActor* AFuraCharacterBase::GetAvatar_Implementation()
 {
 	return this;
+}
+
+TArray<FTaggedMontage_F> AFuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttachMontages;
 }
 
 void AFuraCharacterBase::InitAbilityActorInfo()
