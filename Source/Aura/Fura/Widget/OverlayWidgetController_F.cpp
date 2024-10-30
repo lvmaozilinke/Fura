@@ -35,6 +35,7 @@ void UOverlayWidgetController_F::BindCallBackToDependencies()
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(FuraAttributeSet->GetMaxHPAttribute()).AddLambda(
 		[this](const FOnAttributeChangeData& Data)
 		{
+			//UE_LOG(LogTemp,Warning,TEXT("TEST:GetMaxHPAttributeNewData:%f"),Data.NewValue);
 			OnMaxHPChangeSignature.Broadcast(Data.NewValue);
 			
 		});

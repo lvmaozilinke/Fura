@@ -253,7 +253,7 @@ void UFuraAttributeSet::OnRep_HP(const FGameplayAttributeData& OldHP) const
 
 void UFuraAttributeSet::OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP) const
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MaxHP, OldMaxHP);
+ 	GAMEPLAYATTRIBUTE_REPNOTIFY(UFuraAttributeSet, MaxHP, OldMaxHP);
 }
 
 void UFuraAttributeSet::OnRep_MP(const FGameplayAttributeData& OldMP) const

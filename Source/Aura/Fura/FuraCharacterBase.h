@@ -88,6 +88,7 @@ protected:
 
 	//初始化所有属性(主要加次要)
 	virtual void InitializeDefaultAttributes() const;
+	
 
 	//添加角色能力
 	void AddCharacterAbilities();

@@ -58,7 +58,7 @@ void AFuraCharacter::InitAbilityActorInfo()
 	//设置AttributeSet为playerstate上的AttributeSet（传递指针）
 	AttributeSet = FuraPlayerState->GetAttributeSet();
 
-
+	
 	//得到controller
 	if (AFuraPlayerControllerBase* FuraPlayerControllerBase = Cast<AFuraPlayerControllerBase>(GetController()))
 	{
@@ -69,6 +69,7 @@ void AFuraCharacter::InitAbilityActorInfo()
 		}
 	}
 
+	
 	//初始化player的属性
 	InitializeDefaultAttributes();
 }

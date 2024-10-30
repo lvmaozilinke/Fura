@@ -18,6 +18,8 @@ UMMC_MaxHp::UMMC_MaxHp()
 float UMMC_MaxHp::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
 	//Gather tags from source and target
+
+
 	const FGameplayTagContainer* SourceTags=Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags=Spec.CapturedTargetTags.GetAggregatedTags();
 
@@ -30,6 +32,7 @@ float UMMC_MaxHp::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpe
 	Vigor=FMath::Max<float>(Vigor,0.f);
 	ICombatInterface_F* CombatInterface_F=Cast<ICombatInterface_F>(Spec.GetContext().GetSourceObject());
 	const int32 PlayerLevel=CombatInterface_F->GetPlayerLevel();
-	
+	//最大生命值为
+	UE_LOG(LogTemp,Warning,TEXT("TEST:MaxHPSet%f"), 80.f+2.5f*Vigor+10.f*PlayerLevel);
 	return 80.f+2.5f*Vigor+10.f*PlayerLevel;
 }

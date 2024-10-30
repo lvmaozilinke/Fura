@@ -62,7 +62,7 @@ void AFuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	Dissolve();
 
-	bDead=true;
+	bDead = true;
 }
 
 // Called when the game starts or when spawned
@@ -119,6 +119,7 @@ void AFuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
+
 
 void AFuraCharacterBase::AddCharacterAbilities()
 {

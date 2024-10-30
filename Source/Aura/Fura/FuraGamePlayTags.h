@@ -60,8 +60,11 @@ public:
 	//区分不同类型的攻击
 	
 	FGameplayTag FAbilities_Attack;
-	
-	
+
+	//插槽和攻击蒙太奇动画（攻击方式，武器，左右手等）
+	FGameplayTag FMontage_Attack_Weapon;
+	FGameplayTag FMontage_Attack_RightHand;
+	FGameplayTag FMontage_Attack_LeftHand;
 	
 
 	//伤害属性和对应的伤害抗性的TMap

@@ -139,9 +139,6 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 	);
 
 
-	
-
-
 	/*
 	 * Resistances
 	 */
@@ -167,10 +164,12 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 	 * TMap of Damage Types to Resistances
 	 */
 	//伤害类型和抗性类型的TMap进行添加
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Fire,GamePlayTags.FAttributes_Resistance_Fire);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Lightning,GamePlayTags.FAttributes_Resistance_Lightning);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Arcane,GamePlayTags.FAttributes_Resistance_Arcane);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Physical,GamePlayTags.FAttributes_Resistance_Physical);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Fire, GamePlayTags.FAttributes_Resistance_Fire);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Lightning,
+	                                          GamePlayTags.FAttributes_Resistance_Lightning);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Arcane, GamePlayTags.FAttributes_Resistance_Arcane);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.FDamage_Physical,
+	                                          GamePlayTags.FAttributes_Resistance_Physical);
 
 	/*
 	 * Effects
@@ -192,8 +191,19 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 		FString("FAbilities_Attack")
 	);
 
-
-
-
-	
+	/*
+	 * Montage
+	 */
+	GamePlayTags.FMontage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FMontage.Attack.Weapon"),
+		FString("FMontage_Attack_Weapon")
+	);
+	GamePlayTags.FMontage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FMontage.Attack.RightHand"),
+		FString("FMontage_Attack_RightHand")
+	);
+	GamePlayTags.FMontage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("FMontage.Attack.LeftHand"),
+		FString("FMontage_Attack_LeftHand")
+	);
 }
