@@ -38,7 +38,7 @@ public:
 
 
 	//蒙太奇动画攻击，不同的攻击tag对应不同的动画，存到结构体数组里
-	UPROPERTY(EditAnywhere, Category="FCombat.h")
+	UPROPERTY(EditAnywhere, Category="Combat_F")
 	TArray<FTaggedMontage_F> AttachMontages;
 
 protected:
@@ -50,17 +50,17 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, Category="FCombat")
+	UPROPERTY(EditAnywhere, Category="Combat_F")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	//武器插槽，用于远程子弹生成位置(枪口)
-	UPROPERTY(EditAnywhere, Category="FCombat")
+	UPROPERTY(EditAnywhere, Category="Combat_F")
 	FName WeaponTipSocketName;
 	//左手插槽，攻击使用
-	UPROPERTY(EditAnywhere, Category="FCombat")
+	UPROPERTY(EditAnywhere, Category="Combat_F")
 	FName LeftHandSocketName;
 	//右手插槽，攻击使用)
-	UPROPERTY(EditAnywhere, Category="FCombat")
+	UPROPERTY(EditAnywhere, Category="Combat_F")
 	FName RightHandSocketName;
 
 	bool bDead = false;

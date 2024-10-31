@@ -212,3 +212,17 @@ void UFuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 		}
 	}
 }
+
+bool UFuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	const bool bFirstIsPlayer = FirstActor->ActorHasTag(FName("Player"));
+	const bool bSecondIsPlayer = SecondActor->ActorHasTag(FName("Player"));
+	const bool bFirstIsEnemy = FirstActor->ActorHasTag(FName("Enemy"));
+	const bool bSecondIsEnemy = SecondActor->ActorHasTag(FName("Enemy"));
+
+	const bool bBothArePlayer = bFirstIsPlayer && bSecondIsPlayer;
+	const bool bBothAreEnemies = bFirstIsEnemy && bSecondIsEnemy;
+	//都是玩家或者都是敌人，就返回true
+	const bool bFriend = bBothArePlayer || bBothAreEnemies;
+	return !bFriend;
+}

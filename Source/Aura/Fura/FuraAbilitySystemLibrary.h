@@ -59,5 +59,11 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category="FuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetLivePlayersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
-	                                       const TArray<AActor*>& ActorsToIgnore, float Radius, const FVector& SphereOrigin);
+	                                       const TArray<AActor*>& ActorsToIgnore, float Radius,
+	                                       const FVector& SphereOrigin);
+
+
+	//判断FirstActor和SecondActor的Tag是否为不同（是否不是友方？）
+	UFUNCTION(BlueprintPure, Category="FuraAbilitySystemLibrary|GameplayMechanics")
+	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
 };
