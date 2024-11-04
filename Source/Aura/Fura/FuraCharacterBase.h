@@ -105,7 +105,7 @@ protected:
 	//添加角色能力
 	void AddCharacterAbilities();
 
-
+ 
 	//死亡溶解材质
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;

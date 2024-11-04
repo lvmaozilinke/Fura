@@ -13,7 +13,7 @@ class UWidgetComponent;
 class UBehaviorTree;
 class AFuraAIController;
 
-UCLASS(Abstract)
+UCLASS()
 class AURA_API AFuraEnemy : public AFuraCharacterBase, public IEnemyInterface_F
 {
 	GENERATED_BODY()

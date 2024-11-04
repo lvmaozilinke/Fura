@@ -22,9 +22,11 @@ void AFuraEnemy::BeginPlay()
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	*/
-	InitAbilityActorInfo();
 	//初始化玩家移动速度
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
+	
+	InitAbilityActorInfo();
+	
 	if (HasAuthority())
 	{
 		//批量赋予能力(获取数组变量设置能力),给予能力时传递敌人类型
@@ -89,7 +91,6 @@ void AFuraEnemy::InitAbilityActorInfo()
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 
 	Cast<UFuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-
 	if (HasAuthority())
 	{
 		InitializeDefaultAttributes();
@@ -103,10 +104,15 @@ void AFuraEnemy::InitializeDefaultAttributes() const
 
 AFuraEnemy::AFuraEnemy()
 {
-	AbilitySystemComponent = CreateDefaultSubobject<UFuraAbilitySystemComponent>("AbilitySystemComponent");
-	AbilitySystemComponent->SetIsReplicated(true); //开启复制
-	AttributeSet = CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
 
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	
+	AbilitySystemComponent = CreateDefaultSubobject<UFuraAbilitySystemComponent>("AbilitySystemComponent");
+	
+	AbilitySystemComponent->SetIsReplicated(true); //开启复制
+
+	
 
 	//设置复制模式
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
@@ -116,7 +122,8 @@ AFuraEnemy::AFuraEnemy()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
-
+	
+	AttributeSet = CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
 	HPBar = CreateDefaultSubobject<UWidgetComponent>("HPBar");
 
 	//附加到根组件
