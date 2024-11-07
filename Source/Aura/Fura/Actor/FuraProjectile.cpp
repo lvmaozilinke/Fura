@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Aura/Aura.h"
+#include "Aura/Fura/FuraAbilitySystemLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -86,6 +87,13 @@ void AFuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	//检查碰到的是否是自己
 	if (DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() ==
 		OtherActor)
+	{
+		return;
+	}
+
+	//判断敌我关系
+	if (!UFuraAbilitySystemLibrary::IsNotFriend(DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser(),
+	                                           OtherActor))
 	{
 		return;
 	}
