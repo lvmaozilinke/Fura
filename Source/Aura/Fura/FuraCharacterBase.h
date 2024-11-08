@@ -50,7 +50,7 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	UPROPERTY(EditAnywhere, Category="Combat_F")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Combat_F")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	//武器插槽，用于远程子弹生成位置(枪口)
