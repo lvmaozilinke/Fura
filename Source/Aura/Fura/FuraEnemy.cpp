@@ -149,7 +149,7 @@ void AFuraEnemy::PossessedBy(AController* NewController)
 
 	//传递信息到行为树，告知当前敌人角色类型是否为*远程攻击*
 	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),
-	                                                           CharacterClass == ECharacterClass_F::Ranger);
+	                                                           CharacterClass == ECharacterClass_F::Ranger||CharacterClass == ECharacterClass_F::Elementalist);
 }
 
 void AFuraEnemy::HightLightActor()
