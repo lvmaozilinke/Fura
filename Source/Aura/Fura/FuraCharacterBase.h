@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemInterface.h"
+#include "NiagaraSystem.h"
 #include "interaction/CombatInterface_F.h"
 #include "GameFramework/Character.h"
 #include "FuraCharacterBase.generated.h"
@@ -40,6 +41,9 @@ public:
 	//蒙太奇动画攻击，不同的攻击tag对应不同的动画，存到结构体数组里
 	UPROPERTY(EditAnywhere, Category="Combat_F")
 	TArray<FTaggedMontage_F> AttachMontages;
+
+	//重写获取血液特效
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 
 protected:
 	// Called when the game starts or when spawned
@@ -119,6 +123,9 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Combat_F")
+	UNiagaraSystem* BloodEffect;
+	
 private:
 	//角色能力数组+
 	UPROPERTY(EditAnywhere, Category="Attributes_f")

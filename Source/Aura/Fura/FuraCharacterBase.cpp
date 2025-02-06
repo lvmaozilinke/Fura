@@ -66,6 +66,11 @@ void AFuraCharacterBase::MulticastHandleDeath_Implementation()
 	bDead = true;
 }
 
+UNiagaraSystem* AFuraCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
 // Called when the game starts or when spawned
 void AFuraCharacterBase::BeginPlay()
 {

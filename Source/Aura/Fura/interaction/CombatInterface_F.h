@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "CombatInterface_F.generated.h"
 
+class UNiagaraSystem;
+class UAnimMontage;
 USTRUCT(BlueprintType)
 struct FTaggedMontage_F
 {
@@ -17,6 +19,9 @@ struct FTaggedMontage_F
 	//tag
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag MontageTag;
+	//音效
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USoundBase* ImpactSound = nullptr;
 };
 
 
@@ -62,4 +67,6 @@ public:
 	//声明接口：获取攻击蒙太奇集合，在实现接口的类里面实现对应功能
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	TArray<FTaggedMontage_F> GetAttackMontages();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	UNiagaraSystem* GetBloodEffect();
 };
