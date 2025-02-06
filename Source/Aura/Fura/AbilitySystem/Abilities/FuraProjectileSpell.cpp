@@ -95,6 +95,11 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 			//计算伤害值
 			const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
 			//AssignTagSetByCallerMagnitude:将计算后的伤害值（ScaledDamage）与指定的 Tag（Pair.Key）绑定到一个 SpecHandle 上。
+			if (!SpecHandle.IsValid() || !SpecHandle.Data.IsValid())
+			{
+				UE_LOG(LogTemp, Error, TEXT("SpecHandle is invalid before assigning damage values!"));
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Assigning Damage: Tag = %s, ScaledDamage = %f"), *Pair.Key.ToString(), ScaledDamage);
 			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
 		}
 

@@ -19,6 +19,10 @@ void UFuraDamageGameplayAbility::CauseDamage(AActor* TargetActor)
 	{
 		return;
 	}
+	for (const auto& Pair : DamageTypes)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DamageTypes contains: %s with value %f"), *Pair.Key.ToString(), Pair.Value.GetValueAtLevel(GetAbilityLevel()));
+	}
 
 	for (TTuple<FGameplayTag, FScalableFloat> Pair : DamageTypes)
 	{

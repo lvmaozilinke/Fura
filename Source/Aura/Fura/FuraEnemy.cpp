@@ -24,9 +24,9 @@ void AFuraEnemy::BeginPlay()
 	*/
 	//初始化玩家移动速度
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
-	
+
 	InitAbilityActorInfo();
-	
+
 	if (HasAuthority())
 	{
 		//批量赋予能力(获取数组变量设置能力),给予能力时传递敌人类型
@@ -104,15 +104,13 @@ void AFuraEnemy::InitializeDefaultAttributes() const
 
 AFuraEnemy::AFuraEnemy()
 {
-
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
-	
+
 	AbilitySystemComponent = CreateDefaultSubobject<UFuraAbilitySystemComponent>("AbilitySystemComponent");
-	
+
 	AbilitySystemComponent->SetIsReplicated(true); //开启复制
 
-	
 
 	//设置复制模式
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
@@ -122,7 +120,7 @@ AFuraEnemy::AFuraEnemy()
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 
-	
+
 	AttributeSet = CreateDefaultSubobject<UFuraAttributeSet>("AttributeSet");
 	HPBar = CreateDefaultSubobject<UWidgetComponent>("HPBar");
 
@@ -149,7 +147,8 @@ void AFuraEnemy::PossessedBy(AController* NewController)
 
 	//传递信息到行为树，告知当前敌人角色类型是否为*远程攻击*
 	FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),
-	                                                           CharacterClass == ECharacterClass_F::Ranger||CharacterClass == ECharacterClass_F::Elementalist);
+	                                                           CharacterClass == ECharacterClass_F::Ranger ||
+	                                                           CharacterClass == ECharacterClass_F::Elementalist);
 }
 
 void AFuraEnemy::HightLightActor()
@@ -178,6 +177,9 @@ int32 AFuraEnemy::GetPlayerLevel()
 void AFuraEnemy::Die()
 {
 	SetLifeSpan(LifeSpan); //x秒后销毁(可以插入动画和特效)
+	//行为树设置我是否死亡bool值为真。
+	if (FuraAIController)FuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
+
 	Super::Die();
 }
 
