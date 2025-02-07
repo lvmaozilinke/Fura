@@ -71,6 +71,20 @@ UNiagaraSystem* AFuraCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
+FTaggedMontage_F AFuraCharacterBase::GetToggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	//遍历蒙太奇攻击动画数组
+	for (FTaggedMontage_F TaggedMontage : AttachMontages)
+	{
+		//找出对应tag的蒙太奇
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage_F();
+}
+
 // Called when the game starts or when spawned
 void AFuraCharacterBase::BeginPlay()
 {
@@ -82,22 +96,22 @@ FVector AFuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 {
 	const FFuraGamePlayTags& GamePlayTags = FFuraGamePlayTags::Get();
 	//查看tag是否为weapon
-	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_Weapon) && IsValid(Weapon))
+	if (MontageTag.MatchesTagExact(GamePlayTags.FCombatSocket_Weapon) && IsValid(Weapon))
 	{
 		//从weapon 上获取对应的位置
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
 	}
-	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_LeftHand))
+	if (MontageTag.MatchesTagExact(GamePlayTags.FCombatSocket_LeftHand))
 	{
 		//从左手指定的插槽名称上获取位置
 		return GetMesh()->GetSocketLocation(LeftHandSocketName);
 	}
-	if (MontageTag.MatchesTagExact(GamePlayTags.FMontage_Attack_RightHand))
+	if (MontageTag.MatchesTagExact(GamePlayTags.FCombatSocket_RightHand))
 	{
 		//从右手指定的插槽名称上获取位置
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
 	}
-	
+
 	return FVector();
 }
 

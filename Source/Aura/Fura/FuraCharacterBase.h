@@ -45,6 +45,8 @@ public:
 	//重写获取血液特效
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 
+	//重写获取动画蒙太奇
+	virtual FTaggedMontage_F GetToggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

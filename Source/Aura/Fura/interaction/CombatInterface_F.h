@@ -9,6 +9,7 @@
 
 class UNiagaraSystem;
 class UAnimMontage;
+
 USTRUCT(BlueprintType)
 struct FTaggedMontage_F
 {
@@ -16,9 +17,12 @@ struct FTaggedMontage_F
 	//蒙太奇动画
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UAnimMontage* Montage = nullptr;
-	//tag
+	//Montage tag
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTag MontageTag;
+	//Socket Tag
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag SocketTag;
 	//音效
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USoundBase* ImpactSound = nullptr;
@@ -69,4 +73,8 @@ public:
 	TArray<FTaggedMontage_F> GetAttackMontages();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UNiagaraSystem* GetBloodEffect();
+
+	//通过标签获取蒙太奇
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FTaggedMontage_F GetToggedMontageByTag(const FGameplayTag& MontageTag);
 };

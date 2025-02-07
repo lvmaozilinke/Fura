@@ -62,10 +62,15 @@ public:
 	FGameplayTag FAbilities_Attack;
 
 	//插槽和攻击蒙太奇动画（攻击方式，武器，左右手等）
-	FGameplayTag FMontage_Attack_Weapon;
-	FGameplayTag FMontage_Attack_RightHand;
-	FGameplayTag FMontage_Attack_LeftHand;
-	
+	FGameplayTag FCombatSocket_Weapon;
+	FGameplayTag FCombatSocket_RightHand;
+	FGameplayTag FCombatSocket_LeftHand;
+
+	//
+	FGameplayTag FMontage_Attack_1;
+	FGameplayTag FMontage_Attack_2;
+	FGameplayTag FMontage_Attack_3;
+	FGameplayTag FMontage_Attack_4;
 
 	//伤害属性和对应的伤害抗性的TMap
 	TMap<FGameplayTag,FGameplayTag> DamageTypesToResistances;
