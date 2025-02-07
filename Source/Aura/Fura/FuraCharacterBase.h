@@ -127,6 +127,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Combat_F")
 	UNiagaraSystem* BloodEffect;
+
+	//死亡时播放的声音
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Combat_F")
+	USoundBase* DeathSound;
 	
 private:
 	//角色能力数组+

@@ -7,6 +7,7 @@
 #include "FuraGamePlayTags.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFuraCharacterBase::AFuraCharacterBase()
@@ -49,6 +50,8 @@ void AFuraCharacterBase::Die()
 
 void AFuraCharacterBase::MulticastHandleDeath_Implementation()
 {
+	//播放死亡音效
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
 	//设置武器
 	Weapon->SetSimulatePhysics(true);
 	Weapon->SetEnableGravity(true);
