@@ -66,7 +66,9 @@ void AFuraProjectile::Destroyed()
 		if (LoopingSoundComponent)
 		{
 			LoopingSoundComponent->Stop();
+			
 		}
+		bHit=true;
 	}
 
 	Super::Destroyed();
@@ -110,6 +112,7 @@ void AFuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		{
 			LoopingSoundComponent->Stop();
 		}
+		bHit=true;
 	}
 
 
