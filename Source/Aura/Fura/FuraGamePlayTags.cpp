@@ -206,6 +206,10 @@ void FFuraGamePlayTags::InitializeNativeGameplayTags()
 		FName("FCombatSocket.LeftHand"),
 		FString("FCombatSocket_LeftHand")
 	);
+	GamePlayTags.FCombatSocket_Tail = UGameplayTagsManager::Get().AddNativeGameplayTag(
+	FName("FCombatSocket.Tail"),
+	FString("FCombatSocket_Tail")
+);
 
 	/*
 	 * Montages	

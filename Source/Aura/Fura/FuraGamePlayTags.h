@@ -65,6 +65,8 @@ public:
 	FGameplayTag FCombatSocket_Weapon;
 	FGameplayTag FCombatSocket_RightHand;
 	FGameplayTag FCombatSocket_LeftHand;
+	FGameplayTag FCombatSocket_Tail;//尾巴
+	
 
 	//
 	FGameplayTag FMontage_Attack_1;

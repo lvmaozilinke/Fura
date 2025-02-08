@@ -114,6 +114,12 @@ FVector AFuraCharacterBase::GetCombatSocketLocation_Implementation(const FGamepl
 		//从右手指定的插槽名称上获取位置
 		return GetMesh()->GetSocketLocation(RightHandSocketName);
 	}
+	if (MontageTag.MatchesTagExact(GamePlayTags.FCombatSocket_Tail))
+	{
+		//从尾巴指定的插槽名称上获取位置
+		return GetMesh()->GetSocketLocation(TailSocketName);
+	}
+	
 
 	return FVector();
 }

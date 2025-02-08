@@ -9,6 +9,8 @@
 
 class AFuraProjectile;
 class UGameplayEffect;
+struct FGameplayTag;
+
 /**
  * 
  */
@@ -22,8 +24,9 @@ protected:
 	                             const FGameplayAbilityActivationInfo ActivationInfo,
 	                             const FGameplayEventData* TriggerEventData) override;
 
+	//生成子弹，传入子弹目标位置和插槽tag
 	UFUNCTION(BlueprintCallable, Category="Projectile_F")
-	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation,const FGameplayTag& SocketTag);
 
 	//火球
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

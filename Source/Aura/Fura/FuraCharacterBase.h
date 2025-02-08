@@ -68,6 +68,9 @@ protected:
 	//右手插槽，攻击使用)
 	UPROPERTY(EditAnywhere, Category="Combat_F")
 	FName RightHandSocketName;
+	//尾巴插槽，攻击使用)
+	UPROPERTY(EditAnywhere, Category="Combat_F")
+	FName  TailSocketName;
 
 	bool bDead = false;
 

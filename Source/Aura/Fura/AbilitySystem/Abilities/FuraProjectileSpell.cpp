@@ -21,7 +21,7 @@ void UFuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	//UKismetSystemLibrary::PrintString(this,FString("ActivateAbility(C++)"),true,true,FLinearColor::Yellow,3);
 }
 
-void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation,const FGameplayTag& SocketTag)
 {
 	//判断是否为服务器
 	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
@@ -40,7 +40,7 @@ void UFuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		 *它的作用是在不知道实际类实现的情况下，安全地调用实现了该接口的任何对象的方法。
 		*/
 		const FVector SocketLocation = ICombatInterface_F::Execute_GetCombatSocketLocation(
-			GetAvatarActorFromActorInfo(),FFuraGamePlayTags::Get().FCombatSocket_Weapon);
+			GetAvatarActorFromActorInfo(),SocketTag);
 
 
 		//子弹的旋转角度(从插槽位置到射击目标位置的向量)
