@@ -142,7 +142,7 @@ public:
 
 	// ==========【伤害属性】==========
 
-	/** 空手伤害 */
+	/** 物理伤害 */
 	UPROPERTY(BlueprintReadOnly, Category="Damage", ReplicatedUsing=OnRep_UnarmedDamage)
 	FGameplayAttributeData UnarmedDamage;
 	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, UnarmedDamage)
@@ -184,7 +184,7 @@ public:
 
 	// ==========【抗性属性】==========
 
-	/** 空手抗性 */
+	/** 物理抗性 */
 	UPROPERTY(BlueprintReadOnly, Category="Resistance", ReplicatedUsing=OnRep_UnarmedResistance)
 	FGameplayAttributeData UnarmedResistance;
 	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, UnarmedResistance)

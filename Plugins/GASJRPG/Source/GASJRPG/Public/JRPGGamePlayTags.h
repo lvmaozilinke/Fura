@@ -39,7 +39,7 @@ public:
 	FGameplayTag JRPGAttributes_Secondary_CriticalHitResistance;  // 暴击抗性
 
 	// ==========【伤害属性】==========
-	FGameplayTag JRPGAttributes_Damage_Unarmed;       // 空手伤害
+	FGameplayTag JRPGAttributes_Damage_Unarmed;       // 物理伤害
 	FGameplayTag JRPGAttributes_Damage_Fire;          // 火焰伤害
 	FGameplayTag JRPGAttributes_Damage_Bullet;        // 子弹伤害
 	FGameplayTag JRPGAttributes_Damage_Ice;           // 冰冻伤害
@@ -49,7 +49,7 @@ public:
 	FGameplayTag JRPGAttributes_Damage_Laser;         // 光线伤害
 
 	// ==========【抗性属性】==========
-	FGameplayTag JRPGAttributes_Resistance_Unarmed;   // 空手抗性
+	FGameplayTag JRPGAttributes_Resistance_Unarmed;   // 物理抗性
 	FGameplayTag JRPGAttributes_Resistance_Fire;      // 火焰抗性
 	FGameplayTag JRPGAttributes_Resistance_Bullet;    // 子弹抗性
 	FGameplayTag JRPGAttributes_Resistance_Ice;       // 冰冻抗性

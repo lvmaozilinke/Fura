@@ -60,7 +60,7 @@ void UJRPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, CriticalHitResistance, COND_None, REPNOTIFY_Always);
 
 	// ==========【伤害属性】==========
-	/** 复制空手伤害，每次变化都会通知客户端 */
+	/** 复制物理伤害，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, UnarmedDamage, COND_None, REPNOTIFY_Always);
 
 	/** 复制火焰伤害，每次变化都会通知客户端 */
@@ -85,7 +85,7 @@ void UJRPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, LaserDamage, COND_None, REPNOTIFY_Always);
 
 	// ==========【抗性属性】==========
-	/** 复制空手抗性，每次变化都会通知客户端 */
+	/** 复制物理抗性，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, UnarmedResistance, COND_None, REPNOTIFY_Always);
 
 	/** 复制火焰抗性，每次变化都会通知客户端 */
