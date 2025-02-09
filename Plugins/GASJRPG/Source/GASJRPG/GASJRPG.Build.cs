@@ -25,7 +25,7 @@ public class GASJRPG : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core",
+				"Core", "GameplayAbilities",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -37,7 +37,7 @@ public class GASJRPG : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore","GameplayTags", "GameplayTasks"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

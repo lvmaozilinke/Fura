@@ -80,5 +80,5 @@ public:
 	FGameplayTag FEffects_HitReact;
 
 private:
-	static FFuraGamePlayTags GamePlayTags;
+		static FFuraGamePlayTags GamePlayTags;
 };
