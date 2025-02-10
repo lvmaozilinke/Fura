@@ -94,7 +94,7 @@ protected:
 	virtual AActor* GetAvatar_Implementation() override;
 
 	//战斗蒙太奇数组
-	virtual TArray<FTaggedMontage_F> GetAttackMontages_Implementation() override;
+	virtual TArray<FJRPGTaggedMontage> GetAttackMontages_Implementation() override;
 
 	//（收到伤害蒙太奇）
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;

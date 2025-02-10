@@ -16,6 +16,7 @@ UCLASS()
 class GASJRPG_API UJRPGAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+public:
 	void AbilityActorInfoSet();
 	EffectAssetTags EffectAssetTags;
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);

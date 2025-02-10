@@ -72,7 +72,7 @@ public:
 
 	//获取攻击蒙太奇数组
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	TArray<FTaggedMontage_F> GetAttackMontages();
+	TArray<FJRPGTaggedMontage> GetAttackMontages();
 	
 	//伤害流血特效
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)

@@ -5,6 +5,13 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
+#define CUSTOM_DEPTH_RED 250
+#define CUSTOM_DEPTH_BLUE 251
+#define CUSTOM_DEPTH_TAN 252
+
+#define ECC_JRPG_Projectile ECollisionChannel::ECC_GameTraceChannel1
+#define ECC_JRPG_Target ECollisionChannel::ECC_GameTraceChannel2
+#define ECC_JRPG_ExcludePlayers ECollisionChannel::ECC_GameTraceChannel3
 class FGASJRPGModule : public IModuleInterface
 {
 public:
