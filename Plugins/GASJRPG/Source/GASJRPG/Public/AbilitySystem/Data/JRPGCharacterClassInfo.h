@@ -32,11 +32,11 @@ struct FJRPGCharacterClassDefaultInfo
 	GENERATED_BODY()
 
 	//UGameplayEffect：类似buff，捕获属性后计算给出新的属性值
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
 	TSubclassOf<UGameplayEffect> PrimaryAttributes;
 
 	//角色能力技能数组（GameplayAbility）
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>>CommonAttributes;
 };
 
@@ -48,27 +48,27 @@ class GASJRPG_API UJRPGCharacterClassInfo : public UDataAsset
 
 public:
 	//角色类型对应不同的Effect和Ability能力的TMap
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
 	TMap<EJRPGCharacterClass, FJRPGCharacterClassDefaultInfo> CharacterClassInformation;
 
 	//
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Common Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults")
 	TSubclassOf<UGameplayEffect> SecondaryAttributes;
 
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Common Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
 
 
-	//返回结构体
-	FCharacterClassDefaultInfo_F GetClassDefaultInfo(ECharacterClass_F CharacterClass);
+	//根绝角色类型返回对应的effect和ability
+	FJRPGCharacterClassDefaultInfo GetClassDefaultInfo(EJRPGCharacterClass CharacterClass);
 
 
 	//能力集合数组
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults_F")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAbilities;
 
 
 	//曲线表格，不同等级对应的护甲计算参数值（护甲值*参数值）
-	UPROPERTY(EditDefaultsOnly, Category="Common Class Defaults_F|Damage")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
 };
