@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystem/Data/JRPGCharacterClassInfo.h"
+#include "AbilitySystem/Data/JRPGEnemyClassInfo.h"
 #include "GameFramework/GameModeBase.h"
 #include "JRPGGameModeBase.generated.h"
 
@@ -17,7 +18,10 @@ class GASJRPG_API AJRPGGameModeBase : public AGameModeBase
 
 public:
 	//角色类型
-	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
+	UPROPERTY(EditDefaultsOnly, Category="JRPG|Character Class Defaults")
 	TObjectPtr<UJRPGCharacterClassInfo> CharacterClassInfo;
+	//敌人类型
+	UPROPERTY(EditDefaultsOnly, Category="JRPG|Character Class Defaults")
+	TObjectPtr<UJRPGEnemyClassInfo> EnemyClassInfo;
 
 };
