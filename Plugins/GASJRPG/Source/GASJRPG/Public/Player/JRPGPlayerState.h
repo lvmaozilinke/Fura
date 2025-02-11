@@ -10,7 +10,7 @@
 class UAbilitySystemComponent;
 class UAttributeSet;
 /**
- * 
+ * PlayerState很重要，存储玩家控制的多个角色
  */
 UCLASS()
 class GASJRPG_API AJRPGPlayerState : public APlayerState, public IAbilitySystemInterface

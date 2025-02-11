@@ -22,6 +22,9 @@ public:
 	// Sets default values for this character's properties
 	AJRPGCharacterBase();
 
+	//初始化 能力系统组件
+	virtual void Init();
+
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }

@@ -7,6 +7,7 @@
 #include "GASJRPG.h"
 #include "JRPGGamePlayTags.h"
 #include "AbilitySystem/JRPGAbilitySystemComponent.h"
+#include "AbilitySystem/JRPGAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 
 
@@ -28,6 +29,27 @@ AJRPGCharacterBase::AJRPGCharacterBase()
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//创建ASC
+	AbilitySystemComponent = CreateDefaultSubobject<UJRPGAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+
+	//创建AttributeSet
+	AttributeSet = CreateDefaultSubobject<UJRPGAttributeSet>("AttributeSet");
+
+	
+}
+
+void AJRPGCharacterBase::Init()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();		
+	}
 }
 
 UAbilitySystemComponent* AJRPGCharacterBase::GetAbilitySystemComponent() const
@@ -153,10 +175,7 @@ void AJRPGCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 
 void AJRPGCharacterBase::InitializeDefaultAttributes() const
 {
-	//CharacterBase基础类通用效果附加（角色类和敌人类通用）
-	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+	
 }
 
 void AJRPGCharacterBase::AddCharacterAbilities()
