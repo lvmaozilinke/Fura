@@ -25,7 +25,7 @@ public class GASJRPG : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"Core", "GameplayAbilities",
+				"Core", "GameplayAbilities", "Niagara"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
