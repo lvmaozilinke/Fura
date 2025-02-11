@@ -3,6 +3,8 @@
 
 #include "Character/JRPGCharacter.h"
 
+#include "AbilitySystem/JRPGAbilitySystemComponent.h"
+#include "AbilitySystem/JRPGAbilitySystemLibrary.h"
 #include "Player/JRPGPlayerState.h"
 
 
@@ -38,10 +40,20 @@ int32 AJRPGCharacter::GetPlayerLevel()
 	return JRPGPlayerState->GetPlayerLevel();
 }
 
+void AJRPGCharacter::InitializeDefaultAttributes() const
+{
+	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+}
+
 void AJRPGCharacter::InitAbilityActorInfo()
 {
 	//角色添加Effect
-	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
-	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();
+	}
+	
 }

@@ -13,10 +13,10 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
                                                                      UAbilitySystemComponent* ASC)
 {
 	//获取character class info
-	UJRPGCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
+	UJRPGCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContentObject);;
 
 	//根据角色类型获取不同的属性等信息
-	const FJRPGCharacterClassDefaultInfo CharacterClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+	const FJRPGCharacterClassDefaultInfo CharacterClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
@@ -33,7 +33,7 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 	
 	/*SecondaryAttributes*/
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
-		ClassInfo->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
+		CharacterClassInfo->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data.Get());
 	
 	/*VitalAttributes*/
@@ -41,7 +41,7 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(const UObje
 	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
 
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
-		ClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
+		CharacterClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
 
@@ -50,10 +50,10 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject* 
                                                                  UAbilitySystemComponent* ASC)
 {
 	//获取character class info
-	UJRPGCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContentObject);;
+	UJRPGEnemyClassInfo* EnemyClassInfo = GetEnemyClassInfo(WorldContentObject);;
 
 	//根据角色类型获取不同的属性等信息
-	const FJRPGCharacterClassDefaultInfo CharacterClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
+	const FJRPGEnemyClassDefaultInfo EnemyClassDefaultInfo = EnemyClassInfo->GetClassDefaultInfo(EnemyClass);
 
 	AActor* AvatarActor = ASC->GetAvatarActor();
 
@@ -62,7 +62,7 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject* 
 	PrimaryAttributesContextHandle.AddSourceObject(AvatarActor);
 
 	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
-		CharacterClassDefaultInfo.PrimaryAttributes, Level, PrimaryAttributesContextHandle);
+		EnemyClassDefaultInfo.PrimaryAttributes, Level, PrimaryAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data.Get());
 	/*SecondaryAttributes*/
 	FGameplayEffectContextHandle SecondaryAttributesContextHandle = ASC->MakeEffectContext();
@@ -70,7 +70,7 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject* 
 	
 	/*SecondaryAttributes*/
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
-		ClassInfo->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
+		EnemyClassInfo->SecondaryAttributes, Level, SecondaryAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*SecondaryAttributesSpecHandle.Data.Get());
 	
 	/*VitalAttributes*/
@@ -78,7 +78,7 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(const UObject* 
 	VitalAttributesContextHandle.AddSourceObject(AvatarActor);
 
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
-		ClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
+		EnemyClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
 
