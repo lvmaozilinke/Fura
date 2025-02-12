@@ -5,7 +5,6 @@
 
 #include "AbilitySystem/JRPGAbilitySystemComponent.h"
 #include "AbilitySystem/JRPGAbilitySystemLibrary.h"
-#include "Player/JRPGPlayerState.h"
 
 
 // Sets default values
