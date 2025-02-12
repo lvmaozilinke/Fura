@@ -35,9 +35,7 @@ void AJRPGCharacter::OnRep_PlayerState()
 
 int32 AJRPGCharacter::GetPlayerLevel()
 {
-	const AJRPGPlayerState* JRPGPlayerState = GetPlayerState<AJRPGPlayerState>();
-	check(JRPGPlayerState);
-	return JRPGPlayerState->GetPlayerLevel();
+	return Level;
 }
 
 void AJRPGCharacter::InitializeDefaultAttributes() const

@@ -3,6 +3,9 @@
 
 #include "Character/JRPGEnemy.h"
 
+#include "AbilitySystem/JRPGAbilitySystemComponent.h"
+#include "AbilitySystem/JRPGAbilitySystemLibrary.h"
+
 
 // Sets default values
 AJRPGEnemy::AJRPGEnemy()
@@ -11,22 +14,42 @@ AJRPGEnemy::AJRPGEnemy()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void AJRPGEnemy::BeginPlay()
+void AJRPGEnemy::Init()
 {
-	Super::BeginPlay();
-	
+	Super::Init();
+	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
-// Called every frame
-void AJRPGEnemy::Tick(float DeltaTime)
+void AJRPGEnemy::PossessedBy(AController* NewController)
 {
-	Super::Tick(DeltaTime);
+	Super::PossessedBy(NewController);
 }
 
-// Called to bind functionality to input
-void AJRPGEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AJRPGEnemy::OnRep_PlayerState()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::OnRep_PlayerState();
+}
+
+int32 AJRPGEnemy::GetPlayerLevel()
+{
+	return Level;
+}
+
+void AJRPGEnemy::InitializeDefaultAttributes() const
+{
+	UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
+}
+
+void AJRPGEnemy::InitAbilityActorInfo()
+{
+	//敌人添加Effect
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	if (HasAuthority())
+	{
+		InitializeDefaultAttributes();
+	}
 }
 
