@@ -19,6 +19,10 @@ void UJRPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	// REPNOTIFY_Always:总是同步          COND_None：【只要修改就同步】This property has no condition, and will send anytime it changes
 	// ==========【等级相关属性】==========
+
+	/** 复制玩家经验值，每次变化都会通知客户端 */
+	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Experience, COND_None, REPNOTIFY_Always);
+
 	/** 复制玩家等级，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Level, COND_None, REPNOTIFY_Always);
 
@@ -119,8 +123,8 @@ void UJRPGAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 		//将数据限制最大值和最小值[const float X, const float Min, const float Max]
 		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
 	}
-
 }
+
 /*
 *在GameplayEffect执行之前调用，修改属性的基本值。不能再做任何更改。
 *注意，这只在'execute'期间调用。例如，修改属性的“基本值”。它不会在GameplayEffect的应用过程中被调用，比如5秒+10的移动速度buff。
@@ -188,11 +192,16 @@ void UJRPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 }
 
+void UJRPGAttributeSet::OnRep_Experience(const FGameplayAttributeData& OldExperience) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Experience, OldExperience);
+}
+
 void UJRPGAttributeSet::OnRep_Level(const FGameplayAttributeData& OldLevel) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Level, OldLevel);
-
 }
+
 void UJRPGAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Health, OldHealth);

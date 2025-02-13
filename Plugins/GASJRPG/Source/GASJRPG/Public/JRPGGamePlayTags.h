@@ -20,6 +20,7 @@ public:
 
 
 	// ==========【等级相关属性】==========
+	FGameplayTag JRPGAttributes_Experience; // 玩家经验值
 	FGameplayTag JRPGAttributes_Level; // 玩家等级
 	FGameplayTag JRPGAttributes_Health; // 玩家当前血量
 	FGameplayTag JRPGAttributes_MaxHealth; // 玩家最大血量

@@ -74,7 +74,12 @@ public:
 
 
 	// ==========【等级相关属性】==========
-
+	
+	/** 角色当前经验值 */
+	UPROPERTY(BlueprintReadOnly, Category="Level", ReplicatedUsing=OnRep_Experience)
+	FGameplayAttributeData Experience;
+	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, Experience)
+	
 	/** 玩家等级 */
 	UPROPERTY(BlueprintReadOnly, Category="Level", ReplicatedUsing=OnRep_Level)
 	FGameplayAttributeData Level;
@@ -233,6 +238,10 @@ public:
 	//对应的Rep
 	// ==========【等级相关属性】==========
 
+	/** 当玩家等级变化时触发 */
+	UFUNCTION()
+	void OnRep_Experience(const FGameplayAttributeData& OldExperience) const;
+	
 	/** 当玩家等级变化时触发 */
 	UFUNCTION()
 	void OnRep_Level(const FGameplayAttributeData& OldLevel) const;
