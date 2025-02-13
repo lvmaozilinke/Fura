@@ -9,37 +9,44 @@ void UExecCalc_JRPG_CheckLevelUp::Execute_Implementation(
 	const FGameplayEffectCustomExecutionParameters& ExecutionParams,
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
-	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
-	// 获取能力系统组件
+	// 1. 获取能力系统组件
 	UAbilitySystemComponent* ASC = ExecutionParams.GetTargetAbilitySystemComponent();
 	if (!ASC) return;
 
-	// 获取当前 XP 和 Level
-	const UJRPGAttributeSet* Attributes = Cast<UJRPGAttributeSet>(ASC->GetAttributeSet(UJRPGAttributeSet::StaticClass()));
+	// 2. 获取属性集
+	const UJRPGAttributeSet* Attributes = Cast<UJRPGAttributeSet>(
+		ASC->GetAttributeSet(UJRPGAttributeSet::StaticClass()));
 	if (!Attributes) return;
 
 	float CurrentXP = Attributes->GetExperience();
 	float CurrentLevel = Attributes->GetLevel();
-
-	// 读取 CurveTable 里的经验需求
-	UCurveTable* XPTable = LoadObject<UCurveTable>(nullptr, TEXT("/Blueprints/CurveTables/Effect/CT_LevelExperience.CT_LevelExperience'"));
+	
+	UE_LOG(LogTemp, Warning, TEXT("UExecCalc_JRPG_CheckLevelUp --xp: %f, level: %f"), CurrentXP, CurrentLevel);
+	
+	// 3. 获取曲线表
+	static const FString CurvePath = TEXT("/GASJRPG/Blueprints/CurveTables/Effect/CT_LevelExperience.CT_LevelExperience");
+	UCurveTable* XPTable = LoadObject<UCurveTable>(nullptr, *CurvePath);
 	if (!XPTable) return;
-	FRealCurve* XPCurve = XPTable->FindCurve(TEXT("XP"), TEXT(""));
+
+	// 4. 读取经验曲线
+	const FRealCurve* XPCurve = XPTable->FindCurve(TEXT("XP"), TEXT(""));
 	if (!XPCurve)
 	{
 		UE_LOG(LogTemp, Error, TEXT("Failed to find curve named 'XP'"));
+		return;
 	}
-	
-	// 3. 计算当前经验对应的等级
+
+	// 5. 计算新的等级
 	int32 NewLevel = FMath::RoundToInt(XPCurve->Eval(CurrentXP));
-	//判断是否升级
+
+	// 6. 判断是否升级
 	if (NewLevel > CurrentLevel)
 	{
-		// 触发 `GE_SetLevel` 进行升级
-		FGameplayEffectSpecHandle LevelUpEffect = ASC->MakeOutgoingSpec(UGameplayEffect::StaticClass(), 1.0f, ASC->MakeEffectContext());
-		if (LevelUpEffect.IsValid())
-		{
-			ASC->ApplyGameplayEffectSpecToSelf(*LevelUpEffect.Data.Get());
-		}
+		// 通过 OutExecutionOutput 修改属性
+		FGameplayModifierEvaluatedData LevelMod(
+			FGameplayAttribute(FindFieldChecked<FProperty>(UJRPGAttributeSet::StaticClass(),
+			                                               GET_MEMBER_NAME_CHECKED(UJRPGAttributeSet, Level))),
+			EGameplayModOp::Override, NewLevel);
+		OutExecutionOutput.AddOutputModifier(LevelMod);
 	}
 }
