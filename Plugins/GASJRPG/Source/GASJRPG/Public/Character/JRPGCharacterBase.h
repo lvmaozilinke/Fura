@@ -25,6 +25,7 @@ public:
 	AJRPGCharacterBase();
 
 	//初始化 能力系统组件
+	UFUNCTION(BlueprintCallable,Category="JRPG|Character Class Default")
 	virtual void Init();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -131,7 +132,7 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 
 	//添加角色能力
-	void AddCharacterAbilities();
+	void AddAbilities();
 
 	//收到伤害的特效
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Combat")

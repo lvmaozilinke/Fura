@@ -18,7 +18,7 @@ void AJRPGEnemy::Init()
 {
 	Super::Init();
 	InitAbilityActorInfo();
-	AddCharacterAbilities();
+	AddAbilities();
 }
 
 void AJRPGEnemy::PossessedBy(AController* NewController)
@@ -38,18 +38,8 @@ int32 AJRPGEnemy::GetPlayerLevel()
 
 void AJRPGEnemy::InitializeDefaultAttributes() const
 {
+	//调用函数库初始化角色属性
 	UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
 }
 
-void AJRPGEnemy::InitAbilityActorInfo()
-{
-	//敌人添加Effect
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-	if (HasAuthority())
-	{
-		InitializeDefaultAttributes();
-	}
-}
 

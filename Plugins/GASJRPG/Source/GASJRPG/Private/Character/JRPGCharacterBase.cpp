@@ -37,19 +37,13 @@ AJRPGCharacterBase::AJRPGCharacterBase()
 
 	//创建AttributeSet
 	AttributeSet = CreateDefaultSubobject<UJRPGAttributeSet>("AttributeSet");
-
-	
 }
 
 void AJRPGCharacterBase::Init()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-
-	if (HasAuthority())
-	{
-		InitializeDefaultAttributes();		
-	}
+	InitializeDefaultAttributes();
 }
 
 UAbilitySystemComponent* AJRPGCharacterBase::GetAbilitySystemComponent() const
@@ -149,6 +143,9 @@ UAnimMontage* AJRPGCharacterBase::GetHitReactMontage_Implementation()
 
 void AJRPGCharacterBase::InitAbilityActorInfo()
 {
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	InitializeDefaultAttributes();
 }
 
 void AJRPGCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const
@@ -175,19 +172,12 @@ void AJRPGCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gameplay
 
 void AJRPGCharacterBase::InitializeDefaultAttributes() const
 {
-	
 }
 
-void AJRPGCharacterBase::AddCharacterAbilities()
+void AJRPGCharacterBase::AddAbilities()
 {
 	//添加角色能力
 	UJRPGAbilitySystemComponent* ASC = CastChecked<UJRPGAbilitySystemComponent>(AbilitySystemComponent);
-
-	//只在服务器添加（单机游戏可以改动该部分）
-	if (!HasAuthority())
-	{
-		return;
-	}
 	//ASC 添加能力
 	ASC->AddCharacterAbilities(StartupAbilities);
 }

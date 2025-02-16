@@ -27,11 +27,10 @@ public:
 	//Combat Interface:获取玩家等级
 	virtual int32 GetPlayerLevel() override;
 
-	//
 	virtual void InitializeDefaultAttributes() const override;
 
 protected:
-	virtual void InitAbilityActorInfo() override;
+
 
 	//设置角色类型,默认为猎人// 猎人,士兵,摔跤手,护士,艺术家,机械师
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Character Class Default")

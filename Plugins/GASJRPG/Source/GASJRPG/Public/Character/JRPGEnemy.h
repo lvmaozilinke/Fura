@@ -29,7 +29,6 @@ public:
 	virtual void InitializeDefaultAttributes() const override;
 
 protected:
-	virtual void InitAbilityActorInfo() override;
 
 	/*
 	* 敌人类型，每个类型不同的属性

@@ -18,7 +18,7 @@ void AJRPGCharacter::Init()
 {
 	Super::Init();
 	InitAbilityActorInfo();
-	AddCharacterAbilities();
+	AddAbilities();
 }
 
 void AJRPGCharacter::PossessedBy(AController* NewController)
@@ -39,18 +39,7 @@ int32 AJRPGCharacter::GetPlayerLevel()
 
 void AJRPGCharacter::InitializeDefaultAttributes() const
 {
+	//调用函数库初始化角色属性
 	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }
 
-void AJRPGCharacter::InitAbilityActorInfo()
-{
-	//角色添加Effect
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
-	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-	if (HasAuthority())
-	{
-		InitializeDefaultAttributes();
-	}
-	
-}
