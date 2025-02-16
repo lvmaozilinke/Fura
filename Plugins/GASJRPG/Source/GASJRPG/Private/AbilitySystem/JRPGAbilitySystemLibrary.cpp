@@ -2,8 +2,11 @@
 
 
 #include "AbilitySystem/JRPGAbilitySystemLibrary.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
+#include "JRPGGamePlayTags.h"
 #include "AbilitySystem/Data/JRPGCharacterClassInfo.h"
 #include "Game/JRPGGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -100,4 +103,30 @@ UJRPGEnemyClassInfo* UJRPGAbilitySystemLibrary::GetEnemyClassInfo(const UObject*
 		return nullptr;
 	}
 	return JRPGGameMode->EnemyClassInfo;
+}
+
+void UJRPGAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
+	UAbilitySystemComponent* ASC, TMap<FGameplayTag, float> FJRPGTagAttributesValue)
+{
+	//根据教程来，先不使用SaveGame,先用TMap来设置基础属性
+	
+	UJRPGCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (CharacterClassInfo == nullptr) return;
+
+	const FJRPGGamePlayTags& GameplayTags = FJRPGGamePlayTags::Get();
+
+	const AActor* SourceAvatarActor = ASC->GetAvatarActor();
+
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(SourceAvatarActor);
+
+	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Primary_Speed,FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_Primary_Speed]);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_Level]);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Primary_ArmStrength,FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_Primary_ArmStrength]);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_MaxHealth,FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_MaxHealth]);
+	
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	
 }

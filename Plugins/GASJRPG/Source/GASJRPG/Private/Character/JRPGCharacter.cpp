@@ -2,8 +2,6 @@
 
 
 #include "Character/JRPGCharacter.h"
-
-#include "AbilitySystem/JRPGAbilitySystemComponent.h"
 #include "AbilitySystem/JRPGAbilitySystemLibrary.h"
 
 

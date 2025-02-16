@@ -57,6 +57,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults")
 	TSubclassOf<UGameplayEffect> VitalAttributes;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "JRPG Character Common Class Defaults")
+	TSubclassOf<UGameplayEffect> PrimaryAttributes_SetByCaller;
 
 
 	//根绝角色类型返回对应的effect和ability
@@ -71,4 +74,6 @@ public:
 	//曲线表格，不同等级对应的护甲计算参数值（护甲值*参数值）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+
+	
 };

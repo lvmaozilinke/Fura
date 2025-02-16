@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Data/JRPGCharacterClassInfo.h"
 #include "Data/JRPGEnemyClassInfo.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -19,12 +20,13 @@ class GASJRPG_API UJRPGAbilitySystemLibrary : public UBlueprintFunctionLibrary
 public:
 	//初始化角色类的默认属性
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
-	static void InitializeCharacterDefaultAttributes(const UObject* WorldContentObject, EJRPGCharacterClass CharacterClass,
-											float Level, UAbilitySystemComponent* ASC);
+	static void InitializeCharacterDefaultAttributes(const UObject* WorldContentObject,
+	                                                 EJRPGCharacterClass CharacterClass,
+	                                                 float Level, UAbilitySystemComponent* ASC);
 	//初始化敌人类的默认属性
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializeEnemyDefaultAttributes(const UObject* WorldContentObject, EJRPGEnemyClass EnemyClass,
-											float Level, UAbilitySystemComponent* ASC);
+	                                             float Level, UAbilitySystemComponent* ASC);
 
 	//获取DataAsset存储的Character信息
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
@@ -35,4 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
 	static UJRPGEnemyClassInfo* GetEnemyClassInfo(const UObject* WorldContextObject);
 
+
+	//
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterClassDefaults")
+	static void InitializeDefaultAttributes(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
+	                                        TMap<FGameplayTag, float> FJRPGTagAttributesValue);
 };
