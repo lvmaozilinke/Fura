@@ -26,16 +26,6 @@ void AJRPGEnemy::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 }
 
-void AJRPGEnemy::OnRep_PlayerState()
-{
-	Super::OnRep_PlayerState();
-}
-
-int32 AJRPGEnemy::GetPlayerLevel()
-{
-	return Level;
-}
-
 void AJRPGEnemy::InitializeDefaultAttributes() const
 {
 	//调用函数库初始化角色属性

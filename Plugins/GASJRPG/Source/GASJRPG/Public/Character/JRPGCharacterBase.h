@@ -15,6 +15,9 @@ class UAttributeSet;
 class UGameplayEffect;
 class UAnimMontage;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnJRPGStateChanged, int32 /*StatValue*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnJRPGLevelChanged, int32 /*StatValue*/, bool /*bLevelUp*/)
+
 UCLASS()
 class GASJRPG_API AJRPGCharacterBase : public ACharacter, public IAbilitySystemInterface, public IJRPGCombatInterface
 {
@@ -49,10 +52,38 @@ public:
 	//重写获取动画蒙太奇
 	virtual FJRPGTaggedMontage GetToggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
 
+	//设置等级
+	void SetLevel(int32 InLevel);
+	//设置经验值
+	void SetXP(int32 InXP);
+	//增加等级
+	void AddToLevel(int32 InLevel);
+	//增加经验值
+	void AddToXP(int32 InXP);
+
+	//获取等级
+	FORCEINLINE int32 GetBaseLevel() const { return Level; }
+	FORCEINLINE int32 GetXP() const { return XP; }
+
+	//XP经验值变化委托
+	FOnJRPGStateChanged OnXPChangedDelegate;
+	//等级变化委托
+	FOnJRPGLevelChanged OnLevelChangedDelegate;
+
+	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//Level：玩家等级和敌人等级，设置到Base里面
+	UPROPERTY(VisibleAnywhere)
+	int32 Level = 1;
+	
+	//经验值
+	UPROPERTY(VisibleAnywhere)
+	int32 XP = 0;
+	
 	//ASC
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -107,23 +138,6 @@ protected:
 
 	//启动能力演员信息
 	virtual void InitAbilityActorInfo();
-
-
-	/*
-	 * 效果GamePlayEffect
-	 */
-	//主要效果
-	//Gameplay Effect，定义了将应用的效果。它通常是一个类或数据表，定义了效果的具体属性（如伤害、治疗、状态变化等）。
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="JRPG|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
-
-	//次要效果
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="JRPG|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
-
-	//其他效果
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="JRPG|Attributes")
-	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 
 	//添加效果到自身（效果类，等级）：添加一个伤害效果到自身，然后根据等级计算伤害
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float level) const;

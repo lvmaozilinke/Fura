@@ -21,10 +21,6 @@ public:
 	virtual void Init() override;
 	//控制Pawn的时候调用
 	virtual void PossessedBy(AController* NewController) override;
-	//同步给所有客户端的初始化（客户端初始化后立马初始化player state）
-	virtual void OnRep_PlayerState() override;
-	//Combat Interface:获取敌人等级
-	virtual int32 GetPlayerLevel() override;
 
 	virtual void InitializeDefaultAttributes() const override;
 	
@@ -44,9 +40,6 @@ protected:
 	*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
 	EJRPGEnemyClass EnemyClass = EJRPGEnemyClass::Humanoid;
-	//敌人等级
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
-	int32 Level = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
 	TMap<FGameplayTag, float> FJRPGTagAttributesValue;

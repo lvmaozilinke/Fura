@@ -24,16 +24,6 @@ void AJRPGCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 }
 
-void AJRPGCharacter::OnRep_PlayerState()
-{
-	Super::OnRep_PlayerState();
-}
-
-
-int32 AJRPGCharacter::GetPlayerLevel()
-{
-	return Level;
-}
 
 void AJRPGCharacter::InitializeDefaultAttributes() const
 {

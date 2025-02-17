@@ -86,6 +86,30 @@ FJRPGTaggedMontage AJRPGCharacterBase::GetToggedMontageByTag_Implementation(cons
 	return FJRPGTaggedMontage();
 }
 
+void AJRPGCharacterBase::SetLevel(int32 InLevel)
+{
+	Level = InLevel;
+	OnLevelChangedDelegate.Broadcast(Level, false);
+}
+
+void AJRPGCharacterBase::SetXP(int32 InXP)
+{
+	XP = InXP;
+	OnXPChangedDelegate.Broadcast(XP);
+}
+
+void AJRPGCharacterBase::AddToLevel(int32 InLevel)
+{
+	Level += InLevel;
+	OnLevelChangedDelegate.Broadcast(Level, true);
+}
+
+void AJRPGCharacterBase::AddToXP(int32 InXP)
+{
+	XP += InXP;
+	OnXPChangedDelegate.Broadcast(XP);
+}
+
 // Called when the game starts or when spawned
 void AJRPGCharacterBase::BeginPlay()
 {
