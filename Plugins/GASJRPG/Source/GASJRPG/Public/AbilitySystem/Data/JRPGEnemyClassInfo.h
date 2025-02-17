@@ -43,6 +43,9 @@ struct FJRPGEnemyClassDefaultInfo
 	//角色能力技能数组（GameplayAbility）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Enemy Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAttributes;
+	//等级对应的属性曲线表格（不同的类型的表格成长曲线也不同）
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Enemy Class Defaults")
+	UCurveTable* EnemyAttributeCurveTable;
 };
 
 UCLASS()

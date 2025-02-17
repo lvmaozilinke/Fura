@@ -44,6 +44,9 @@ struct FJRPGCharacterClassDefaultInfo
 	//角色能力技能数组（GameplayAbility）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
 	TArray<TSubclassOf<UGameplayAbility>> CommonAttributes;
+	//等级对应的属性曲线表格（不同的类型的表格成长曲线也不同）
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
+	UCurveTable* CharacterAttributeCurveTable;
 };
 
 
@@ -63,4 +66,6 @@ public:
 	//曲线表格，不同等级对应的护甲计算参数值（护甲值*参数值）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Common Class Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficients;
+
+	
 };

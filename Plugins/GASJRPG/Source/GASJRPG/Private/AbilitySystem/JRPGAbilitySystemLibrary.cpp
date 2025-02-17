@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
 #include "JRPGGamePlayTags.h"
+#include "AbilitySystem/JRPGAttributeSet.h"
 #include "AbilitySystem/Data/JRPGCharacterClassInfo.h"
 #include "Game/JRPGGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -120,10 +121,30 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 	
+	
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              FJRPGTagAttributesValue[GameplayTags.
 		                                                              JRPGAttributes_Level]);
+
+
+	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
+	UE_LOG(LogTemp,Warning,TEXT("LevelValue:%f"),Level);
+
+	//根据曲线表格去获取等级对应的数值
+	UCurveTable*CurveTable = CharacterClassDefaultInfo.CharacterAttributeCurveTable;
+	const FRealCurve* MaxHealthCurve=CurveTable->FindCurve(FName(TEXT("MaxHealth")),FString());
+	float MaxHealthValue =MaxHealthCurve->Eval(Level);
+
+	// 赋值 MaxHealth（从曲线表获取的值）
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle, GameplayTags.JRPGAttributes_MaxHealth, MaxHealthValue);
+	
+
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
+	const float MaxHealth = ASC->GetNumericAttribute(UJRPGAttributeSet::GetMaxHealthAttribute());
+	UE_LOG(LogTemp,Warning,TEXT("MaxHealth:%f"),MaxHealth);
+	
 }
 
 void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject,
