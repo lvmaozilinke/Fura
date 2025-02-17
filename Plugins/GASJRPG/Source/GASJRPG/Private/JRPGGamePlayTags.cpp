@@ -9,14 +9,9 @@ FJRPGGamePlayTags FJRPGGamePlayTags::GamePlayTags;
 
 void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 {
-	// ==========【等级相关属性】==========
-	GamePlayTags.JRPGAttributes_Experience = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		FName("JRPGAttributes.Experience"),
-		FString("玩家经验值")
-	);
 	GamePlayTags.JRPGAttributes_Level = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("JRPGAttributes.Level"),
-		FString("玩家等级")
+		FString("玩家当前等级")
 	);
 	GamePlayTags.JRPGAttributes_Health = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("JRPGAttributes.Health"),

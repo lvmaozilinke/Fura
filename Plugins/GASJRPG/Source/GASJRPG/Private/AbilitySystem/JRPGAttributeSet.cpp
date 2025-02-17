@@ -19,10 +19,7 @@ void UJRPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	// REPNOTIFY_Always:总是同步          COND_None：【只要修改就同步】This property has no condition, and will send anytime it changes
 	// ==========【等级相关属性】==========
-
-	/** 复制玩家经验值，每次变化都会通知客户端 */
-	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Experience, COND_None, REPNOTIFY_Always);
-
+	
 	/** 复制玩家等级，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Level, COND_None, REPNOTIFY_Always);
 
@@ -192,10 +189,7 @@ void UJRPGAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	}
 }
 
-void UJRPGAttributeSet::OnRep_Experience(const FGameplayAttributeData& OldExperience) const
-{
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Experience, OldExperience);
-}
+
 
 void UJRPGAttributeSet::OnRep_Level(const FGameplayAttributeData& OldLevel) const
 {

@@ -119,20 +119,10 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
-
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Primary_Speed,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_Primary_Speed]);
+	
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              FJRPGTagAttributesValue[GameplayTags.
 		                                                              JRPGAttributes_Level]);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-		SpecHandle, GameplayTags.JRPGAttributes_Primary_ArmStrength,
-		FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_Primary_ArmStrength]);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_MaxHealth,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_MaxHealth]);
-
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }
 
@@ -159,18 +149,8 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Primary_Speed,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_Primary_Speed]);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              FJRPGTagAttributesValue[GameplayTags.
 		                                                              JRPGAttributes_Level]);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-		SpecHandle, GameplayTags.JRPGAttributes_Primary_ArmStrength,
-		FJRPGTagAttributesValue[GameplayTags.JRPGAttributes_Primary_ArmStrength]);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_MaxHealth,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_MaxHealth]);
-
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }

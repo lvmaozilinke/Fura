@@ -43,7 +43,6 @@ void AJRPGCharacterBase::Init()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-	InitializeDefaultAttributes();
 }
 
 UAbilitySystemComponent* AJRPGCharacterBase::GetAbilitySystemComponent() const
@@ -90,6 +89,10 @@ void AJRPGCharacterBase::SetLevel(int32 InLevel)
 {
 	Level = InLevel;
 	OnLevelChangedDelegate.Broadcast(Level, false);
+	//设置等级的方式
+	if (!AbilitySystemComponent || !AttributeSet) return;
+	AbilitySystemComponent->SetNumericAttributeBase(CastChecked<UJRPGAttributeSet>(AttributeSet)->GetLevelAttribute(), InLevel);
+	UE_LOG(LogTemp, Log, TEXT("Character Level Set to %d"), InLevel);
 }
 
 void AJRPGCharacterBase::SetXP(int32 InXP)

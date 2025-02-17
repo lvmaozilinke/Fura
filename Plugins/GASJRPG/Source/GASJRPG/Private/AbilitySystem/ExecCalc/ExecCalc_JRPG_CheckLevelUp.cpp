@@ -9,7 +9,7 @@ void UExecCalc_JRPG_CheckLevelUp::Execute_Implementation(
 	const FGameplayEffectCustomExecutionParameters& ExecutionParams,
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
-	// 1. 获取能力系统组件
+	/*// 1. 获取能力系统组件
 	UAbilitySystemComponent* ASC = ExecutionParams.GetTargetAbilitySystemComponent();
 	if (!ASC) return;
 
@@ -18,7 +18,6 @@ void UExecCalc_JRPG_CheckLevelUp::Execute_Implementation(
 		ASC->GetAttributeSet(UJRPGAttributeSet::StaticClass()));
 	if (!Attributes) return;
 
-	float CurrentXP = Attributes->GetExperience();
 	float CurrentLevel = Attributes->GetLevel();
 	
 	UE_LOG(LogTemp, Warning, TEXT("UExecCalc_JRPG_CheckLevelUp --xp: %f, level: %f"), CurrentXP, CurrentLevel);
@@ -48,5 +47,5 @@ void UExecCalc_JRPG_CheckLevelUp::Execute_Implementation(
 			                                               GET_MEMBER_NAME_CHECKED(UJRPGAttributeSet, Level))),
 			EGameplayModOp::Override, NewLevel);
 		OutExecutionOutput.AddOutputModifier(LevelMod);
-	}
+	}*/
 }
