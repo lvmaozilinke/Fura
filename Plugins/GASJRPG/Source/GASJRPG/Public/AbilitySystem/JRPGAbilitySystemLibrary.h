@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Character/JRPGCharacter.h"
+#include "Character/JRPGEnemy.h"
 #include "Data/JRPGCharacterClassInfo.h"
 #include "Data/JRPGEnemyClassInfo.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -24,7 +26,7 @@ public:
 	                                                 EJRPGCharacterClass CharacterClass,
 	                                                 float Level, UAbilitySystemComponent* ASC);
 	//初始化敌人类的默认属性
-	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|EnemyClassDefaults")
 	static void InitializeEnemyDefaultAttributes(const UObject* WorldContentObject, EJRPGEnemyClass EnemyClass,
 	                                             float Level, UAbilitySystemComponent* ASC);
 
@@ -39,7 +41,13 @@ public:
 
 
 	//
-	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterClassDefaults")
-	static void InitializeDefaultAttributes(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
-	                                        TMap<FGameplayTag, float> FJRPGTagAttributesValue);
+	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
+	static void InitializeCharacterDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
+	                                        TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGCharacter* Character);
+
+	//
+	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|EnemyClassDefaults")
+	static void InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
+											TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGEnemy* Enemy);
+
 };

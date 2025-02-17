@@ -38,6 +38,8 @@ int32 AJRPGCharacter::GetPlayerLevel()
 void AJRPGCharacter::InitializeDefaultAttributes() const
 {
 	//调用函数库初始化角色属性
-	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	//UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
+	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(this, AbilitySystemComponent, FJRPGTagAttributesValue, this);
+
 }
 

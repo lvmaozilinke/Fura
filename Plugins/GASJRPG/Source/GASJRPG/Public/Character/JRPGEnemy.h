@@ -27,7 +27,9 @@ public:
 	virtual int32 GetPlayerLevel() override;
 
 	virtual void InitializeDefaultAttributes() const override;
-
+	
+	UFUNCTION(BlueprintCallable, Category="JRPG|Enemy Class Default")
+	EJRPGEnemyClass GetEnemyClass() const { return EnemyClass; }
 protected:
 
 	/*
@@ -45,4 +47,7 @@ protected:
 	//敌人等级
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
 	int32 Level = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
+	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
 };

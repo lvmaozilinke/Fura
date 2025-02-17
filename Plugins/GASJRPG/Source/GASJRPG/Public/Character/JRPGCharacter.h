@@ -29,6 +29,10 @@ public:
 
 	virtual void InitializeDefaultAttributes() const override;
 
+	UFUNCTION(BlueprintCallable, Category="JRPG|Character Class Default")
+	EJRPGCharacterClass GetCharacterClass() const { return CharacterClass; }
+
+	
 protected:
 
 
@@ -38,5 +42,8 @@ protected:
 	//角色等级
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Character Class Default")
 	int32 Level = 1;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Character Class Default")
+	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
 
 };

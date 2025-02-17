@@ -39,7 +39,7 @@ int32 AJRPGEnemy::GetPlayerLevel()
 void AJRPGEnemy::InitializeDefaultAttributes() const
 {
 	//调用函数库初始化角色属性
-	UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
+	//UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributes(this, EnemyClass, Level, AbilitySystemComponent);
+	UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(this, AbilitySystemComponent,
+	                                                                    FJRPGTagAttributesValue, this);
 }
-
-
