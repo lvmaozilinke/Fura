@@ -124,21 +124,42 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 
 	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
 
-	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterValueValue:%f"), *DataLevelValue);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle, GameplayTags.JRPGAttributes_Level,
+	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterLevelValue:%f"), *DataLevelValue);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle,
+	                                                              GameplayTags.JRPGAttributes_Level,
 	                                                              *DataLevelValue);
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterLevelValue:%f"), Level)
 
 
+
+	
 	//SecondaryAttributes：次要属性，跟随等级变化
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
-			CharacterClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
-	
-	//曲线表格遍历初始化所有属性数据
-	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC, SecondaryAttributesSpecHandle);
+		CharacterClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
 
+	//曲线表格遍历初始化所有属性数据
+	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC,
+	                                  SecondaryAttributesSpecHandle);
+
+
+
+
+	
+	//VitalAttributes：重要属性，血量Health来自SaveGame(暂时使用TMap的数据)
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
+		CharacterClassDefaultInfo.VitalAttributes, 1.f, EffectContextHandle);
+
+	const float* DataHealthValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Health);
+
+	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterHealthValue:%f"), *DataHealthValue);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(VitalAttributesSpecHandle,
+																  GameplayTags.JRPGAttributes_Health,
+																  *DataHealthValue);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
+	const float Health = ASC->GetNumericAttribute(UJRPGAttributeSet::GetHealthAttribute());
+	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterHealthValue:%f"), Health)
 }
 
 void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject,
@@ -167,21 +188,31 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 		EnemyClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
 	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesEnemyValueValue:%f"), *DataLevelValue);
-	
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle, GameplayTags.JRPGAttributes_Level,*DataLevelValue);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle,
+	                                                              GameplayTags.JRPGAttributes_Level, *DataLevelValue);
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("EnemyLevelValue:%f"), Level);
 
-
+	
 
 	//SecondaryAttributes：次要属性，跟随等级变化
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
-			EnemyClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
-	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC, SecondaryAttributesSpecHandle);
+		EnemyClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
+	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC,
+	                                  SecondaryAttributesSpecHandle);
+
 	
+	
+	//VitalAttributes：重要属性，血量Health使用的是MaxHealth
+	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
+		EnemyClassDefaultInfo.VitalAttributes, 1.f, EffectContextHandle);
+	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
+	const float Health = ASC->GetNumericAttribute(UJRPGAttributeSet::GetHealthAttribute());
+	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterHealthValue:%f"), Health)
 }
 
 void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Level, UCurveTable* CurveTable,
