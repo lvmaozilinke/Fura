@@ -41,6 +41,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
 	EJRPGEnemyClass EnemyClass = EJRPGEnemyClass::Humanoid;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Enemy Class Default")
-	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
+	
 };

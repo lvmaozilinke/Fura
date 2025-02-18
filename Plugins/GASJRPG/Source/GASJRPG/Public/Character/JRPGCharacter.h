@@ -35,8 +35,6 @@ protected:
 	//设置角色类型,默认为猎人// 猎人,士兵,摔跤手,护士,艺术家,机械师
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Character Class Default")
 	EJRPGCharacterClass CharacterClass = EJRPGCharacterClass::Hunter;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Character Class Default")
-	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
+	
 
 };

@@ -121,28 +121,17 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
+	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
 
+	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterValueValue:%f"), *DataLevelValue);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_Level]);
-
-
+	                                                              *DataLevelValue);
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
-	UE_LOG(LogTemp, Warning, TEXT("CharacterLevelValue:%f"), Level);
-
-	/*//根据曲线表格去获取等级对应的数值
-	UCurveTable* CurveTable = CharacterClassDefaultInfo.CharacterAttributeCurveTable;
-	const FRealCurve* MaxHealthCurve = CurveTable->FindCurve(FName(TEXT("MaxHealth")), FString());
-	float MaxHealthValue = MaxHealthCurve->Eval(Level);
-
-	// 赋值 MaxHealth（从曲线表获取的值）
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-		SpecHandle, GameplayTags.JRPGAttributes_MaxHealth, MaxHealthValue);*/
-
+	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterLevelValue:%f"), Level)
+	//曲线表格遍历初始化所有属性数据
 	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC, SpecHandle);
 
-
-	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }
 
 void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject,
@@ -169,18 +158,17 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
-	                                                              FJRPGTagAttributesValue[GameplayTags.
-		                                                              JRPGAttributes_Level]);
-
+	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
+	
+	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesEnemyValueValue:%f"), *DataLevelValue);
+	
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,*DataLevelValue);
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("EnemyLevelValue:%f"), Level);
 
-
 	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC, SpecHandle);
-
-
-	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	
 }
 
 void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Level, UCurveTable* CurveTable,
@@ -200,4 +188,5 @@ void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Le
 		UE_LOG(LogTemp, Log, TEXT("FindUCurveTableSetAttributesValue---Tag:%s,Value:%f"), *Tag.GetTagName().ToString(),
 		       RowPair.Value->Eval(Level));
 	}
+	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }

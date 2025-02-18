@@ -156,6 +156,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Combat")
 	USoundBase* DeathSound;
 
+	//属性初始化数组（Tag对应的默认值）
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Class Default")
+	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
+
 private:
 	//初始化的角色能力数组
 	UPROPERTY(EditAnywhere, Category="JRPG|Attributes")
