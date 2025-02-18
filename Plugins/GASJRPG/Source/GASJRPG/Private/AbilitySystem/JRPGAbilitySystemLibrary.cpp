@@ -118,19 +118,26 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 
-	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
+	//PrimaryAttributes_SetByCaller：等级属性
+	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
 	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
 
 	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterValueValue:%f"), *DataLevelValue);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              *DataLevelValue);
-	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterLevelValue:%f"), Level)
+
+
+	//SecondaryAttributes：次要属性，跟随等级变化
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
+			CharacterClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
+	
 	//曲线表格遍历初始化所有属性数据
-	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC, SpecHandle);
+	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC, SecondaryAttributesSpecHandle);
 
 }
 
@@ -155,19 +162,25 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 
-	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
+	//PrimaryAttributes_SetByCaller：等级属性
+	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
 	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
 	
 	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesEnemyValueValue:%f"), *DataLevelValue);
 	
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,*DataLevelValue);
-	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle, GameplayTags.JRPGAttributes_Level,*DataLevelValue);
+	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("EnemyLevelValue:%f"), Level);
 
-	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC, SpecHandle);
+
+
+	//SecondaryAttributes：次要属性，跟随等级变化
+	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
+			EnemyClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
+	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC, SecondaryAttributesSpecHandle);
 	
 }
 
