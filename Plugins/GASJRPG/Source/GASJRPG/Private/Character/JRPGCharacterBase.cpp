@@ -41,8 +41,6 @@ AJRPGCharacterBase::AJRPGCharacterBase()
 
 void AJRPGCharacterBase::Init()
 {
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	Cast<UJRPGAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
 
 UAbilitySystemComponent* AJRPGCharacterBase::GetAbilitySystemComponent() const

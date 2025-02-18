@@ -40,14 +40,19 @@ public:
 	static UJRPGEnemyClassInfo* GetEnemyClassInfo(const UObject* WorldContextObject);
 
 
-	//
+	//初始化角色类的属性数值来自曲线表格
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializeCharacterDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
 	                                        TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGCharacter* Character);
 
-	//
+	//初始化敌人类的属性数值来自曲线表格
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|EnemyClassDefaults")
 	static void InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
 											TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGEnemy* Enemy);
 
+	//根据表格查询表格内数据并设置到角色上
+	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|ClassDefaults")
+	static void FindUCurveTableSetAttributesValue(float Level,UCurveTable* CurveTable,UAbilitySystemComponent* ASC,FGameplayEffectSpecHandle SpecHandle);
+
+	
 };

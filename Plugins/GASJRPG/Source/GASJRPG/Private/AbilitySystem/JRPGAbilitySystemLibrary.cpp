@@ -120,37 +120,36 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 
 	const FGameplayEffectSpecHandle SpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
-	
-	
+
+
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              FJRPGTagAttributesValue[GameplayTags.
 		                                                              JRPGAttributes_Level]);
 
 
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
-	UE_LOG(LogTemp,Warning,TEXT("LevelValue:%f"),Level);
+	UE_LOG(LogTemp, Warning, TEXT("CharacterLevelValue:%f"), Level);
 
-	//根据曲线表格去获取等级对应的数值
-	UCurveTable*CurveTable = CharacterClassDefaultInfo.CharacterAttributeCurveTable;
-	const FRealCurve* MaxHealthCurve=CurveTable->FindCurve(FName(TEXT("MaxHealth")),FString());
-	float MaxHealthValue =MaxHealthCurve->Eval(Level);
+	/*//根据曲线表格去获取等级对应的数值
+	UCurveTable* CurveTable = CharacterClassDefaultInfo.CharacterAttributeCurveTable;
+	const FRealCurve* MaxHealthCurve = CurveTable->FindCurve(FName(TEXT("MaxHealth")), FString());
+	float MaxHealthValue = MaxHealthCurve->Eval(Level);
 
 	// 赋值 MaxHealth（从曲线表获取的值）
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
-		SpecHandle, GameplayTags.JRPGAttributes_MaxHealth, MaxHealthValue);
-	
+		SpecHandle, GameplayTags.JRPGAttributes_MaxHealth, MaxHealthValue);*/
+
+	FindUCurveTableSetAttributesValue(Level, CharacterClassDefaultInfo.CharacterAttributeCurveTable, ASC, SpecHandle);
+
 
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
-
-	const float MaxHealth = ASC->GetNumericAttribute(UJRPGAttributeSet::GetMaxHealthAttribute());
-	UE_LOG(LogTemp,Warning,TEXT("MaxHealth:%f"),MaxHealth);
-	
 }
 
 void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject,
                                                                          UAbilitySystemComponent* ASC,
                                                                          TMap<FGameplayTag, float>
-                                                                         FJRPGTagAttributesValue,const AJRPGEnemy* Enemy)
+                                                                         FJRPGTagAttributesValue,
+                                                                         const AJRPGEnemy* Enemy)
 {
 	//根据教程来，先不使用SaveGame,先用TMap来设置基础属性
 
@@ -173,5 +172,32 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.JRPGAttributes_Level,
 	                                                              FJRPGTagAttributesValue[GameplayTags.
 		                                                              JRPGAttributes_Level]);
+
+	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
+	UE_LOG(LogTemp, Warning, TEXT("EnemyLevelValue:%f"), Level);
+
+
+	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC, SpecHandle);
+
+
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+}
+
+void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Level, UCurveTable* CurveTable,
+                                                                  UAbilitySystemComponent* ASC,
+                                                                  const FGameplayEffectSpecHandle SpecHandle)
+{
+	if (CurveTable == nullptr) return;
+	const TMap<FName, FRealCurve*>& RowMap = CurveTable->GetRowMap();
+	for (auto& RowPair : RowMap)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("CurveTable Key: %s"), *RowPair.Key.ToString());
+		//转换Tag
+		FGameplayTag Tag = FGameplayTag::RequestGameplayTag(FName(*RowPair.Key.ToString()));
+		//设置tag对应的Attribute的值根据level来计算
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+			SpecHandle, Tag, RowPair.Value->Eval(Level));
+		UE_LOG(LogTemp, Log, TEXT("FindUCurveTableSetAttributesValue---Tag:%s,Value:%f"), *Tag.GetTagName().ToString(),
+		       RowPair.Value->Eval(Level));
+	}
 }
