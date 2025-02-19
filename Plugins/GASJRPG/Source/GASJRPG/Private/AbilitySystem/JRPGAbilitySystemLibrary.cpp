@@ -7,6 +7,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameplayEffectTypes.h"
 #include "JRPGGamePlayTags.h"
+#include "AbilitySystem/JRPGAbilityTypes.h"
 #include "AbilitySystem/JRPGAttributeSet.h"
 #include "AbilitySystem/Data/JRPGCharacterClassInfo.h"
 #include "Game/JRPGGameModeBase.h"
@@ -233,4 +234,178 @@ void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Le
 		       RowPair.Value->Eval(Level));
 	}
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+}
+
+bool UJRPGAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UJRPGAbilitySystemLibrary::IsSuccessfulDebuff(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->IsSuccessfulDebuff();
+	}
+	return false;
+}
+
+float UJRPGAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->GetDebuffDamage();
+	}
+	return 0.f;
+}
+
+float UJRPGAbilitySystemLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->GetDebuffDuration();
+	}
+	return 0.f;
+}
+
+float UJRPGAbilitySystemLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->GetDebuffFrequency();
+	}
+	return 0.f;
+}
+
+FGameplayTag UJRPGAbilitySystemLibrary::GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		if (JRPGEffectContext->GetDamageType().IsValid())
+		{
+			return *JRPGEffectContext->GetDamageType();
+		}
+	}
+	return FGameplayTag();
+}
+
+bool UJRPGAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return JRPGEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+
+
+void UJRPGAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInIsCriticalHit)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetIsSuccessfulDebuff(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInSuccessfulDebuff)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetIsSuccessfulDebuff(bInSuccessfulDebuff);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle, float InDamage)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetDebuffDamage(InDamage);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle, float InDuration)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetDebuffDuration(InDuration);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle, float InFrequency)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		JRPGEffectContext->SetDebuffFrequency(InFrequency);
+	}
+}
+
+void UJRPGAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle,
+	const FGameplayTag& InDamageType)
+{
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		const TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
+		JRPGEffectContext->SetDamageType(DamageType);
+	}
+}
+
+bool UJRPGAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	const bool bBothArePlayers = FirstActor->ActorHasTag(FName("Player")) && SecondActor->ActorHasTag(FName("Player"));
+	const bool bBothAreEnemies = FirstActor->ActorHasTag(FName("Enemy")) && SecondActor->ActorHasTag(FName("Enemy"));
+	const bool bFriends = bBothArePlayers || bBothAreEnemies;
+	return !bFriends;
+}
+
+FGameplayEffectContextHandle UJRPGAbilitySystemLibrary::ApplyDamageEffect(const FJRPGDamageEffectParams& DamageEffectParams)
+{
+	const FJRPGGamePlayTags& GameplayTags = FJRPGGamePlayTags::Get();
+	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	
+	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
+	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+	
+	
+	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance, DamageEffectParams.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage, DamageEffectParams.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration, DamageEffectParams.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency, DamageEffectParams.DebuffFrequency);
+	
+	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+	return EffectContexthandle;
+}
+
+int32 UJRPGAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject,
+	EJRPGCharacterClass CharacterClass, int32 CharacterLevel)
+{
+	UJRPGCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if (CharacterClassInfo == nullptr) return 0;
+
+	const FJRPGCharacterClassDefaultInfo& Info = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	const float XPReward = Info.XPReward.GetValueAtLevel(CharacterLevel);
+
+	return static_cast<int32>(XPReward);
+}
+
+void UJRPGAbilitySystemLibrary::SetTargetEffectParamsASC(FDamageEffectParams& DamageEffectParams,
+	UAbilitySystemComponent* InASC)
+{
 }

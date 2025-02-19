@@ -20,11 +20,10 @@ class GASJRPG_API UJRPGAbilitySystemLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-
 	/*
 	 * Ability System Class Defaults
 	 */
-	
+
 	//初始化角色类的默认属性
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializeCharacterDefaultAttributes(const UObject* WorldContentObject,
@@ -47,17 +46,22 @@ public:
 
 	//初始化角色类的属性数值来自曲线表格
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
-	static void InitializeCharacterDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
-	                                        TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGCharacter* Character);
+	static void InitializeCharacterDefaultAttributesFromData(const UObject* WorldContextObject,
+	                                                         UAbilitySystemComponent* ASC,
+	                                                         TMap<FGameplayTag, float> FJRPGTagAttributesValue,
+	                                                         const AJRPGCharacter* Character);
 
 	//初始化敌人类的属性数值来自曲线表格
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|EnemyClassDefaults")
-	static void InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,
-											TMap<FGameplayTag, float> FJRPGTagAttributesValue,const AJRPGEnemy* Enemy);
+	static void InitializeEnemyDefaultAttributesFromData(const UObject* WorldContextObject,
+	                                                     UAbilitySystemComponent* ASC,
+	                                                     TMap<FGameplayTag, float> FJRPGTagAttributesValue,
+	                                                     const AJRPGEnemy* Enemy);
 
 	//根据表格查询表格内数据并设置到角色上
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|ClassDefaults")
-	static void FindUCurveTableSetAttributesValue(float Level,UCurveTable* CurveTable,UAbilitySystemComponent* ASC,FGameplayEffectSpecHandle SpecHandle);
+	static void FindUCurveTableSetAttributesValue(float Level, UCurveTable* CurveTable, UAbilitySystemComponent* ASC,
+	                                              FGameplayEffectSpecHandle SpecHandle);
 
 	/*
 	 * Effect Context Getters
@@ -82,7 +86,7 @@ public:
 	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	//是否致命一击
-	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
 	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	/*
@@ -90,7 +94,43 @@ public:
 	 * 效果上下文设定器
 	 */
 
-	
-	
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
 
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
+
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetIsSuccessfulDebuff(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle,
+	                                  bool bInSuccessfulDebuff);
+
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetDebuffDamage(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDamage);
+
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetDebuffDuration(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDuration);
+
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InFrequency);
+
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle,
+	                          const FGameplayTag& InDamageType);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayMechanics")
+	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FJRPGDamageEffectParams& DamageEffectParams);
+
+	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EJRPGCharacterClass CharacterClass,
+	                                         int32 CharacterLevel);
+
+
+	/*
+	* Damage Effect Params
+	*/
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static void SetTargetEffectParamsASC(UPARAM(ref) FDamageEffectParams& DamageEffectParams,
+	                                     UAbilitySystemComponent* InASC);
 };

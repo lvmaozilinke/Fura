@@ -47,6 +47,7 @@ struct FJRPGCharacterClassDefaultInfo
 	//等级对应的属性曲线表格（不同的类型的表格成长曲线也不同）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Character Class Defaults")
 	UCurveTable* CharacterAttributeCurveTable;
+	
 };
 
 

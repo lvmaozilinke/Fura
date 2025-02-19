@@ -70,6 +70,13 @@ public:
 	FGameplayTag JRPGCombatSocket_Tail; //尾巴
 
 
+	//Debuff效果相关
+	FGameplayTag Debuff_Chance;
+	FGameplayTag Debuff_Damage;
+	FGameplayTag Debuff_Duration;
+	FGameplayTag Debuff_Frequency;
+
+
 private:
 	static FJRPGGamePlayTags GamePlayTags;
 };
