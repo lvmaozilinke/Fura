@@ -20,6 +20,11 @@ class GASJRPG_API UJRPGAbilitySystemLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
+
+	/*
+	 * Ability System Class Defaults
+	 */
+	
 	//初始化角色类的默认属性
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|CharacterClassDefaults")
 	static void InitializeCharacterDefaultAttributes(const UObject* WorldContentObject,
@@ -54,5 +59,38 @@ public:
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|ClassDefaults")
 	static void FindUCurveTableSetAttributesValue(float Level,UCurveTable* CurveTable,UAbilitySystemComponent* ASC,FGameplayEffectSpecHandle SpecHandle);
 
+	/*
+	 * Effect Context Getters
+	 * 效果上下文获取器
+	 */
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static bool IsSuccessfulDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static float GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static float GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static float GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
+	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	//是否致命一击
+	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayEffects")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	/*
+	 * Effect Context Setters
+	 * 效果上下文设定器
+	 */
+
 	
+	
+
 };

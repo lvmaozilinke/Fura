@@ -2,8 +2,7 @@
 
 
 #include "AbilitySystem/JRPGAbilitySystemComponent.h"
-
-#include "AbilitySystem/JRPGGamePlayAbility.h"
+#include "AbilitySystem/Abilities/JRPGGamePlayAbility.h"
 
 void UJRPGAbilitySystemComponent::AbilityActorInfoSet()
 {
