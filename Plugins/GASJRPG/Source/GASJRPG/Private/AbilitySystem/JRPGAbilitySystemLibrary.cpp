@@ -394,18 +394,19 @@ FGameplayEffectContextHandle UJRPGAbilitySystemLibrary::ApplyDamageEffect(const 
 }
 
 int32 UJRPGAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject,
-	EJRPGCharacterClass CharacterClass, int32 CharacterLevel)
+	EJRPGEnemyClass EnemyClass, int32 EnemyLevel)
 {
-	UJRPGCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
-	if (CharacterClassInfo == nullptr) return 0;
+	UJRPGEnemyClassInfo* EnemyClassInfo = GetEnemyClassInfo(WorldContextObject);
+	if (EnemyClassInfo == nullptr) return 0;
 
-	const FJRPGCharacterClassDefaultInfo& Info = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
-	const float XPReward = Info.XPReward.GetValueAtLevel(CharacterLevel);
+	const FJRPGEnemyClassDefaultInfo& Info = EnemyClassInfo->GetClassDefaultInfo(EnemyClass);
+	const float XPReward = Info.EnemyXPReward.GetValueAtLevel(EnemyLevel);
 
 	return static_cast<int32>(XPReward);
 }
 
-void UJRPGAbilitySystemLibrary::SetTargetEffectParamsASC(FDamageEffectParams& DamageEffectParams,
+void UJRPGAbilitySystemLibrary::SetTargetEffectParamsASC(FJRPGDamageEffectParams& DamageEffectParams,
 	UAbilitySystemComponent* InASC)
 {
+	DamageEffectParams.TargetAbilitySystemComponent = InASC;	
 }

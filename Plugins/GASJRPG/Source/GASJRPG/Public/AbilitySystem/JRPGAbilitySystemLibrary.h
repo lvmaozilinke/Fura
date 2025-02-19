@@ -123,7 +123,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FJRPGDamageEffectParams& DamageEffectParams);
 
-	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EJRPGCharacterClass CharacterClass,
+
+	//目前猜测是击败敌人后获取敌人对应等级的经验值
+	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EJRPGEnemyClass EnemyClass,
 	                                         int32 CharacterLevel);
 
 
@@ -131,6 +133,6 @@ public:
 	* Damage Effect Params
 	*/
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
-	static void SetTargetEffectParamsASC(UPARAM(ref) FDamageEffectParams& DamageEffectParams,
+	static void SetTargetEffectParamsASC(UPARAM(ref) FJRPGDamageEffectParams& DamageEffectParams,
 	                                     UAbilitySystemComponent* InASC);
 };

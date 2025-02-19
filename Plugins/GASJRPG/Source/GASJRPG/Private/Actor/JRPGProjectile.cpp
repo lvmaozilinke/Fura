@@ -41,7 +41,6 @@ void AJRPGProjectile::BeginPlay()
 	SetReplicateMovement(true);
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AJRPGProjectile::OnSphereOverlap);
 	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
-
 }
 
 void AJRPGProjectile::OnHit()
@@ -68,35 +67,27 @@ void AJRPGProjectile::Destroyed()
 }
 
 void AJRPGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                      const FHitResult& SweepResult)
 {
 	if (!IsValidOverlap(OtherActor)) return;
 	if (!bHit) OnHit();
-	
-	if (HasAuthority())
+	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 	{
-		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-		{
-			const FVector DeathImpulse = GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
-			DamageEffectParams.DeathImpulse = DeathImpulse;
-			const bool bKnockback = FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance;
-			if (bKnockback)
-			{
-				FRotator Rotation = GetActorRotation();
-				Rotation.Pitch = 45.f;
-				
-				const FVector KnockbackDirection = Rotation.Vector();
-				const FVector KnockbackForce = KnockbackDirection * DamageEffectParams.KnockbackForceMagnitude;
-				DamageEffectParams.KnockbackForce = KnockbackForce;
-			}
-			
-			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
-			UJRPGAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
-		}
-		
-		Destroy();
+		DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+		UJRPGAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 	}
 	else bHit = true;
+}
+
+bool AJRPGProjectile::IsValidOverlap(AActor* OtherActor)
+{
+	if (DamageEffectParams.SourceAbilitySystemComponent == nullptr) return false;
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) return false;
+	if (!UJRPGAbilitySystemLibrary::IsNotFriend(SourceAvatarActor, OtherActor)) return false;
+
+	return true;
 }
 
 // Called every frame
@@ -104,4 +95,3 @@ void AJRPGProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-

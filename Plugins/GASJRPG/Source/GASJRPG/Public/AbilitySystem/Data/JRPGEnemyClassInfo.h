@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "ScalableFloat.h"
 #include "JRPGEnemyClassInfo.generated.h"
 
 /**
@@ -46,6 +47,9 @@ struct FJRPGEnemyClassDefaultInfo
 	//等级对应的属性曲线表格（不同的类型的表格成长曲线也不同）
 	UPROPERTY(EditDefaultsOnly, Category="JRPG Enemy Class Defaults")
 	UCurveTable* EnemyAttributeCurveTable;
+	//敌人死亡时获取的经验值
+	UPROPERTY(EditDefaultsOnly, Category="JRPG Enemy Class Defaults")
+	FScalableFloat EnemyXPReward;
 };
 
 UCLASS()
