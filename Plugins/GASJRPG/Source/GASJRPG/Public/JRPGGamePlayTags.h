@@ -62,7 +62,7 @@ public:
 	/*
 	 * 伤害插槽tag：不同怪物类型的攻击方式对应不同的插槽
 	 */
-	
+
 	//插槽和攻击蒙太奇动画（攻击方式，武器，左右手等）
 	FGameplayTag JRPGCombatSocket_Weapon;
 	FGameplayTag JRPGCombatSocket_RightHand;
@@ -76,6 +76,15 @@ public:
 	FGameplayTag Debuff_Duration;
 	FGameplayTag Debuff_Frequency;
 
+	
+
+	/*
+	 * 能力相关：Abilities
+	 */
+
+	//角色能力CharacterAbilities:每个玩家类别都有不同的能力，按角色职业划分，每个职业有不同的能力。
+	
+	
 
 private:
 	static FJRPGGamePlayTags GamePlayTags;

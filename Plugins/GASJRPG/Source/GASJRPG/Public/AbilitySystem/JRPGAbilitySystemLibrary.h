@@ -49,7 +49,7 @@ public:
 	static void InitializeCharacterDefaultAttributesFromData(const UObject* WorldContextObject,
 	                                                         UAbilitySystemComponent* ASC,
 	                                                         TMap<FGameplayTag, float> FJRPGTagAttributesValue,
-	                                                         const AJRPGCharacter* Character);
+	                                                         AJRPGCharacter* Character);
 
 	//初始化敌人类的属性数值来自曲线表格
 	UFUNCTION(BlueprintCallable, Category="JRPG|AbilitySystemLibrary|EnemyClassDefaults")

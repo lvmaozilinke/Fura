@@ -102,7 +102,7 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
                                                                              UAbilitySystemComponent* ASC,
                                                                              TMap<FGameplayTag, float>
                                                                              FJRPGTagAttributesValue,
-                                                                             const AJRPGCharacter* Character)
+                                                                             AJRPGCharacter* Character)
 {
 	//根据教程来，先不使用SaveGame,先用TMap来设置基础属性
 
@@ -132,7 +132,8 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterLevelValue:%f"), Level)
-
+	//可能和上面的会有冲突，先给到
+	Character->SetLevel(Level);
 
 	//SecondaryAttributes：次要属性，跟随等级变化
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(

@@ -204,5 +204,5 @@ void AJRPGCharacterBase::AddAbilities()
 	//添加角色能力
 	UJRPGAbilitySystemComponent* ASC = CastChecked<UJRPGAbilitySystemComponent>(AbilitySystemComponent);
 	//ASC 添加能力
-	ASC->AddCharacterAbilities(StartupAbilities);
+	ASC->AddAbilitiesBasedOnLevel(ASC->GetAbilitiesBasedOnLevel(LevelAbilities,Level));
 }

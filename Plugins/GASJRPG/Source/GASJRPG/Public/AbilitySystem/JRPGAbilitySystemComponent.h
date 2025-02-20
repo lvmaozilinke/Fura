@@ -19,8 +19,11 @@ class GASJRPG_API UJRPGAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void AbilityActorInfoSet();
 	EffectAssetTags EffectAssetTags;
-	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
-
+	//根据等级获取能力列表
+	void AddAbilitiesBasedOnLevel(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
+	
+	TArray<TSubclassOf<UGameplayAbility>> GetAbilitiesBasedOnLevel(const TMap<float,TArray<TSubclassOf<UGameplayAbility>>>& LevelAbilities,float CurrentLevel);
+	
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 	/*

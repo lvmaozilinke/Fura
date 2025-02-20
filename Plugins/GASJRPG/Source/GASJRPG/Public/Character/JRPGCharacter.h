@@ -28,7 +28,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category="JRPG|Character Class Default")
 	EJRPGCharacterClass GetCharacterClass() const { return CharacterClass; }
 
-	
 protected:
 
 
