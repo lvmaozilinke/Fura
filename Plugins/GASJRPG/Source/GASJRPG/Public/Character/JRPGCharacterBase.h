@@ -73,7 +73,7 @@ public:
 	float GetLevel() const {return Level;}
 
 	//等级对应的能力TMap，等级对应的能力数组，例如，10级解锁10个能力
-	const TMap<float, TArray<TSubclassOf<UGameplayAbility>>>& LevelAbilities;
+	TMap<float, TArray<TSubclassOf<UGameplayAbility>>> LevelAbilities;
 	
 
 protected:

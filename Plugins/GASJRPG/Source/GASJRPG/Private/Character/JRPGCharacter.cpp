@@ -29,7 +29,6 @@ void AJRPGCharacter::InitializeDefaultAttributes() const
 {
 	//调用函数库初始化角色属性
 	//UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
-	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(this, AbilitySystemComponent, FJRPGTagAttributesValue, this);
-
+	UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(
+		this, AbilitySystemComponent, FJRPGTagAttributesValue, const_cast<AJRPGCharacter*>(this));
 }
-
