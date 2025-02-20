@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/JRPGAbilitySystemComponent.h"
 #include "AbilitySystem/Abilities/JRPGGamePlayAbility.h"
+#include "Character/JRPGCharacterBase.h"
 
 void UJRPGAbilitySystemComponent::AbilityActorInfoSet()
 {
@@ -24,22 +25,25 @@ void UJRPGAbilitySystemComponent::AddAbilitiesBasedOnLevel(const TArray<TSubclas
 }
 
 TArray<TSubclassOf<UGameplayAbility>> UJRPGAbilitySystemComponent::GetAbilitiesBasedOnLevel(
-	const TMap<float, TArray<TSubclassOf<UGameplayAbility>>>& LevelAbilities,float CurrentLevel)
+	const TMap<float, FJRPGLevelAbilities>& LevelAbilities,float CurrentLevel)
 {
-	//根据等级获取对应的已开启的能力列表，用于初始化（升级后可能需要执行一次，可能写到其他的地方）
+	// 根据等级获取对应的已开启的能力列表，用于初始化（升级后可能需要执行一次，可能写到其他的地方）
 	TArray<TSubclassOf<UGameplayAbility>> CurrentAbilityArray;
+
 	// 遍历所有等级能力
 	for (const auto& Pair : LevelAbilities)
 	{
 		float Level = Pair.Key;
-		const TArray<TSubclassOf<UGameplayAbility>>& Abilities = Pair.Value;
+		const FJRPGLevelAbilities& LevelAbility = Pair.Value;
 
-		// 只有 Key (Level) 小于等于 CurrentLevel 才加入
+		// 只有 Level 小于等于 CurrentLevel 才加入
 		if (Level <= CurrentLevel)
 		{
-			CurrentAbilityArray.Append(Abilities);
+			// 将符合条件的能力添加到当前能力数组
+			CurrentAbilityArray.Append(LevelAbility.Abilities); // 访问 Abilities 成员
 		}
 	}
+
 	return CurrentAbilityArray;
 }
 

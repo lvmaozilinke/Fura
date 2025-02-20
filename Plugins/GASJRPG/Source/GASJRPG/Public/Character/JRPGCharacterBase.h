@@ -15,6 +15,17 @@ class UAttributeSet;
 class UGameplayEffect;
 class UAnimMontage;
 
+//等级解锁对应的能力数组
+USTRUCT(BlueprintType)
+struct FJRPGLevelAbilities
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<TSubclassOf<UGameplayAbility>> Abilities;
+};
+
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnJRPGStateChanged, int32 /*StatValue*/)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnJRPGLevelChanged, int32 /*StatValue*/, bool /*bLevelUp*/)
 
@@ -73,8 +84,9 @@ public:
 	float GetLevel() const {return Level;}
 
 	//等级对应的能力TMap，等级对应的能力数组，例如，10级解锁10个能力
-	TMap<float, TArray<TSubclassOf<UGameplayAbility>>> LevelAbilities;
-	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="JRPG|Class Default")
+	TMap<float,FJRPGLevelAbilities> LevelAbilities;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -150,7 +162,7 @@ protected:
 	virtual void InitializeDefaultAttributes() const;
 
 	//添加角色能力
-	void AddAbilities();
+	void AddAbilities() const;
 
 	//收到伤害的特效
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="JRPG|Combat")
@@ -165,10 +177,6 @@ protected:
 	TMap<FGameplayTag, float> FJRPGTagAttributesValue;
 
 private:
-	//初始化的角色能力数组
-	UPROPERTY(EditAnywhere, Category="JRPG|Attributes")
-	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
-
 	//命中反应蒙太奇
 	UPROPERTY(EditAnywhere, Category="JRPG|Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

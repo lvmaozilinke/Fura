@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Character/JRPGCharacterBase.h"
 #include "JRPGAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(EffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
@@ -21,8 +22,8 @@ public:
 	EffectAssetTags EffectAssetTags;
 	//根据等级获取能力列表
 	void AddAbilitiesBasedOnLevel(const TArray<TSubclassOf<UGameplayAbility>>& StartupAbilities);
-	
-	TArray<TSubclassOf<UGameplayAbility>> GetAbilitiesBasedOnLevel(const TMap<float,TArray<TSubclassOf<UGameplayAbility>>>& LevelAbilities,float CurrentLevel);
+
+	static TArray<TSubclassOf<UGameplayAbility>> GetAbilitiesBasedOnLevel(const TMap<float,FJRPGLevelAbilities>& LevelAbilities,float CurrentLevel);
 	
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);

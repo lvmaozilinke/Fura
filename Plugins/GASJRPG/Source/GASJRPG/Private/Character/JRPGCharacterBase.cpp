@@ -199,7 +199,7 @@ void AJRPGCharacterBase::InitializeDefaultAttributes() const
 {
 }
 
-void AJRPGCharacterBase::AddAbilities()
+void AJRPGCharacterBase::AddAbilities() const
 {
 	//添加角色能力
 	UJRPGAbilitySystemComponent* ASC = CastChecked<UJRPGAbilitySystemComponent>(AbilitySystemComponent);
