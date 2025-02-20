@@ -70,6 +70,8 @@ public:
 	//等级变化委托
 	FOnJRPGLevelChanged OnLevelChangedDelegate;
 
+	float GetLevel() const {return Level;}
+
 	
 
 protected:
@@ -77,11 +79,11 @@ protected:
 	virtual void BeginPlay() override;
 
 	//Level：玩家等级和敌人等级，设置到Base里面
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="JRPG|Class Default")
 	int32 Level = 1;
 	
-	//经验值
-	UPROPERTY(VisibleAnywhere)
+	//经验值(击败后获得的经验值)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="JRPG|Class Default")
 	int32 XP = 0;
 	
 	//ASC

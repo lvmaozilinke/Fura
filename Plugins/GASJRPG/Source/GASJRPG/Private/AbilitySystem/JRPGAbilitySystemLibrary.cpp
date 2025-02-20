@@ -134,8 +134,6 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterLevelValue:%f"), Level)
 
 
-
-	
 	//SecondaryAttributes：次要属性，跟随等级变化
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
@@ -145,10 +143,7 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 	                                  SecondaryAttributesSpecHandle);
 
 
-
-
-	
-	//VitalAttributes：重要属性，血量Health来自SaveGame(暂时使用TMap的数据)
+	//VitalAttributes：重要属性，血量Health来自TMap
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		CharacterClassDefaultInfo.VitalAttributes, 1.f, EffectContextHandle);
 
@@ -156,8 +151,8 @@ void UJRPGAbilitySystemLibrary::InitializeCharacterDefaultAttributesFromData(con
 
 	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesCharacterHealthValue:%f"), *DataHealthValue);
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(VitalAttributesSpecHandle,
-																  GameplayTags.JRPGAttributes_Health,
-																  *DataHealthValue);
+	                                                              GameplayTags.JRPGAttributes_Health,
+	                                                              *DataHealthValue);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
 	const float Health = ASC->GetNumericAttribute(UJRPGAttributeSet::GetHealthAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterHealthValue:%f"), Health)
@@ -188,32 +183,38 @@ void UJRPGAbilitySystemLibrary::InitializeEnemyDefaultAttributesFromData(const U
 	const FGameplayEffectSpecHandle PrimaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.PrimaryAttributes_SetByCaller, 1.f, EffectContextHandle);
 
-	const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
-
-	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesEnemyValueValue:%f"), *DataLevelValue);
+	//const float* DataLevelValue = FJRPGTagAttributesValue.Find(GameplayTags.JRPGAttributes_Level);
+	//敌人类的level获取定义在Enemy类里面
+	UE_LOG(LogTemp, Warning, TEXT("FJRPGTagAttributesEnemyValueValue:%f"), Enemy->GetLevel());
 
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(PrimaryAttributesSpecHandle,
-	                                                              GameplayTags.JRPGAttributes_Level, *DataLevelValue);
+	                                                              GameplayTags.JRPGAttributes_Level, Enemy->GetLevel());
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimaryAttributesSpecHandle.Data);
 	const float Level = ASC->GetNumericAttribute(UJRPGAttributeSet::GetLevelAttribute());
 	UE_LOG(LogTemp, Warning, TEXT("EnemyLevelValue:%f"), Level);
 
-	
 
+	//属性等级对应曲线表格在敌人类中定义 CurveTable
 	//SecondaryAttributes：次要属性，跟随等级变化
 	const FGameplayEffectSpecHandle SecondaryAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.SecondaryAttributes, 1.f, EffectContextHandle);
-	FindUCurveTableSetAttributesValue(Level, EnemyClassDefaultInfo.EnemyAttributeCurveTable, ASC,
+	FindUCurveTableSetAttributesValue(Level, Enemy->GetEnemyAttributeCurveTable(), ASC,
 	                                  SecondaryAttributesSpecHandle);
 
-	
-	
+
 	//VitalAttributes：重要属性，血量Health使用的是MaxHealth
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(
 		EnemyClassDefaultInfo.VitalAttributes, 1.f, EffectContextHandle);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(VitalAttributesSpecHandle,
+	                                                              GameplayTags.JRPGAttributes_Health,
+	                                                              ASC->GetNumericAttribute(
+		                                                              UJRPGAttributeSet::GetMaxHealthAttribute()));
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data);
+
 	const float Health = ASC->GetNumericAttribute(UJRPGAttributeSet::GetHealthAttribute());
-	UE_LOG(LogTemp, Warning, TEXT("AttributeCharacterHealthValue:%f"), Health)
+
+	UE_LOG(LogTemp, Warning, TEXT("AttributeEnemyHealthValue:%f"), Health)
 }
 
 void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Level, UCurveTable* CurveTable,
@@ -238,7 +239,8 @@ void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Le
 
 bool UJRPGAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->IsBlockedHit();
 	}
@@ -247,7 +249,8 @@ bool UJRPGAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle&
 
 bool UJRPGAbilitySystemLibrary::IsSuccessfulDebuff(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->IsSuccessfulDebuff();
 	}
@@ -256,7 +259,8 @@ bool UJRPGAbilitySystemLibrary::IsSuccessfulDebuff(const FGameplayEffectContextH
 
 float UJRPGAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->GetDebuffDamage();
 	}
@@ -265,7 +269,8 @@ float UJRPGAbilitySystemLibrary::GetDebuffDamage(const FGameplayEffectContextHan
 
 float UJRPGAbilitySystemLibrary::GetDebuffDuration(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->GetDebuffDuration();
 	}
@@ -274,7 +279,8 @@ float UJRPGAbilitySystemLibrary::GetDebuffDuration(const FGameplayEffectContextH
 
 float UJRPGAbilitySystemLibrary::GetDebuffFrequency(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->GetDebuffFrequency();
 	}
@@ -283,7 +289,8 @@ float UJRPGAbilitySystemLibrary::GetDebuffFrequency(const FGameplayEffectContext
 
 FGameplayTag UJRPGAbilitySystemLibrary::GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		if (JRPGEffectContext->GetDamageType().IsValid())
 		{
@@ -295,7 +302,8 @@ FGameplayTag UJRPGAbilitySystemLibrary::GetDamageType(const FGameplayEffectConte
 
 bool UJRPGAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
-	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
+		EffectContextHandle.Get()))
 	{
 		return JRPGEffectContext->IsCriticalHit();
 	}
@@ -303,28 +311,30 @@ bool UJRPGAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle
 }
 
 
-
 void UJRPGAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetIsBlockedHit(bInIsBlockedHit);
 	}
 }
 
 void UJRPGAbilitySystemLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
-	bool bInIsCriticalHit)
+                                                 bool bInIsCriticalHit)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetIsCriticalHit(bInIsCriticalHit);
 	}
 }
 
 void UJRPGAbilitySystemLibrary::SetIsSuccessfulDebuff(FGameplayEffectContextHandle& EffectContextHandle,
-	bool bInSuccessfulDebuff)
+                                                      bool bInSuccessfulDebuff)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetIsSuccessfulDebuff(bInSuccessfulDebuff);
 	}
@@ -332,7 +342,8 @@ void UJRPGAbilitySystemLibrary::SetIsSuccessfulDebuff(FGameplayEffectContextHand
 
 void UJRPGAbilitySystemLibrary::SetDebuffDamage(FGameplayEffectContextHandle& EffectContextHandle, float InDamage)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetDebuffDamage(InDamage);
 	}
@@ -340,7 +351,8 @@ void UJRPGAbilitySystemLibrary::SetDebuffDamage(FGameplayEffectContextHandle& Ef
 
 void UJRPGAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& EffectContextHandle, float InDuration)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetDebuffDuration(InDuration);
 	}
@@ -348,16 +360,18 @@ void UJRPGAbilitySystemLibrary::SetDebuffDuration(FGameplayEffectContextHandle& 
 
 void UJRPGAbilitySystemLibrary::SetDebuffFrequency(FGameplayEffectContextHandle& EffectContextHandle, float InFrequency)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		JRPGEffectContext->SetDebuffFrequency(InFrequency);
 	}
 }
 
 void UJRPGAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& EffectContextHandle,
-	const FGameplayTag& InDamageType)
+                                              const FGameplayTag& InDamageType)
 {
-	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.Get()))
+	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
+		Get()))
 	{
 		const TSharedPtr<FGameplayTag> DamageType = MakeShared<FGameplayTag>(InDamageType);
 		JRPGEffectContext->SetDamageType(DamageType);
@@ -372,41 +386,45 @@ bool UJRPGAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondAc
 	return !bFriends;
 }
 
-FGameplayEffectContextHandle UJRPGAbilitySystemLibrary::ApplyDamageEffect(const FJRPGDamageEffectParams& DamageEffectParams)
+FGameplayEffectContextHandle UJRPGAbilitySystemLibrary::ApplyDamageEffect(
+	const FJRPGDamageEffectParams& DamageEffectParams)
 {
 	const FJRPGGamePlayTags& GameplayTags = FJRPGGamePlayTags::Get();
 	const AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
-	
-	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->MakeEffectContext();
-	EffectContexthandle.AddSourceObject(SourceAvatarActor);
-	
-	
-	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
 
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType, DamageEffectParams.BaseDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance, DamageEffectParams.DebuffChance);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage, DamageEffectParams.DebuffDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration, DamageEffectParams.DebuffDuration);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency, DamageEffectParams.DebuffFrequency);
-	
+	FGameplayEffectContextHandle EffectContexthandle = DamageEffectParams.SourceAbilitySystemComponent->
+	                                                                      MakeEffectContext();
+	EffectContexthandle.AddSourceObject(SourceAvatarActor);
+
+
+	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
+		DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContexthandle);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType,
+	                                                              DamageEffectParams.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance,
+	                                                              DamageEffectParams.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage,
+	                                                              DamageEffectParams.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration,
+	                                                              DamageEffectParams.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency,
+	                                                              DamageEffectParams.DebuffFrequency);
+
 	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 	return EffectContexthandle;
 }
 
 int32 UJRPGAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject,
-	EJRPGEnemyClass EnemyClass, int32 EnemyLevel)
+                                                             const AJRPGEnemy* Enemy)
 {
-	UJRPGEnemyClassInfo* EnemyClassInfo = GetEnemyClassInfo(WorldContextObject);
-	if (EnemyClassInfo == nullptr) return 0;
-
-	const FJRPGEnemyClassDefaultInfo& Info = EnemyClassInfo->GetClassDefaultInfo(EnemyClass);
-	const float XPReward = Info.EnemyXPReward.GetValueAtLevel(EnemyLevel);
-
+	const float EnemyLevel = Enemy->GetLevel();
+	const float XPReward = Enemy->GetEnemyLevelXPCurveTable().GetValueAtLevel(EnemyLevel);
 	return static_cast<int32>(XPReward);
 }
 
 void UJRPGAbilitySystemLibrary::SetTargetEffectParamsASC(FJRPGDamageEffectParams& DamageEffectParams,
-	UAbilitySystemComponent* InASC)
+                                                         UAbilitySystemComponent* InASC)
 {
-	DamageEffectParams.TargetAbilitySystemComponent = InASC;	
+	DamageEffectParams.TargetAbilitySystemComponent = InASC;
 }

@@ -125,8 +125,7 @@ public:
 
 
 	//目前猜测是击败敌人后获取敌人对应等级的经验值
-	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, EJRPGEnemyClass EnemyClass,
-	                                         int32 CharacterLevel);
+	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, const AJRPGEnemy* Enemy);
 
 
 	/*
