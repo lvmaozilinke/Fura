@@ -15,6 +15,8 @@ public:
 
 	//伤害属性和对应的伤害抗性的TMap
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	//伤害类型和buff之间的对应
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 
 	FGameplayTag FEffects_HitReact;
 
@@ -32,6 +34,9 @@ public:
 	FGameplayTag JRPGAttributes_Primary_Speed; // 速度
 	FGameplayTag JRPGAttributes_Primary_Manliness; // 男子气概
 	FGameplayTag JRPGAttributes_Primary_Scars; // 伤痕
+	FGameplayTag JRPGAttributes_Primary_Armor; // 护甲
+	FGameplayTag JRPGAttributes_Primary_ArmorPenetration; // 护甲穿透力
+	
 
 	// ==========【次要属性】==========
 	FGameplayTag JRPGAttributes_Secondary_CriticalHitChance; // 暴击率
@@ -76,6 +81,12 @@ public:
 	FGameplayTag Debuff_Duration;
 	FGameplayTag Debuff_Frequency;
 
+	//buff持续效果
+	FGameplayTag Debuff_Burn;//持续燃烧
+	FGameplayTag Debuff_Stun;//持续眩晕（麻痹）
+	FGameplayTag Debuff_Physical;//物理减益
+	FGameplayTag Debuff_Poison;//中毒
+	FGameplayTag Debuff_Ice;//冰冻
 	
 
 	/*
@@ -83,6 +94,11 @@ public:
 	 */
 
 	//角色能力CharacterAbilities:每个玩家类别都有不同的能力，按角色职业划分，每个职业有不同的能力。
+
+
+
+
+	
 	
 	
 

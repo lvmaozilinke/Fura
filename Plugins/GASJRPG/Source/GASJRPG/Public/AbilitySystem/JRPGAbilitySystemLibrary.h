@@ -120,8 +120,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayMechanics")
 	static bool IsNotFriend(AActor* FirstActor, AActor* SecondActor);
 
-	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|DamageEffect")
 	static FGameplayEffectContextHandle ApplyDamageEffect(const FJRPGDamageEffectParams& DamageEffectParams);
+
+
+	//炮弹命中后的散射角度数组？目前好像没用
+	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayMechanics")
+	static TArray<FRotator> EvenlySpacedRotators(const FVector& Forward, const FVector& Axis, float Spread, int32 NumRotators);
 
 
 	//目前猜测是击败敌人后获取敌人对应等级的经验值

@@ -46,6 +46,9 @@ class GASJRPG_API IJRPGCombatInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetPlayerLevel();
+
 	//获取武器插槽位置
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation(const FGameplayTag& MontageTag);

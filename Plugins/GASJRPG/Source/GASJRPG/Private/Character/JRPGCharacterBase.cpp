@@ -111,6 +111,11 @@ void AJRPGCharacterBase::AddToXP(int32 InXP)
 	OnXPChangedDelegate.Broadcast(XP);
 }
 
+int32 AJRPGCharacterBase::GetPlayerLevel_Implementation()
+{
+	return GetLevel();
+}
+
 // Called when the game starts or when spawned
 void AJRPGCharacterBase::BeginPlay()
 {

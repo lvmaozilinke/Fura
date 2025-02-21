@@ -125,6 +125,16 @@ public:
 	FGameplayAttributeData Scars;
 	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, Scars)
 
+	/* 护甲*/
+	UPROPERTY(BlueprintReadOnly, Category="Stats", ReplicatedUsing=OnRep_Scars)
+	FGameplayAttributeData Armor;
+	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, Armor)
+
+	/* 穿甲*/
+	UPROPERTY(BlueprintReadOnly, Category="Stats", ReplicatedUsing=OnRep_Scars)
+	FGameplayAttributeData ArmorPenetration;
+	ATTRIBUTE_ACCESSORS(UJRPGAttributeSet, ArmorPenetration)
+	
 	//暴击率
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing=OnRep_CriticalHitChance, Category="Secondary Attributes")
 	FGameplayAttributeData CriticalHitChance;
@@ -273,6 +283,14 @@ public:
 	UFUNCTION()
 	void OnRep_Scars(const FGameplayAttributeData& OldScars) const;
 
+	/** 当玩家护甲变化时触发 */
+	UFUNCTION()
+	void OnRep_Armor(const FGameplayAttributeData& OldArmor) const;
+
+	/** 当玩家护甲穿透时触发 */
+	UFUNCTION()
+	void OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const;
+
 	// ==========【暴击相关属性】==========
 
 	/** 当玩家暴击率变化时触发 */
@@ -361,3 +379,5 @@ private:
 	//显示
 	void ShowFloatingText(const FJRPGEffectProperties& Props, float Damage, bool bBlockedHit, bool bCriticalHit) const;
 };
+
+

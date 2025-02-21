@@ -82,7 +82,10 @@ public:
 	FOnJRPGLevelChanged OnLevelChangedDelegate;
 
 	float GetLevel() const {return Level;}
-
+	
+	//接口获取等级
+	virtual int32 GetPlayerLevel_Implementation() override;
+	
 	//等级对应的能力TMap，等级对应的能力数组，例如，10级解锁10个能力
 	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category="JRPG|Class Default")
 	TMap<float,FJRPGLevelAbilities> LevelAbilities;

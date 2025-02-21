@@ -50,6 +50,9 @@ void UJRPGAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	/** 复制伤痕，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Scars, COND_None, REPNOTIFY_Always);
 
+	/** 复制伤痕，每次变化都会通知客户端 */
+	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, Armor, COND_None, REPNOTIFY_Always);
+
 	// ==========【暴击相关属性】==========
 	/** 复制暴击率，每次变化都会通知客户端 */
 	DOREPLIFETIME_CONDITION_NOTIFY(UJRPGAttributeSet, CriticalHitChance, COND_None, REPNOTIFY_Always);
@@ -239,6 +242,16 @@ void UJRPGAttributeSet::OnRep_Manliness(const FGameplayAttributeData& OldManline
 void UJRPGAttributeSet::OnRep_Scars(const FGameplayAttributeData& OldScars) const
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Scars, OldScars);
+}
+
+void UJRPGAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, Armor, OldArmor);
+}
+
+void UJRPGAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UJRPGAttributeSet, ArmorPenetration, OldArmorPenetration);
 }
 
 void UJRPGAttributeSet::OnRep_CriticalHitChance(const FGameplayAttributeData& OldCriticalHitChance) const

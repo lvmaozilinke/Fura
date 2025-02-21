@@ -22,6 +22,7 @@ void UJRPGAbilitySystemComponent::AddAbilitiesBasedOnLevel(const TArray<TSubclas
 			GiveAbility(AbilitySpec);
 		}
 	}
+
 }
 
 TArray<TSubclassOf<UGameplayAbility>> UJRPGAbilitySystemComponent::GetAbilitiesBasedOnLevel(

@@ -51,6 +51,14 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 		FName("JRPGAttributes.Primary.Scars"),
 		FString("伤痕")
 	);
+	GamePlayTags.JRPGAttributes_Primary_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("JRPGAttributes.Primary.Armor"),
+		FString("护甲");
+
+	GamePlayTags.JRPGAttributes_Primary_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("JRPGAttributes.Primary.ArmorPenetration"),
+		FString("护甲穿透")
+	);
 
 	// ==========【次要属性】==========
 	GamePlayTags.JRPGAttributes_Secondary_CriticalHitChance = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -154,4 +162,38 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 		FName("JRPGCombatSocket.Tail"),
 		FString("JRPGCombatSocket_Tail")
 	);
+
+
+	/*
+	 * Map of Damage Types to Resistances
+	 * 伤害类型和抵抗类型的对应关系
+	 */
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Unarmed, GamePlayTags.JRPGAttributes_Resistance_Unarmed);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Fire, GamePlayTags.JRPGAttributes_Resistance_Fire);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Bullet, GamePlayTags.JRPGAttributes_Resistance_Bullet);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Ice, GamePlayTags.JRPGAttributes_Resistance_Ice);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Lightning, GamePlayTags.JRPGAttributes_Resistance_Lightning);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Sonic, GamePlayTags.JRPGAttributes_Resistance_Sonic);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Poison, GamePlayTags.JRPGAttributes_Resistance_Poison);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Laser, GamePlayTags.JRPGAttributes_Resistance_Laser);
+
+	/*
+	 * 伤害类型和持续效果关系
+	 * 闪电会导致麻痹
+	 * 火焰会导致燃烧
+	 * 寒冷
+	 * 毒液
+	 */
+	//闪电麻痹
+	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Lightning, GamePlayTags.Debuff_Stun);
+	//火焰燃烧
+	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Fire, GamePlayTags.Debuff_Burn);
+	//物理
+	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Unarmed, GamePlayTags.Debuff_Physical);
+	//冰冻
+	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Ice, GamePlayTags.Debuff_Ice);
+	//中毒
+	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Poison, GamePlayTags.Debuff_Poison);
+	
+
 }
