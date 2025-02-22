@@ -238,12 +238,12 @@ void UJRPGAbilitySystemLibrary::FindUCurveTableSetAttributesValue(const float Le
 	ASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 }
 
-bool UJRPGAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+bool UJRPGAbilitySystemLibrary::IsDodgedHit(const FGameplayEffectContextHandle& EffectContextHandle)
 {
 	if (const FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<const FJRPGGameplayEffectContext*>(
 		EffectContextHandle.Get()))
 	{
-		return JRPGEffectContext->IsBlockedHit();
+		return JRPGEffectContext->IsDodgeHit();
 	}
 	return false;
 }
@@ -312,12 +312,12 @@ bool UJRPGAbilitySystemLibrary::IsCriticalHit(const FGameplayEffectContextHandle
 }
 
 
-void UJRPGAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+void UJRPGAbilitySystemLibrary::SetIsDodgeHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsDodgeHit)
 {
 	if (FJRPGGameplayEffectContext* JRPGEffectContext = static_cast<FJRPGGameplayEffectContext*>(EffectContextHandle.
 		Get()))
 	{
-		JRPGEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+		JRPGEffectContext->SetIsDodgeHit(bInIsDodgeHit);
 	}
 }
 

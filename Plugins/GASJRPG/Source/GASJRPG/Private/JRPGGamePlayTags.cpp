@@ -53,8 +53,8 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 	);
 	GamePlayTags.JRPGAttributes_Primary_Armor = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("JRPGAttributes.Primary.Armor"),
-		FString("护甲");
-
+		FString("护甲")
+	);
 	GamePlayTags.JRPGAttributes_Primary_ArmorPenetration = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("JRPGAttributes.Primary.ArmorPenetration"),
 		FString("护甲穿透")
@@ -168,14 +168,22 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 	 * Map of Damage Types to Resistances
 	 * 伤害类型和抵抗类型的对应关系
 	 */
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Unarmed, GamePlayTags.JRPGAttributes_Resistance_Unarmed);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Fire, GamePlayTags.JRPGAttributes_Resistance_Fire);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Bullet, GamePlayTags.JRPGAttributes_Resistance_Bullet);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Ice, GamePlayTags.JRPGAttributes_Resistance_Ice);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Lightning, GamePlayTags.JRPGAttributes_Resistance_Lightning);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Sonic, GamePlayTags.JRPGAttributes_Resistance_Sonic);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Poison, GamePlayTags.JRPGAttributes_Resistance_Poison);
-	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Laser, GamePlayTags.JRPGAttributes_Resistance_Laser);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Unarmed,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Unarmed);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Fire,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Fire);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Bullet,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Bullet);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Ice,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Ice);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Lightning,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Lightning);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Sonic,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Sonic);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Poison,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Poison);
+	GamePlayTags.DamageTypesToResistances.Add(GamePlayTags.JRPGAttributes_Damage_Laser,
+	                                          GamePlayTags.JRPGAttributes_Resistance_Laser);
 
 	/*
 	 * 伤害类型和持续效果关系
@@ -194,6 +202,4 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Ice, GamePlayTags.Debuff_Ice);
 	//中毒
 	GamePlayTags.DamageTypesToDebuffs.Add(GamePlayTags.JRPGAttributes_Damage_Poison, GamePlayTags.Debuff_Poison);
-	
-
 }

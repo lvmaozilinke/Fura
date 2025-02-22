@@ -68,7 +68,7 @@ public:
 	 * 效果上下文获取器
 	 */
 	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
-	static bool IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	static bool IsDodgedHit(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintPure, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
 	static bool IsSuccessfulDebuff(const FGameplayEffectContextHandle& EffectContextHandle);
@@ -95,7 +95,7 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
-	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit);
+	static void SetIsDodgeHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsDodgeHit);
 
 	UFUNCTION(BlueprintCallable, Category = "JRPG|AbilitySystemLibrary|GameplayEffects")
 	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsCriticalHit);
