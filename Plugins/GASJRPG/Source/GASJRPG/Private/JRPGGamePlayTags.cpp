@@ -164,6 +164,14 @@ void FJRPGGamePlayTags::InitializeNativeGameplayTags()
 	);
 
 
+	//Abilities能力相关
+	GamePlayTags.JRPGAbilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("JRPGAbilities.Fire.FireBolt"),
+		FString("JRPGAbilities_Fire_FireBolt")
+	);
+	
+
+
 	/*
 	 * Map of Damage Types to Resistances
 	 * 伤害类型和抵抗类型的对应关系

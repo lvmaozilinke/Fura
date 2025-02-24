@@ -91,9 +91,13 @@ public:
 
 	/*
 	 * 能力相关：Abilities
+	 * 武器和能力的结合，武器视为一种能力，首先创建武器类，里面存储一个能力
+	 * 
 	 */
 
 	//角色能力CharacterAbilities:每个玩家类别都有不同的能力，按角色职业划分，每个职业有不同的能力。
+
+	FGameplayTag JRPGAbilities_Fire_FireBolt;//测试火球射击
 
 
 
