@@ -92,3 +92,5 @@ Releases
 /Plugins/ViveOpenXR/Intermediate
 /.vsconfig
 /Aura.sln.DotSettings.user
+Plugins/TestDLL/Win64/TestDLL.dll
+Plugins/TestDLL/Win64/TestDLL.lib
