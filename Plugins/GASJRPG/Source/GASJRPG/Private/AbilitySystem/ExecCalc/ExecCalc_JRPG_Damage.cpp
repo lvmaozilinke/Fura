@@ -153,7 +153,7 @@ void UExecCalc_JRPG_Damage::Execute_Implementation(const FGameplayEffectCustomEx
 	//暴击相关
 	TagsToCaptureDefs.Add(Tags.JRPGAttributes_Secondary_CriticalHitChance, DamageStatics().CriticalHitChanceDef);
 	TagsToCaptureDefs.Add(Tags.JRPGAttributes_Secondary_CriticalHitResistance,
-						  DamageStatics().CriticalHitResistanceDef);
+	                      DamageStatics().CriticalHitResistanceDef);
 	TagsToCaptureDefs.Add(Tags.JRPGAttributes_Secondary_CriticalHitDamage, DamageStatics().CriticalHitDamageDef);
 	//Debuff和抗性
 	TagsToCaptureDefs.Add(Tags.JRPGAttributes_Resistance_Fire, DamageStatics().FireResistanceDef);
@@ -205,7 +205,7 @@ void UExecCalc_JRPG_Damage::Execute_Implementation(const FGameplayEffectCustomEx
 		const FGameplayTag ResistanceTag = Pair.Value;
 
 		checkf(TagsToCaptureDefs.Contains(ResistanceTag),
-			   TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString());
+		       TEXT("TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString());
 		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[ResistanceTag];
 
 		//获取伤害值
@@ -220,80 +220,87 @@ void UExecCalc_JRPG_Damage::Execute_Implementation(const FGameplayEffectCustomEx
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 		//减去抵抗后的伤害值
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
-		
-		// Capture BlockChance on Target, and determine if there was a successful Block
-		//计算speed速度来计算是否闪避
-		float TargetDodgeChance = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().SpeedDef, EvaluationParameters,
-																   TargetDodgeChance);
-		//闪避概率
-		TargetDodgeChance = FMath::Max<float>(TargetDodgeChance, 0.f);
-
-		const bool bDodge = FMath::RandRange(1, 100) < TargetDodgeChance;
-		//是否闪避
-		UJRPGAbilitySystemLibrary::SetIsDodgeHit(EffectContextHandle, bDodge);
-
-		// If Dodge, halve the damage.	
-		Damage = bDodge ? Damage / 2.f : Damage;
-
-		//护甲相关
-		float TargetArmor = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters,
-																   TargetArmor);
-		TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
-
-		//护甲穿透相关
-		float SourceArmorPenetration = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef,
-																   EvaluationParameters, SourceArmorPenetration);
-		SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
-
-		const UJRPGCharacterClassInfo* CharacterClassInfo = UJRPGAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
-		const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
-			FName("ArmorPenetration"), FString());
-		const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourcePlayerLevel);
-
-		// ArmorPenetration ignores a percentage of the Target's Armor.	
-		const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
-
-		const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
-			FName("EffectiveArmor"), FString());
-		const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetPlayerLevel);
-		// Armor ignores a percentage of incoming Damage.
-		Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
-
-		//暴击相关
-		float SourceCriticalHitChance = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef,
-																   EvaluationParameters, SourceCriticalHitChance);
-		SourceCriticalHitChance = FMath::Max<float>(SourceCriticalHitChance, 0.f);
-
-		float TargetCriticalHitResistance = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef,
-																   EvaluationParameters, TargetCriticalHitResistance);
-		TargetCriticalHitResistance = FMath::Max<float>(TargetCriticalHitResistance, 0.f);
-
-		float SourceCriticalHitDamage = 0.f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef,
-																   EvaluationParameters, SourceCriticalHitDamage);
-		SourceCriticalHitDamage = FMath::Max<float>(SourceCriticalHitDamage, 0.f);
-
-		const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
-			FName("CriticalHitResistance"), FString());
-		const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetPlayerLevel);
-
-		// Critical Hit Resistance reduces Critical Hit Chance by a certain percentage
-		const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance *
-			CriticalHitResistanceCoefficient;
-		const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
-
-		UJRPGAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
-
-		// Double damage plus a bonus if critical hit
-		Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
-
-		const FGameplayModifierEvaluatedData EvaluatedData(UJRPGAttributeSet::GetIncomingDamageAttribute(),
-														   EGameplayModOp::Additive, Damage);
-		OutExecutionOutput.AddOutputModifier(EvaluatedData);
+		Damage += DamageTypeValue;
 	}
+	// Capture BlockChance on Target, and determine if there was a successful Block
+	//计算speed速度来计算是否闪避
+	float TargetDodgeChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().SpeedDef, EvaluationParameters,
+	                                                           TargetDodgeChance);
+	//闪避概率
+	TargetDodgeChance = FMath::Max<float>(TargetDodgeChance, 0.f);
+
+	const bool bDodge = FMath::RandRange(1, 100) < TargetDodgeChance;
+	//是否闪避
+	UJRPGAbilitySystemLibrary::SetIsDodgeHit(EffectContextHandle, bDodge);
+
+	// If Dodge, halve the damage.	
+	Damage = bDodge ? Damage / 2.f : Damage;
+
+	//护甲相关
+	float TargetArmor = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters,
+	                                                           TargetArmor);
+	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
+
+	//护甲穿透相关
+	float SourceArmorPenetration = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef,
+	                                                           EvaluationParameters, SourceArmorPenetration);
+	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
+
+	const UJRPGCharacterClassInfo* CharacterClassInfo = UJRPGAbilitySystemLibrary::GetCharacterClassInfo(SourceAvatar);
+
+	if (CharacterClassInfo->DamageCalculationCoefficients == nullptr)
+	{
+		return;
+	}
+	const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
+		FName("ArmorPenetration"), FString());
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourcePlayerLevel);
+
+	// ArmorPenetration ignores a percentage of the Target's Armor.	
+	const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
+
+	const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
+		FName("EffectiveArmor"), FString());
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetPlayerLevel);
+	// Armor ignores a percentage of incoming Damage.
+	Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
+
+	//暴击相关
+	float SourceCriticalHitChance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef,
+	                                                           EvaluationParameters, SourceCriticalHitChance);
+	SourceCriticalHitChance = FMath::Max<float>(SourceCriticalHitChance, 0.f);
+
+	float TargetCriticalHitResistance = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef,
+	                                                           EvaluationParameters, TargetCriticalHitResistance);
+	TargetCriticalHitResistance = FMath::Max<float>(TargetCriticalHitResistance, 0.f);
+
+	float SourceCriticalHitDamage = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef,
+	                                                           EvaluationParameters, SourceCriticalHitDamage);
+	SourceCriticalHitDamage = FMath::Max<float>(SourceCriticalHitDamage, 0.f);
+
+	const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationCoefficients->FindCurve(
+		FName("CriticalHitResistance"), FString());
+	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetPlayerLevel);
+
+	// Critical Hit Resistance reduces Critical Hit Chance by a certain percentage
+	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance *
+		CriticalHitResistanceCoefficient;
+	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
+
+	UJRPGAbilitySystemLibrary::SetIsCriticalHit(EffectContextHandle, bCriticalHit);
+
+	// Double damage plus a bonus if critical hit
+	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
+
+	UE_LOG(LogTemp, Warning, TEXT("FIRE_BOLT Damage: %f"), Damage);
+
+	const FGameplayModifierEvaluatedData EvaluatedData(UJRPGAttributeSet::GetIncomingDamageAttribute(),
+	                                                   EGameplayModOp::Additive, Damage);
+	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

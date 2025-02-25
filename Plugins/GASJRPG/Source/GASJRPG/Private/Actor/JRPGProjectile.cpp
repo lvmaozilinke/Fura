@@ -78,6 +78,7 @@ void AJRPGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 		UJRPGAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
 	}
 	else bHit = true;
+	Destroyed();
 }
 
 bool AJRPGProjectile::IsValidOverlap(AActor* OtherActor)
