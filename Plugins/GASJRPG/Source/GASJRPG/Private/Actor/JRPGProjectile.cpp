@@ -62,8 +62,9 @@ void AJRPGProjectile::Destroyed()
 		LoopingSoundComponent->Stop();
 		LoopingSoundComponent->DestroyComponent();
 	}
-	if (!bHit && !HasAuthority()) OnHit();
+	if (!bHit) OnHit();
 	Super::Destroyed();
+	Destroy();
 }
 
 void AJRPGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -76,9 +77,12 @@ void AJRPGProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
 		UJRPGAbilitySystemLibrary::ApplyDamageEffect(DamageEffectParams);
+		UE_LOG(LogTemp, Warning, TEXT("FIRE_BOLT Destroyed"));
+		//命中后应该触发命中的特效
+		//销毁自己
+		Destroyed();
 	}
 	else bHit = true;
-	Destroyed();
 }
 
 bool AJRPGProjectile::IsValidOverlap(AActor* OtherActor)

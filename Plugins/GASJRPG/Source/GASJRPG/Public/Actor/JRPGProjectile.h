@@ -55,13 +55,14 @@ private:
 	float LifeSpan = 15.f;
 
 
-	
+
+	//命中特效
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
-
+	//命中声音
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> ImpactSound;
-
+	//子弹飞行中的声音
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USoundBase> LoopingSound;
 };

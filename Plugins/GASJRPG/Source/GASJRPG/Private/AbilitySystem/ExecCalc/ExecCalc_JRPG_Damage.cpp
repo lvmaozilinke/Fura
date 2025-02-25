@@ -298,9 +298,10 @@ void UExecCalc_JRPG_Damage::Execute_Implementation(const FGameplayEffectCustomEx
 	// Double damage plus a bonus if critical hit
 	Damage = bCriticalHit ? 2.f * Damage + SourceCriticalHitDamage : Damage;
 
-	UE_LOG(LogTemp, Warning, TEXT("FIRE_BOLT Damage: %f"), Damage);
+	//舍去小数位（四舍五入避免出现浮点数的问题）
+	UE_LOG(LogTemp, Warning, TEXT("FIRE_BOLT Damage: %f"), FMath::RoundToFloat(Damage));
 
 	const FGameplayModifierEvaluatedData EvaluatedData(UJRPGAttributeSet::GetIncomingDamageAttribute(),
-	                                                   EGameplayModOp::Additive, Damage);
+	                                                   EGameplayModOp::Additive, FMath::RoundToFloat(Damage));
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
